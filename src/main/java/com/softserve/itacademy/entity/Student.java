@@ -1,4 +1,4 @@
-package com.ifjava.eduproject.entity;
+package com.softserve.itacademy.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,17 +13,18 @@ import java.util.Set;
 @Accessors(chain = true)
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@DiscriminatorValue("STUDENT")
 @Entity
-@PrimaryKeyJoinColumn(foreignKey = @ForeignKey(name = "fk_group_members_users_id"))
-@Table(name = "group_members")
-public abstract class GroupMember extends User {
+@PrimaryKeyJoinColumn(foreignKey = @ForeignKey(name = "fk_students_users_id"))
+@Table(name = "students")
+public class Student extends User {
 
-    @ManyToMany(mappedBy = "groupMembers", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
     public void addGroup(Group group) {
+        group.getStudents().add(this);
         this.groups.add(group);
-        group.getGroupMembers().add(this);
     }
 
 }

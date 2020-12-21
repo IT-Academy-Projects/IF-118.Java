@@ -1,7 +1,6 @@
-package com.ifjava.eduproject.repository;
+package com.softserve.itacademy.repository;
 
-import com.ifjava.eduproject.entity.Admin;
-import com.ifjava.eduproject.entity.Student;
+import com.softserve.itacademy.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {

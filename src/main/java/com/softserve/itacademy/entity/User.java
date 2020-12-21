@@ -1,4 +1,4 @@
-package com.ifjava.eduproject.entity;
+package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Set;
+
 
 @Data
 @Accessors(chain = true)
@@ -15,22 +14,25 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-@DiscriminatorColumn(name="role", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name="accountType", discriminatorType = DiscriminatorType.STRING)
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BasicEntity {
+
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, updatable = false, insertable = false)
-    private Role role;
+    private AccountType accountType;
+
     private String email;
     private String password;
     private String name;
-    private LocalDateTime created = LocalDateTime.now();
+
     private Boolean disabled = false;
 
-    public enum Role {
+    //TODO: Implement Spring Security roles system
+    private Boolean isAdmin = false;
+
+    public enum AccountType {
 
         ADMIN("ADMIN"),
         TEACHER("TEACHER"),
@@ -38,7 +40,7 @@ public class User {
 
         private final String value;
 
-        Role(String value) {
+        AccountType(String value) {
             this.value = value;
         }
 

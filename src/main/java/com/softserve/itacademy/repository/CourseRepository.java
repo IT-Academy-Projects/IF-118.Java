@@ -1,6 +1,6 @@
-package com.ifjava.eduproject.repository;
+package com.softserve.itacademy.repository;
 
-import com.ifjava.eduproject.entity.Course;
+import com.softserve.itacademy.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
