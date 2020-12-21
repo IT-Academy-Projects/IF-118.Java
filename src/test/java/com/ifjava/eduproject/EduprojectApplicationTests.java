@@ -1,13 +1,13 @@
-package com.softserve.itacademy;
+package com.ifjava.eduproject;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ClassRoomApplicationTests {
+class EduprojectApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
