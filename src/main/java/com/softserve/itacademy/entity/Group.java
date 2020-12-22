@@ -17,17 +17,15 @@ import java.util.Set;
 public class Group extends BasicEntity {
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "teacher_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__teachers__teacher_id"))
-    private Teacher teacher;
+    private Integer ownerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "groups_students",
-            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__students__group_id"))},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__students__student_id"))}
+            name = "groups_users",
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__users__group_id"))},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__users__user_id"))}
     )
-    private Set<Student> students = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -19,12 +19,13 @@ public class Course extends BasicEntity {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "teacher_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__courses__teachers__teacher_id"))
-    private Teacher teacher;
+    private Integer ownerId;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
+
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Material> materials;

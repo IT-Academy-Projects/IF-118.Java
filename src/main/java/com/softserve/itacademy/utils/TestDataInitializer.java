@@ -2,11 +2,11 @@ package com.softserve.itacademy.utils;
 
 
 import com.softserve.itacademy.entity.*;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -16,12 +16,6 @@ public class TestDataInitializer {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TeacherRepository teacherRepository;
-
-    @Autowired
-    private StudentRepository studentRepository;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -36,77 +30,76 @@ public class TestDataInitializer {
     public void init() {
         log.info("Initializing test data");
         insertTestData();
-        self.addStudentToGroup(1L, 5L);
+//        self.addStudentToGroup(1L, 5L);
     }
 
     private void insertTestData() {
 
 
-        Teacher firstTeacher = new Teacher();
+        User firstTeacher = new User();
         firstTeacher.setEmail("teacher1@gmail.com");
         firstTeacher.setPassword("password");
         firstTeacher.setName("Teacher 1");
-        teacherRepository.save(firstTeacher);
+        userRepository.save(firstTeacher);
 
 
-        Teacher secondTeacher = new Teacher();
+        User secondTeacher = new User();
         secondTeacher.setEmail("teacher2@gmail.com");
         secondTeacher.setPassword("password");
         secondTeacher.setName("Teacher 2");
-        teacherRepository.save(secondTeacher);
+        userRepository.save(secondTeacher);
 
-        Course course = courseRepository.save(new Course().setName("Java Course").setTeacher(secondTeacher));
+        Course course = new Course().setName("Java Course").setOwnerId(secondTeacher.getId());
+        course.getUsers().add(secondTeacher);
+
+        courseRepository.save(course);
 
 
         Group firstGroup = new Group();
         firstGroup.setName("IF-118");
         firstGroup = groupRepository.save(firstGroup);
-        firstGroup.setTeacher(secondTeacher);
+        firstGroup.getUsers().add(secondTeacher);
+        firstGroup.setOwnerId(secondTeacher.getId());
 
         Group secondGroup = new Group();
         secondGroup.setName("LV-120");
         secondGroup.getCourses().add(course);
         secondGroup = groupRepository.save(secondGroup);
-        secondGroup.setTeacher(secondTeacher);
+        secondGroup.getUsers().add(secondTeacher);
+        secondGroup.setOwnerId(secondTeacher.getId());
 
-        Student firstStudent = new Student();
+        User firstStudent = new User();
         firstStudent.setEmail("student1@gmail.com");
         firstStudent.setPassword("password");
         firstStudent.setName("Student 1");
-        studentRepository.save(firstStudent);
-        firstGroup.getStudents().add(firstStudent);
-        secondGroup.getStudents().add(firstStudent);
+        userRepository.save(firstStudent);
+        firstGroup.getUsers().add(firstStudent);
+        secondGroup.getUsers().add(firstStudent);
 
-        Student secondStudent = new Student();
+        User secondStudent = new User();
         secondStudent.setEmail("student2@gmail.com");
         secondStudent.setPassword("password");
         secondStudent.setName("Student 2");
-        studentRepository.save(secondStudent);
-        firstGroup.getStudents().add(secondStudent);
-        secondGroup.getStudents().add(secondStudent);
-
-        Student thirdStudent = new Student();
-        thirdStudent.setEmail("student3@gmail.com");
-        thirdStudent.setPassword("password");
-        thirdStudent.setName("Student 3");
-        studentRepository.save(thirdStudent);
+        userRepository.save(secondStudent);
+        firstGroup.getUsers().add(secondStudent);
+        secondGroup.getUsers().add(secondStudent);
 
         groupRepository.save(firstGroup);
         groupRepository.save(secondGroup);
     }
 
-    @Transactional
-    public void addStudentToGroup(Long groupId, Long studentId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(RuntimeException::new);
-        Student student = studentRepository.findById(studentId).orElseThrow(RuntimeException::new);
-
-         group.getStudents().add(student);
-         groupRepository.save(group);
-
-        // TODO: Use this if you want add entity to collection from back reference
-        // student.addGroup(group);
-        // studentRepository.save(student);
-    }
+//    @Transactional
+//    public void addStudentToGroup(Long groupId, Long studentId) {
+//        Group group = groupRepository.findById(groupId).orElseThrow(RuntimeException::new);
+//        Student student = studentRepository.findById(studentId).orElseThrow(RuntimeException::new);
+//
+//         group.getStudents().add(student);
+//         groupRepository.save(group);
+//
+//        // TODO: Use this if you want add entity to collection from back reference
+//        // student.addGroup(group);
+//        // studentRepository.save(student);
+//    }
 
 
 }
