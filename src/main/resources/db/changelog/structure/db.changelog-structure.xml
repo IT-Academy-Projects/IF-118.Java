@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet  author="YabVol"  id="structure-1.0">
+        <sql>
+            CREATE TABLE `role` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `created_at` datetime DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+            );
+
+            CREATE TABLE `users` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `created_at` datetime DEFAULT NULL,
+            `disabled` bit(1) DEFAULT NULL,
+            `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `is_admin` bit(1) DEFAULT NULL,
+            `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+            );
+
+            CREATE TABLE `groups` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `created_at` datetime DEFAULT NULL,
+            `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            `owner_id` int DEFAULT NULL,
+            PRIMARY KEY (`id`)
+            );
+
+            CREATE TABLE `courses` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `created_at` datetime DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `owner_id` int DEFAULT NULL,
+            PRIMARY KEY (`id`)
+            );
+
+            CREATE TABLE `authority` (
+            `name` text COLLATE utf8_unicode_ci,
+            `created_at` datetime DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            `id` int NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (`id`)
+            );
+
+            CREATE TABLE `material` (
+            `id` int(10) unsigned zerofill NOT NULL,
+            `name` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+            `created_at` datetime DEFAULT NULL,
+            `updated_at` datetime DEFAULT NULL,
+            `course_id` int DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            KEY `fk_course_material_idx` (`course_id`),
+            CONSTRAINT `fk_course_material` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
+            );
+
+            CREATE TABLE `groups_courses` (
+            `group_id` int DEFAULT NULL,
+            `course_id` int DEFAULT NULL,
+            KEY `fk__groups__courses__group_id_idx` (`group_id`),
+            KEY `fk__courses__groups__course_id_idx` (`course_id`),
+            CONSTRAINT `fk__courses__groups__course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+            CONSTRAINT `fk__groups__courses__group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
+            );
+
+            CREATE TABLE `groups_users` (
+            `group_id` int DEFAULT NULL,
+            `user_id` int DEFAULT NULL,
+            KEY `fk__groups__users__group_id_idx` (`group_id`),
+            KEY `fk__groups__users__user_id_idx` (`user_id`),
+            CONSTRAINT `fk__groups__users__group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+            CONSTRAINT `fk__groups__users__user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+            );
+
+            CREATE TABLE `roles_authorities` (
+            `authority_id` int DEFAULT NULL,
+            `role_id` int DEFAULT NULL,
+            KEY `fk_roles_authorities_role_id_idx` (`role_id`),
+            KEY `fk_authorities_roles_authority_id_idx` (`authority_id`),
+            CONSTRAINT `fk_authorities_roles_authority_id` FOREIGN KEY (`authority_id`) REFERENCES `authority` (`id`),
+            CONSTRAINT `fk_roles_authorities_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+            );
+
+            CREATE TABLE `users_courses` (
+            `user_id` int DEFAULT NULL,
+            `course_id` int DEFAULT NULL,
+            KEY `fk__users__courses__user_id_idx` (`user_id`),
+            KEY `fk__courses__users__course_id_idx` (`course_id`),
+            CONSTRAINT `fk__courses__users__course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+            CONSTRAINT `fk__users__courses__user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+            );
+
+            CREATE TABLE `users_roles` (
+            `user_id` int DEFAULT NULL,
+            `role_id` int DEFAULT NULL,
+            KEY `fk_users_roles_user_id_idx` (`user_id`),
+            KEY `fk_roles_users_role_id_idx` (`role_id`),
+            CONSTRAINT `fk_roles_users_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
+            CONSTRAINT `fk_users_roles_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+            );
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
