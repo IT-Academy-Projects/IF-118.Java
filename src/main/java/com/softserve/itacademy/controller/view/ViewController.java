@@ -11,12 +11,12 @@ public class ViewController {
 
     @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String loginView() {
-        return "login/login.html";
+        return "login.html";
     }
 
     @GetMapping(path = "/admin", produces = MediaType.TEXT_HTML_VALUE)
     public String adminView() {
-        return "admin-panel/admin-panel.html";
+        return "admin-panel.html";
     }
 
 }
