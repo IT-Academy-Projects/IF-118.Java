@@ -10,6 +10,7 @@ public class CourseDto {
     private Integer id;
     private String name;
     private String ownerId;
+    private Boolean disabled;
 
     private CourseDto() {};
 
@@ -17,6 +18,7 @@ public class CourseDto {
         CourseDto courseDto = new CourseDto();
         courseDto.id = course.getId();
         courseDto.name = course.getName();
+        courseDto.disabled = course.getDisabled();
         return courseDto;
     }
 }

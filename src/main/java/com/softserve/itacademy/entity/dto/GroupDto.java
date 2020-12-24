@@ -13,6 +13,7 @@ public class GroupDto {
     private Integer id;
     private String name;
     private String ownerId;
+    private Boolean disabled;
 
     private GroupDto() {};
 
@@ -20,6 +21,7 @@ public class GroupDto {
         GroupDto groupDto = new GroupDto();
         groupDto.id = group.getId();
         groupDto.name = group.getName();
+        groupDto.disabled = group.getDisabled();
         return groupDto;
     }
 

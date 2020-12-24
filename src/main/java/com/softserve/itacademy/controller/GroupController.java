@@ -30,4 +30,10 @@ public class GroupController {
         return new ResponseEntity<>(groupService.delete(id), OK);
     }
 
+    @DeleteMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
+        groupService.updateDisabled(id, disabled);
+        return new ResponseEntity<>(OK);
+    }
+
 }

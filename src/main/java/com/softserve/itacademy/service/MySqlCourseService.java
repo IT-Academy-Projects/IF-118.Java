@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service;
 
+import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.dto.CourseDto;
 import com.softserve.itacademy.repository.CourseRepository;
 import org.springframework.stereotype.Service;
@@ -30,4 +31,12 @@ public class MySqlCourseService implements CourseService {
             return false;
         }
     }
+
+    @Override
+    public void updateDisabled(Integer id, Boolean disabled) {
+        Course group = courseRepository.findById(id).orElseThrow(RuntimeException::new);
+        group.setDisabled(disabled);
+        courseRepository.save(group);
+    }
+
 }

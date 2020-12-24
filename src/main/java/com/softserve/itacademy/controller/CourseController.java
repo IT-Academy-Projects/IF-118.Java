@@ -30,4 +30,10 @@ public class CourseController {
         return new ResponseEntity<>(courseService.delete(id), OK);
     }
 
+    @DeleteMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
+        courseService.updateDisabled(id, disabled);
+        return new ResponseEntity<>(OK);
+    }
+
 }

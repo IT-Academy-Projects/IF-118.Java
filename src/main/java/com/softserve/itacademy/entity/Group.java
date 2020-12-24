@@ -15,9 +15,10 @@ import java.util.Set;
 @Entity
 @Table(name = "student_groups")
 public class Group extends BasicEntity {
-    private String name;
 
+    private String name;
     private Integer ownerId;
+    private Boolean disabled = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -8,4 +8,5 @@ import java.util.List;
 public interface GroupService {
     List<GroupDto> findAll();
     Boolean delete(Integer id);
+    void updateDisabled(Integer id, Boolean disabled);
 }

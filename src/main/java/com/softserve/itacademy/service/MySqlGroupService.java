@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service;
 
+import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.dto.GroupDto;
 import com.softserve.itacademy.repository.GroupRepository;
 import org.springframework.stereotype.Service;
@@ -30,4 +31,12 @@ public class MySqlGroupService implements GroupService {
             return false;
         }
     }
+
+    @Override
+    public void updateDisabled(Integer id, Boolean disabled) {
+        Group group = groupRepository.findById(id).orElseThrow(RuntimeException::new);
+        group.setDisabled(disabled);
+        groupRepository.save(group);
+    }
+
 }

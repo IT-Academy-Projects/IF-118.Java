@@ -16,10 +16,10 @@ function showUsers() {
                 <th scope="row">${user.id}</th>
                 <td>${user.email}</td>
                 <th>${user.name}</th>
-                <th><input type="checkbox" id="checkbox-${user.id}" onchange="disableUser(this, ${user.id})" class="form-check-input my-checkbox" style="margin: 0"></th>
+                <th><input type="checkbox" id="user-checkbox-${user.id}" onchange="disableUser(this, ${user.id})" class="form-check-input my-checkbox" style="margin: 0"></th>
             </tr>
         `);
-            $(`#checkbox-${user.id}`).prop('checked', user.disabled);
+            $(`#user-checkbox-${user.id}`).prop('checked', user.disabled);
         });
     });
 }
@@ -32,7 +32,7 @@ function showGroups() {
          <th scope="col">Id</th>
          <th scope="col">Name</th>
          <th scope="col">Owner id</th>
-         <th scope="col">Delete</th>
+         <th scope="col">Disabled</th>
         `)
         data.forEach((group) => {
             $('#table-content').append(`
@@ -40,9 +40,10 @@ function showGroups() {
                 <th scope="row">${group.id}</th>
                 <td>${group.name}</td>
                 <th>${group.ownerId}</th>
-                <th><button type="button" class="btn btn-danger" onclick="deleteGroup($(this).closest('th'), ${group.id})">Delete</button></th>
+                <th><input type="checkbox" id="group-checkbox-${group.id}" onchange="disableGroup(this, ${group.id})" class="form-check-input my-checkbox" style="margin: 0"></th>
             </tr>
         `);
+            $(`#group-checkbox-${group.id}`).prop('checked', group.disabled);
         });
     });
 }
@@ -55,7 +56,7 @@ function showCourses() {
          <th scope="col">Id</th>
          <th scope="col">Name</th>
          <th scope="col">Owner id</th>
-         <th scope="col">Delete</th>
+         <th scope="col">Disabled</th>
     `)
         data.forEach((course) => {
             $('#table-content').append(`
@@ -63,9 +64,10 @@ function showCourses() {
                 <th scope="row">${course.id}</th>
                 <td>${course.name}</td>
                 <th>${course.ownerId}</th>
-                <th><button type="button" class="btn btn-danger" onclick="deleteCourse($(this).closest('th'), ${course.id})">Delete</button></th>
+                <th><input type="checkbox" id="courses-checkbox-${course.id}" onchange="disableCourse(this, ${course.id})" class="form-check-input my-checkbox" style="margin: 0"></th>
             </tr>
         `);
+            $(`#courses-checkbox-${course.id}`).prop('checked', course.disabled);
         });
     });
 }
@@ -80,22 +82,23 @@ function disableUser(checkbox, id) {
     }
 }
 
-function deleteGroup(htmlElement, id) {
+function disableGroup(checkbox, id) {
     let confirmed = confirm('Do you want to delete this group?');
-
+    let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/groups/${id}`).then((res) => {
-            $(htmlElement).parent().remove()
-        });
+        deleteRequest(`/api/groups/${id}/disabled?disabled=${isChecked}`);
+    } else {
+        $(checkbox).prop('checked', !isChecked);
     }
 }
 
-function deleteCourse(htmlElement, id) {
-    let confirmed = confirm('Do you want to delete this course?');
+function disableCourse(checkbox, id) {
+    let confirmed = confirm('Do you want to delete this group?');
+    let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/courses/${id}`).then((res) => {
-            $(htmlElement).parent().remove()
-        });;
+        deleteRequest(`/api/courses/${id}/disabled?disabled=${isChecked}`);
+    } else {
+        $(checkbox).prop('checked', !isChecked);
     }
 }
 
