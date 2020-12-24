@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.softserve.itacademy</groupId>
-    <artifactId>classroom</artifactId>
+    <artifactId>softclass</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ClassRoom</name>
-    <description>ClassRoom Project</description>
+    <name>SoftClass</name>
+    <description>SoftClass Project</description>
 
     <properties>
         <java.version>11</java.version>
