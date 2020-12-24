@@ -18,8 +18,8 @@ import java.util.Set;
 public class Course extends BasicEntity {
 
     private String name;
-
     private Integer ownerId;
+    private Boolean disabled = false;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();

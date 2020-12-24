@@ -4,13 +4,41 @@
     <meta charset="UTF-8">
     <title>SoftClass</title>
     <meta name="description" content="Study and learn with SoftClass">
+
+    <!-- Bootstrap, jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/admin-panel.css">
     <script src="js/admin-panel.js"></script>
+
 </head>
 
 <body>
-    <span class="title"><h1>Admin HTML works!</h1></span>
-    <a href="/">Go to Login</a>
+    <div class="wrapper">
+        <div class="header">
+            <div class="title">
+                <a href="/" class="link">SoftClass</a>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <div class="side-panel">
+                <button type="button" class="my-btn btn btn-outline-dark active" onclick="showUsers();toggleButtons(this)">Users</button>
+                <button type="button" class="my-btn btn btn-outline-dark" onclick="showGroups();toggleButtons(this)">Groups</button>
+                <button type="button" class="my-btn btn btn-outline-dark" onclick="showCourses();toggleButtons(this)">Courses</button>
+            </div>
+            <div class="content">
+                <h1 id="table-title">Users</h1>
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr id="table-head"></tr>
+                    </thead>
+                    <tbody id="table-content"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -23,6 +23,7 @@ public class User extends BasicEntity {
     private String email;
     private String password;
     private String name;
+    private Boolean disabled = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
