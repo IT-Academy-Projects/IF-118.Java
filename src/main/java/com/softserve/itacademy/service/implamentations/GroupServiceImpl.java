@@ -1,19 +1,21 @@
-package com.softserve.itacademy.service;
+package com.softserve.itacademy.service.implamentations;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.dto.GroupDto;
+import com.softserve.itacademy.dto.GroupDto;
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.service.GroupService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MySqlGroupService implements GroupService {
+public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
 
-    public MySqlGroupService(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
@@ -23,20 +25,18 @@ public class MySqlGroupService implements GroupService {
     }
 
     @Override
-    public Boolean delete(Integer id) {
-        if (groupRepository.existsById(id)) {
-            groupRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public void delete(Integer id) {
+        groupRepository.delete(getById(id));
     }
 
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
-        Group group = groupRepository.findById(id).orElseThrow(RuntimeException::new);
+        Group group = getById(id);
         group.setDisabled(disabled);
         groupRepository.save(group);
     }
 
+    private Group getById(Integer id) {
+        return groupRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
 }

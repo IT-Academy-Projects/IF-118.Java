@@ -1,6 +1,6 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.dto.CourseDto;
+import com.softserve.itacademy.dto.CourseDto;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,9 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
-        return new ResponseEntity<>(courseService.delete(id), OK);
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        courseService.delete(id);
+        return new ResponseEntity<>(OK);
     }
 
     @DeleteMapping("/{id}/disabled")

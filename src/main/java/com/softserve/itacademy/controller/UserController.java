@@ -1,6 +1,6 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.dto.UserDto;
+import com.softserve.itacademy.dto.UserDto;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

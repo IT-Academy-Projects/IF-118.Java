@@ -1,6 +1,6 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.dto.GroupDto;
+import com.softserve.itacademy.dto.GroupDto;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
-        return new ResponseEntity<>(groupService.delete(id), OK);
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        groupService.delete(id);
+        return new ResponseEntity<>(OK);
     }
 
     @DeleteMapping("/{id}/disabled")

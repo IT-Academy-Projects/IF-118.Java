@@ -1,4 +1,4 @@
-package com.softserve.itacademy.entity.dto;
+package com.softserve.itacademy.dto;
 
 import com.softserve.itacademy.entity.Course;
 import lombok.Getter;

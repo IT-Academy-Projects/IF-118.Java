@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
@@ -17,7 +17,7 @@ public class GenericExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception) {
         log.debug(exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), FORBIDDEN);
+        return new ResponseEntity<>(exception.getMessage(), NOT_FOUND);
     }
 
 }

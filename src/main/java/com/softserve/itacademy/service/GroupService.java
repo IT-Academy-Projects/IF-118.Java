@@ -1,12 +1,11 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.entity.dto.GroupDto;
-import com.softserve.itacademy.entity.dto.UserDto;
+import com.softserve.itacademy.dto.GroupDto;
 
 import java.util.List;
 
 public interface GroupService {
     List<GroupDto> findAll();
-    Boolean delete(Integer id);
+    void delete(Integer id);
     void updateDisabled(Integer id, Boolean disabled);
 }

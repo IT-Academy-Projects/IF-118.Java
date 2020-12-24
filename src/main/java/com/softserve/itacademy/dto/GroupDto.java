@@ -1,7 +1,6 @@
-package com.softserve.itacademy.entity.dto;
+package com.softserve.itacademy.dto;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 

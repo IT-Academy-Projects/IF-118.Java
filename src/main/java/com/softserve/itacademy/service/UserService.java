@@ -1,6 +1,6 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.entity.dto.UserDto;
+import com.softserve.itacademy.dto.UserDto;
 
 import java.util.List;
 

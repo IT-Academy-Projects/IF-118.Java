@@ -1,19 +1,21 @@
-package com.softserve.itacademy.service;
+package com.softserve.itacademy.service.implamentations;
 
 import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.dto.CourseDto;
+import com.softserve.itacademy.dto.CourseDto;
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.service.CourseService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MySqlCourseService implements CourseService {
+public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
-    public MySqlCourseService(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
@@ -23,20 +25,19 @@ public class MySqlCourseService implements CourseService {
     }
 
     @Override
-    public Boolean delete(Integer id) {
-        if (courseRepository.existsById(id)) {
-            courseRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public void delete(Integer id) {
+        courseRepository.delete(getById(id));
     }
 
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
-        Course group = courseRepository.findById(id).orElseThrow(RuntimeException::new);
+        Course group = getById(id);
         group.setDisabled(disabled);
         courseRepository.save(group);
+    }
+
+    private Course getById(Integer id) {
+        return courseRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
 }
