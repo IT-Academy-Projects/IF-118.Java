@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service;
 
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.dto.UserDto;
 import com.softserve.itacademy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,13 @@ public class MySqlUserService implements UserService {
 
     public List<UserDto> findAll() {
         return userRepository.findAll().stream().map(UserDto::create).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public void updateDisabled(Integer id, Boolean disabled) {
+        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        user.setDisabled(disabled);
+        userRepository.save(user);
     }
 }

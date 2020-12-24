@@ -39,6 +39,7 @@ CREATE TABLE if not exists `users`
     `email`      varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `password`   varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `disabled`   boolean                              DEFAULT false,
     PRIMARY KEY (`id`)
 );
 

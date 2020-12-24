@@ -11,21 +11,17 @@ public class UserDto {
 
     private Integer id;
     private String email;
-    private String password;
     private String name;
     private Boolean disabled;
-    private Boolean isAdmin;
 
     private UserDto() {};
 
     public static UserDto create(User user) {
         UserDto userDto = new UserDto();
-
         userDto.id = user.getId();
         userDto.email = user.getEmail();
-        userDto.password = user.getPassword();
         userDto.name = user.getName();
-
+        userDto.disabled = user.getDisabled();
         return userDto;
     }
 
