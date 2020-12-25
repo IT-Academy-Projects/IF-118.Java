@@ -3,8 +3,8 @@
 -- changeSet YabVol:change_data-1.0.0 endDelimiter:; splitStatements:true
 
 -- INSERT TEACHERS
-insert into users(name, password, email, created_at, updated_at)
-values ('Teacher 1', 'password', 'teacher1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09');
+insert into users(name, password, email, created_at, updated_at, disabled)
+values ('Teacher 1', 'password', 'teacher1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09', true);
 
 insert into users(name, password, email, created_at, updated_at)
 values ('Teacher 2', 'password2', 'teacher2@gmail.com', '2020-12-23 12:40:09', '2020-12-23 12:40:09');

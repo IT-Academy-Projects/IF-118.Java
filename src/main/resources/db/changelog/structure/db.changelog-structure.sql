@@ -9,6 +9,7 @@ CREATE TABLE if not exists `courses`
     `updated_at` datetime                             DEFAULT NULL,
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `owner_id`   int                                  DEFAULT NULL,
+    `disabled`   boolean                              DEFAULT false,
     PRIMARY KEY (`id`)
 );
 
@@ -28,6 +29,7 @@ CREATE TABLE if not exists `student_groups`
     `updated_at` datetime                             DEFAULT NULL,
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `owner_id`   int                                  DEFAULT NULL,
+    `disabled`   boolean                              DEFAULT false,
     PRIMARY KEY (`id`)
 );
 
@@ -39,6 +41,7 @@ CREATE TABLE if not exists `users`
     `email`      varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `password`   varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `disabled`   boolean                              DEFAULT false,
     PRIMARY KEY (`id`)
 );
 

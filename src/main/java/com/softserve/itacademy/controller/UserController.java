@@ -1,14 +1,14 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.dto.UserDto;
+import com.softserve.itacademy.dto.UserDto;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,4 +24,11 @@ public class UserController {
     public ResponseEntity<List<UserDto>> findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
+        userService.updateDisabled(id, disabled);
+        return new ResponseEntity<>(OK);
+    }
+
 }
