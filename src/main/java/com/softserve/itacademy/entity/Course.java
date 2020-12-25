@@ -29,4 +29,15 @@ public class Course extends BasicEntity {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Material> materials;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", ownerId=" + ownerId +
+                ", groups=" + groups +
+                ", users=" + users +
+                ", materials=" + materials +
+                '}';
+    }
 }
