@@ -14,7 +14,7 @@ public class GenericExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
-        log.debug(exception.getMessage());
+        log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), NOT_FOUND);
     }
 

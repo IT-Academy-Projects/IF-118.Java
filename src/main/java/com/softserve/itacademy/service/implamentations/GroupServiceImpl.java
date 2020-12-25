@@ -36,6 +36,11 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.save(group);
     }
 
+    @Override
+    public Group findById(Integer id) {
+        return getById(id);
+    }
+
     private Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }

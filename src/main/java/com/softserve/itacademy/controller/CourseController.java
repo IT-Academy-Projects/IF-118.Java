@@ -1,18 +1,17 @@
 package com.softserve.itacademy.controller;
 
 import com.softserve.itacademy.dto.CourseDto;
-import com.softserve.itacademy.entity.dto.CourseDto;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/v1/courses")
 public class CourseController {
 
     private final CourseService courseService;
@@ -21,14 +20,9 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping
-    public List<CourseDto> findAll() {
-        return courseService.getAll();
-    }
-
     @PostMapping("/create")
-    public CourseDto create(@RequestBody CourseDto courseDto) {
-        return courseService.create(courseDto);
+    public ResponseEntity<CourseDto> create(@RequestBody CourseDto courseDto) {
+        return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
     }
 
     @GetMapping
