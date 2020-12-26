@@ -25,7 +25,7 @@ public class GenericExceptionHandler {
     public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
         log.error(exception.getMessage());
         ErrorDto errorDto = new ErrorDto(errorConfigurationProperties.getExceptions()
-                .get(ErrorType.NOT_FOUND.getValue()).getMessage());
+                .get(ErrorType.NOT_FOUND.toString()).getMessage());
         return new ResponseEntity<>(errorDto, NOT_FOUND);
     }
 
