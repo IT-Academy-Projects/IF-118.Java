@@ -62,8 +62,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDto readById(Integer id) {
-        Course course = courseRepository.findById(id).orElseThrow(NotFoundException::new);
-        return CourseDto.convertToDto(course);
+        return CourseDto.convertToDto(getById(id));
     }
 
     @Override
