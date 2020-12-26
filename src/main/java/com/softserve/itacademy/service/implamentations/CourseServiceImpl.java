@@ -30,14 +30,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseDto create(CourseDto courseDto) {
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
-        Set<Integer> groupIds = Optional.ofNullable(courseDto.getGroupIds())
-                .orElse(new HashSet<>());
+        Set<Integer> groupIds = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
+                .orElse(Collections.emptySet());    //set an empty set if groupIds is null
 
         Set<Group> groups = groupIds.stream()
                 .map(groupService::findById)
                 .collect(Collectors.toSet());
-        Course course = CourseDto.convertToEntity(courseDto);
-        course.setGroups(groups);
+        Course course = CourseDto.convertToEntity(courseDto, groups);
         Course createdCourse = courseRepository.save(course);
         return CourseDto.convertToDto(createdCourse);
     }

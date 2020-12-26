@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,11 +51,19 @@ public class CourseServiceTest {
         assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
     }
 
+    @Test
+    public void create_whenInvaildGroupId_thenThrowsNotFounfExeption() {
+        when(groupService.findById(anyInt())).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
+    }
+
     private CourseDto generateCourseDto() {
         return CourseDto.builder()
                 .id(1)
                 .name("NewCourse")
                 .ownerId(1)
+                .groupIds(Set.of(1,2,3))
                 .build();
     }
 

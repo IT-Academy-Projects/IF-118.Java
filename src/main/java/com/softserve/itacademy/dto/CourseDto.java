@@ -2,12 +2,10 @@ package com.softserve.itacademy.dto;
 
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,10 +32,11 @@ public class CourseDto {
                 .build();
     }
 
-    public static Course convertToEntity(CourseDto courseDto) {
+    public static Course convertToEntity(CourseDto courseDto, Set<Group> groups) {
         Course course = new Course();
         course.setName(courseDto.getName());
         course.setOwnerId(courseDto.getOwnerId());
+        course.setGroups(groups);
         return course;
     }
 }
