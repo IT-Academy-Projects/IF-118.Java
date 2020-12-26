@@ -11,8 +11,7 @@ import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +30,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseDto create(CourseDto courseDto) {
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
-        Set<Group> groups = courseDto.getGroupIds().stream()
+        Set<Integer> groupIds = Optional.ofNullable(courseDto.getGroupIds())
+                .orElse(new HashSet<>());
+
+        Set<Group> groups = groupIds.stream()
                 .map(groupService::findById)
                 .collect(Collectors.toSet());
         Course course = CourseDto.convertToEntity(courseDto);
