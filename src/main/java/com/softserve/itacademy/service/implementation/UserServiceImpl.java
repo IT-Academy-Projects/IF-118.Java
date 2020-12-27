@@ -40,6 +40,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProfileInfo(Integer id, String name, String email) {
-        userRepository.updateProfileInfo(id, name, email);
+        if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException();
     }
 }

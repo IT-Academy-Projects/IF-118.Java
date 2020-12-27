@@ -1,6 +1,11 @@
-let user = JSON.parse(localStorage.getItem("user"))
+let user
 
-$(function(){
+$.ajax(`api/users/${localStorage.getItem("userId")}`).done(data => {
+    user = data
+    init()
+})
+
+function init() {
     $('#profile-name').text(user.name)
     $('#profile-email').text(user.email)
     $(".profile-edit-confirm").hide()
@@ -12,7 +17,7 @@ $(function(){
         $(".profile-edit").show();
         $(".profile-edit-confirm").hide();
     });
-})
+}
 
 function editProfile() {
     $('#profile-name').attr('contenteditable', true)
@@ -29,14 +34,9 @@ function saveChanges() {
         $.ajax({
             url: `/api/users/${user.id}/profile?` + $.param(obj),
             type: 'PATCH'
-        }).then(
-            $.get('api/users/1').then(data => {
-                localStorage.setItem("user", JSON.stringify(data))
-                user = data
-                console.log(data)
-            })
-        )
+        })
     }
+    console.log(`/api/users/${user.id}/profile?` + $.param(obj))
 }
 
 function cancel() {
