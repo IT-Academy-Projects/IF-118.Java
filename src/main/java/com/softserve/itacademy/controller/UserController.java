@@ -20,6 +20,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(userService.findById(id), OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
@@ -31,4 +36,10 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<Void> updateProfileInfo(@PathVariable Integer id, @RequestParam String name,
+                                                  @RequestParam String email) {
+        userService.updateProfileInfo(id, name, email);
+        return new ResponseEntity<>(OK);
+    }
 }
