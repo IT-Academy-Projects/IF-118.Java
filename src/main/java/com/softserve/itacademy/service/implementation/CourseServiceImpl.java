@@ -3,7 +3,6 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.dto.CourseDto;
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.service.CourseService;
