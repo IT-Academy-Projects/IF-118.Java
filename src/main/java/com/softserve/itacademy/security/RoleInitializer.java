@@ -36,7 +36,6 @@ public class RoleInitializer implements CommandLineRunner {
         roleRepository.deleteAll();
         authorityRepository.deleteAll();
 
-        Authority readUser = authorityRepository.save(Authority.builder().name("user.read").build());
         Authority updateUser = authorityRepository.save(Authority.builder().name("user.update").build());
         Authority deleteUser = authorityRepository.save(Authority.builder().name("user.delete").build());
 
@@ -60,8 +59,6 @@ public class RoleInitializer implements CommandLineRunner {
 
 
         adminRole.setAuthorities(new HashSet<>(authorityRepository.findAll()));
-
-        userRole.setAuthorities(new HashSet<>(Set.of(readUser, updateUser)));
 
         studentRole.setAuthorities(new HashSet<>(Set.of(readCourse, readGroup)));
 

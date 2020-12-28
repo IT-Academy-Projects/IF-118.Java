@@ -2,6 +2,7 @@ package com.softserve.itacademy.security.service.implementations;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.security.dto.RegistrationDto;
+import com.softserve.itacademy.security.dto.SuccessRegistrationDto;
 import com.softserve.itacademy.security.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
 import com.softserve.itacademy.service.UserService;
@@ -29,7 +30,7 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Transactional
     @Override
-    public String registerUser(RegistrationDto dto) {
+    public SuccessRegistrationDto registerUser(RegistrationDto dto) {
 
         if (!(dto.getPickedRole().equals("STUDENT") || dto.getPickedRole().equals("TEACHER"))) {
             throw new BadCredentialsException("You can't pick such role");
@@ -44,7 +45,6 @@ public class DefaultRegistrationService implements RegistrationService {
 
         userService.addUser(user);
 
-
-        return user.getEmail();
+         return SuccessRegistrationDto.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
     }
 }
