@@ -33,12 +33,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        User user = getById(id);
         user.setDisabled(disabled);
         userRepository.save(user);
     }
 
-    @Override
+    private User getById(Integer id) {
+        return userRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
     public void updateProfileInfo(Integer id, String name, String email) {
         if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException();
     }

@@ -19,14 +19,22 @@ public class Course extends BasicEntity {
 
     private String name;
     private Integer ownerId;
-    private Boolean disabled = false;
+    private boolean disabled;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
-
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Material> materials;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", ownerId=" + ownerId +
+                ", groups=" + groups +
+                //", users=" + users +
+                ", materials=" + materials +
+                '}';
+    }
 }

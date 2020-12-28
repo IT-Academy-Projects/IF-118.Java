@@ -11,13 +11,18 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/v1/courses")
 public class CourseController {
 
     private final CourseService courseService;
 
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<CourseDto> create(@RequestBody CourseDto courseDto) {
+        return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
     }
 
     @GetMapping
