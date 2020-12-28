@@ -1,4 +1,4 @@
-package com.softserve.itacademy.service.implamentations;
+package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.dto.GroupDto;

@@ -12,16 +12,17 @@
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/admin-panel.css">
     <script src="js/admin-panel.js"></script>
+    <script>
+        $(function(){
+            $(".header").load("header.html");
+        });
+    </script>
 
 </head>
 
 <body>
     <div class="wrapper">
-        <div class="header">
-            <div class="title">
-                <a href="/" class="link">SoftClass</a>
-            </div>
-        </div>
+        <div class="header"></div>
         <div class="content-wrapper">
             <div class="side-panel">
                 <button type="button" class="my-btn btn btn-outline-dark active" onclick="showUsers();toggleButtons(this)">Users</button>
