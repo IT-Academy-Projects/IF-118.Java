@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -31,9 +32,9 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/disabled")
-    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
-        userService.updateDisabled(id, disabled);
+    @PatchMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
+        userService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
 
