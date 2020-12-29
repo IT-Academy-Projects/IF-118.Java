@@ -8,6 +8,6 @@ import java.util.List;
 public interface GroupService {
     List<GroupResponse> findAll();
     void delete(Integer id);
-    void updateDisabled(Integer id, Boolean disabled);
+    void updateDisabled(Integer id, boolean disabled);
     Group findById(Integer id);
 }

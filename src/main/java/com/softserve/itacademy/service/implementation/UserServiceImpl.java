@@ -33,10 +33,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateDisabled(Integer id, Boolean disabled) {
-        User user = getById(id);
-        user.setDisabled(disabled);
-        userRepository.save(user);
+    public void updateDisabled(Integer id, boolean disabled) {
+        if (userRepository.updateDisabled(id, disabled) == 0) {
+            throw new NotFoundException();
+        }
     }
 
     private User getById(Integer id) {

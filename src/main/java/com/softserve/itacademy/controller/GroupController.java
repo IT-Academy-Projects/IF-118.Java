@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/groups")
+@RequestMapping("/api/v1/groups")
 public class GroupController {
 
     private final GroupService groupService;
@@ -32,9 +33,9 @@ public class GroupController {
         return new ResponseEntity<>(OK);
     }
 
-    @DeleteMapping("/{id}/disabled")
-    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
-        groupService.updateDisabled(id, disabled);
+    @PatchMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
+        groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
 

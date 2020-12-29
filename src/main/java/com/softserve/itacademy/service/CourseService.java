@@ -11,5 +11,5 @@ public interface CourseService {
     CourseResponse update(CourseRequest courseDto);
     List<CourseResponse> findAll();
     void delete(Integer id);
-    void updateDisabled(Integer id, Boolean disabled);
+    void updateDisabled(Integer id, boolean disabled);
 }

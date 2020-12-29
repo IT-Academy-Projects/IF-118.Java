@@ -3,7 +3,7 @@ showUsers();
 function showUsers() {
     $('#table-title').text('Users');
     $('#table-content').html('');
-    getRequest('/api/users').then(data => {
+    getRequest('/api/v1/users').then(data => {
         $('#table-head').html(`
          <th scope="col">Id</th>
          <th scope="col">Email</th>
@@ -27,7 +27,7 @@ function showUsers() {
 function showGroups() {
     $('#table-title').text('Groups');
     $('#table-content').html('');
-    getRequest('/api/groups').then(data => {
+    getRequest('/api/v1/groups').then(data => {
         $('#table-head').html(`
          <th scope="col">Id</th>
          <th scope="col">Name</th>
@@ -76,7 +76,7 @@ function disableUser(checkbox, id) {
     let confirmed = confirm('Do you want to disable this user?');
     let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/users/${id}/disabled?disabled=${isChecked}`);
+        patchRequest(`/api/v1/users/${id}/disabled`, isChecked).catch(err => $(checkbox).prop('checked', !isChecked));
     } else {
         $(checkbox).prop('checked', !isChecked);
     }
@@ -86,7 +86,7 @@ function disableGroup(checkbox, id) {
     let confirmed = confirm('Do you want to delete this group?');
     let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/groups/${id}/disabled?disabled=${isChecked}`);
+        patchRequest(`/api/v1/groups/${id}/disabled`, isChecked).catch(err => $(checkbox).prop('checked', !isChecked));
     } else {
         $(checkbox).prop('checked', !isChecked);
     }
@@ -96,7 +96,7 @@ function disableCourse(checkbox, id) {
     let confirmed = confirm('Do you want to delete this group?');
     let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/v1/courses/${id}/disabled?disabled=${isChecked}`);
+        patchRequest(`/api/v1/courses/${id}/disabled`, isChecked).catch(err => $(checkbox).prop('checked', !isChecked));
     } else {
         $(checkbox).prop('checked', !isChecked);
     }
@@ -113,9 +113,12 @@ function getRequest(url) {
     return $.get(url);
 }
 
-function deleteRequest(url) {
+function patchRequest(url, isDisabled) {
+    let data = {disabled: isDisabled};
     return $.ajax({
         url: url,
-        type: 'DELETE'
+        type: 'PATCH',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8'
     });
 }

@@ -32,10 +32,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void updateDisabled(Integer id, Boolean disabled) {
-        Group group = getById(id);
-        group.setDisabled(disabled);
-        groupRepository.save(group);
+    public void updateDisabled(Integer id, boolean disabled) {
+        if (groupRepository.updateDisabled(id, disabled) == 0) {
+            throw new NotFoundException();
+        }
     }
 
     @Override
