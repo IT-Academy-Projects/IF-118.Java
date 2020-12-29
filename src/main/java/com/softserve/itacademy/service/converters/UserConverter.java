@@ -11,6 +11,7 @@ public class UserConverter {
     public UserResponse convertToDto(User user) {
         return UserResponse
                 .builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .disabled(user.getDisabled())

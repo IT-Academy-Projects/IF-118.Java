@@ -10,6 +10,9 @@ import lombok.Setter;
 @Builder
 public class GroupResponse {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("name")
     private String name;
 
