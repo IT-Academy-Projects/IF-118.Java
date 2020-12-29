@@ -1,0 +1,10 @@
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px;
+}
+
+td {
+    width: 200px;
+}

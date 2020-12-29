@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/structure/db.changelog-structure.sql
   - include:
       file: db/changelog/change_data/db.changelog-change_data_v1.0.sql
+  - includeAll:
+      path: db/changelog/change_data/v_1
