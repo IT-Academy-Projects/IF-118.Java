@@ -23,7 +23,6 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupResponse> findAll() {
         return groupRepository.findAll().stream()
-                .filter(response -> !response.getDisabled())
                 .map(groupConverter::convertToDto).collect(Collectors.toList());
     }
 

@@ -11,6 +11,7 @@ public class GroupConverter {
     public GroupResponse convertToDto(Group group) {
         return GroupResponse
                 .builder()
+                .id(group.getId())
                 .name(group.getName())
                 .ownerId(group.getOwnerId())
                 .disabled(group.getDisabled())
