@@ -56,9 +56,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
-        Course group = getById(id);
-        group.setDisabled(disabled);
-        courseRepository.save(group);
+        Course course = getById(id);
+        course.setDisabled(disabled);
+        courseRepository.save(course);
     }
 
     @Override

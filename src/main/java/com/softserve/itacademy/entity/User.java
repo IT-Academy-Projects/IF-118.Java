@@ -1,13 +1,21 @@
 package com.softserve.itacademy.entity;
 
-import com.softserve.itacademy.entity.BasicEntity;
-import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.security.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 

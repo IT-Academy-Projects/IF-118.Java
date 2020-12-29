@@ -51,7 +51,7 @@ function showGroups() {
 function showCourses() {
     $('#table-title').text('Courses');
     $('#table-content').html('');
-    getRequest('/api/courses').then(data => {
+    getRequest('/api/v1/courses').then(data => {
         $('#table-head').html(`
          <th scope="col">Id</th>
          <th scope="col">Name</th>
@@ -96,7 +96,7 @@ function disableCourse(checkbox, id) {
     let confirmed = confirm('Do you want to delete this group?');
     let isChecked = $(checkbox).is(":checked");
     if (confirmed) {
-        deleteRequest(`/api/courses/${id}/disabled?disabled=${isChecked}`);
+        deleteRequest(`/api/v1/courses/${id}/disabled?disabled=${isChecked}`);
     } else {
         $(checkbox).prop('checked', !isChecked);
     }
