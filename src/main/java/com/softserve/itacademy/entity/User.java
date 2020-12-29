@@ -16,14 +16,22 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @Accessors(chain = true)
 @Table(name = "users")
 public class User extends BasicEntity {
 
-    private String email;
-    private String password;
+    @Column(nullable = false)
     private String name;
-    private Boolean disabled = false;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private Boolean disabled;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -1,7 +1,7 @@
 package com.softserve.itacademy.exception.handler;
 
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
-import com.softserve.itacademy.dto.ErrorDto;
+import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.enums.ErrorType;
 import com.softserve.itacademy.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +24,9 @@ public class GenericExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
         log.error(exception.getMessage());
-        ErrorDto errorDto = new ErrorDto(errorConfigurationProperties.getExceptions()
+        ErrorRequest errorRequest = new ErrorRequest(errorConfigurationProperties.getExceptions()
                 .get(ErrorType.NOT_FOUND.toString()).getMessage());
-        return new ResponseEntity<>(errorDto, NOT_FOUND);
+        return new ResponseEntity<>(errorRequest, NOT_FOUND);
     }
 
 }

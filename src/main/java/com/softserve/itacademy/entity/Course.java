@@ -1,9 +1,19 @@
 package com.softserve.itacademy.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,12 +24,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "courses")
 public class Course extends BasicEntity {
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private Integer ownerId;
-    private boolean disabled;
+
+    @Column(nullable = false)
+    private Boolean disabled;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();

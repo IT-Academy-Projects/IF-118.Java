@@ -1,27 +1,30 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.dto.GroupDto;
+import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
+import com.softserve.itacademy.service.converters.GroupConverter;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-
-    public GroupServiceImpl(GroupRepository groupRepository) {
-        this.groupRepository = groupRepository;
-    }
+    private final GroupConverter groupConverter;
 
     @Override
-    public List<GroupDto> findAll() {
-        return groupRepository.findAll().stream().map(GroupDto::create).collect(Collectors.toList());
+    public List<GroupResponse> findAll() {
+        return groupRepository.findAll().stream()
+                .filter(response -> !response.getDisabled())
+                .map(groupConverter::convertToDto).collect(Collectors.toList());
     }
 
     @Override

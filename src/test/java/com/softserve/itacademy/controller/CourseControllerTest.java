@@ -2,26 +2,29 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
-import com.softserve.itacademy.dto.CourseDto;
-import com.softserve.itacademy.dto.ErrorDto;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.request.CourseRequest;
+import com.softserve.itacademy.request.ErrorRequest;
+import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
+import static org.hamcrest.Matchers.containsString;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.Map;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Map;
 
 @WebMvcTest(CourseController.class)
 public class CourseControllerTest {
@@ -36,8 +39,8 @@ public class CourseControllerTest {
 
     @Test
     void create_whenValidRequest_thenCreateCourse() throws Exception {
-        CourseDto courseDto = getCourseDto();
-        when(courseService.create(any(CourseDto.class))).thenReturn(courseDto);
+        CourseResponse courseDto = getCourseDto();
+        when(courseService.create(any(CourseRequest.class))).thenReturn(courseDto);
 
         this.mockMvc.perform(post("/api/v1/courses/create")
                 .content(asJsonString(courseDto))
@@ -52,8 +55,8 @@ public class CourseControllerTest {
 
     @Test
     void create_whenInValidRequest_thenThrowNotFounfExeption() throws Exception {
-        when(courseService.create(any(CourseDto.class))).thenThrow(NotFoundException.class);
-        when(errorConfigurationProperties.getExceptions()).thenReturn(Map.of("NOT_FOUND", new ErrorDto("Such entity not found")));
+        when(courseService.create(any(CourseRequest.class))).thenThrow(NotFoundException.class);
+        when(errorConfigurationProperties.getExceptions()).thenReturn(Map.of("NOT_FOUND", new ErrorRequest("Such entity not found")));
 
         this.mockMvc.perform(post("/api/v1/courses/create")
                 .content(asJsonString(getCourseDto()))
@@ -75,7 +78,7 @@ public class CourseControllerTest {
         }
     }
 
-    private CourseDto getCourseDto() {
-        return CourseDto.builder().name("NewCourse").build();
+    private CourseResponse getCourseDto() {
+        return CourseResponse.builder().name("NewCourse").build();
     }
 }
