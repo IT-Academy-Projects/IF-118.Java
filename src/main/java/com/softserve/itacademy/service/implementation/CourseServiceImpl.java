@@ -55,10 +55,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void updateDisabled(Integer id, Boolean disabled) {
-        Course course = getById(id);
-        course.setDisabled(disabled);
-        courseRepository.save(course);
+    public void updateDisabled(Integer id, boolean disabled) {
+        if (courseRepository.updateDisabled(id, disabled) == 0) {
+            throw new NotFoundException();
+        }
     }
 
     @Override
