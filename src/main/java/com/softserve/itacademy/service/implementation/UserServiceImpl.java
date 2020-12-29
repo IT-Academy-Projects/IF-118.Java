@@ -1,34 +1,35 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.dto.UserDto;
+import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
+import com.softserve.itacademy.service.converters.UserConverter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public UserResponse findById(Integer id) {
+        return userConverter.convertToDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @Override
-    public UserDto findById(Integer id) {
-        return UserDto.create(userRepository.findById(id).orElseThrow(NotFoundException::new));
-    }
-
-    @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(UserDto::create).collect(Collectors.toList());
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream()
+                .map(userConverter::convertToDto).collect(Collectors.toList());
     }
 
     @Override

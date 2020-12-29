@@ -13,12 +13,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "student_groups")
 public class Group extends BasicEntity {
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private Integer ownerId;
-    private Boolean disabled = false;
+
+    @Column(nullable = false)
+    private Boolean disabled;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -59,6 +59,11 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
 
     </dependencies>
 
@@ -84,11 +89,11 @@
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yml</changeLogFile>
                     <driver>com.mysql.cj.jdbc.Driver</driver>
                     <!--suppress UnresolvedMavenProperty -->
-                    <url>${env.MYSQL_URL}</url>
+                    <url>jdbc:mysql://localhost:3306/softclass?serverTimezone=UTC</url>
                     <!--suppress UnresolvedMavenProperty -->
-                    <username>${env.MYSQL_USERNAME}</username>
+                    <username>root</username>
                     <!--suppress UnresolvedMavenProperty -->
-                    <password>${env.MYSQL_PASSWORD}</password>
+                    <password>root</password>
                 </configuration>
             </plugin>
         </plugins>

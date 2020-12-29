@@ -1,14 +1,21 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.dto.CourseDto;
+import com.softserve.itacademy.request.CourseRequest;
+import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/courses")
@@ -21,12 +28,12 @@ public class CourseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CourseDto> create(@RequestBody CourseDto courseDto) {
+    public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest courseDto) {
         return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseDto>> findAll() {
+    public ResponseEntity<List<CourseResponse>> findAll() {
         return new ResponseEntity<>(courseService.findAll(), HttpStatus.OK);
     }
 
@@ -41,5 +48,7 @@ public class CourseController {
         courseService.updateDisabled(id, disabled);
         return new ResponseEntity<>(OK);
     }
+
+    //TODO create readByID and update courses
 
 }

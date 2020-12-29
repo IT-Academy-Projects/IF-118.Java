@@ -1,6 +1,7 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.dto.UserDto;
+import com.softserve.itacademy.request.UserRequest;
+import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> findById(@PathVariable Integer id) {
+    public ResponseEntity<UserResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.findById(id), OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAll() {
+    public ResponseEntity<List<UserResponse>> findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 

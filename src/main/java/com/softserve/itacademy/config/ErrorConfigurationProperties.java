@@ -1,6 +1,6 @@
 package com.softserve.itacademy.config;
 
-import com.softserve.itacademy.dto.ErrorDto;
+import com.softserve.itacademy.request.ErrorRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,5 +13,5 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties(prefix = "errors")
 public class ErrorConfigurationProperties {
-    Map<String, ErrorDto> exceptions;
+    Map<String, ErrorRequest> exceptions;
 }

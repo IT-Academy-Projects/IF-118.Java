@@ -1,4 +1,4 @@
-package com.softserve.itacademy.dto;
+package com.softserve.itacademy.request;
 
 import lombok.*;
 
@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorDto {
+public class ErrorRequest {
     private String message;
 }

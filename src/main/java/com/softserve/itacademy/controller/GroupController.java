@@ -1,6 +1,7 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.dto.GroupDto;
+import com.softserve.itacademy.request.GroupRequest;
+import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto>> findAll() {
+    public ResponseEntity<List<GroupResponse>> findAll() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 

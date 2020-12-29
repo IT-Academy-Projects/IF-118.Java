@@ -1,33 +1,35 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.dto.CourseDto;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.request.CourseRequest;
+import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
+import com.softserve.itacademy.service.converters.CourseConverter;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final GroupService groupService;
     private final UserService userService;
-
-    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService) {
-        this.courseRepository = courseRepository;
-        this.groupService = groupService;
-        this.userService = userService;
-    }
+    private final CourseConverter courseConverter;
 
     @Override
-    public CourseDto create(CourseDto courseDto) {
+    public CourseResponse create(CourseRequest courseDto) {
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
         Set<Integer> groupIds = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
                 .orElse(Collections.emptySet());    //set an empty set if groupIds is null
@@ -35,15 +37,15 @@ public class CourseServiceImpl implements CourseService {
         Set<Group> groups = groupIds.stream()
                 .map(groupService::findById)
                 .collect(Collectors.toSet());
-        Course course = CourseDto.convertToEntity(courseDto, groups);
+        Course course = courseConverter.convertToCourse(courseDto, groups);
         Course createdCourse = courseRepository.save(course);
-        return CourseDto.convertToDto(createdCourse);
+        return courseConverter.convertToDto(createdCourse);
     }
 
     @Override
-    public List<CourseDto> findAll() {
+    public List<CourseResponse> findAll() {
         return courseRepository.findAll().stream()
-                .map(CourseDto::convertToDto)
+                .map(courseConverter::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -60,12 +62,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDto readById(Integer id) {
-        return CourseDto.convertToDto(getById(id));
+    public CourseResponse readById(Integer id) {
+        return courseConverter.convertToDto(getById(id));
     }
 
     @Override
-    public CourseDto update(CourseDto courseDto) {
+    public CourseResponse update(CourseRequest courseDto) {
         return null;
     }
 
