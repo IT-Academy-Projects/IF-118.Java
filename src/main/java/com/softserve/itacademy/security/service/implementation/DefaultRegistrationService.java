@@ -1,4 +1,4 @@
-package com.softserve.itacademy.security.service.implementations;
+package com.softserve.itacademy.security.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.security.dto.RegistrationDto;

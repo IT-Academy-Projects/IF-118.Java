@@ -1,4 +1,4 @@
-package com.softserve.itacademy.service.implamentations;
+package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.security.Role;
 import com.softserve.itacademy.exception.NotFoundException;

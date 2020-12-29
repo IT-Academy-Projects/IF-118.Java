@@ -30,5 +30,14 @@ public class ViewController {
         return "admin-panel.html";
     }
 
+    @GetMapping(path = "/user", produces = MediaType.TEXT_HTML_VALUE)
+    public String userView() {
+        return "user-panel.html";
+    }
+
+    @GetMapping(path = "/profile", produces = MediaType.TEXT_HTML_VALUE)
+    public String profileView() {
+        return "profile.html";
+    }
 
 }

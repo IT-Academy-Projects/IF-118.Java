@@ -1,6 +1,8 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.dto.UserDto;
+import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.request.UserRequest;
+import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,15 +22,26 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(userService.findById(id), OK);
+    }
+
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAll() {
+    public ResponseEntity<List<UserResponse>> findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/disabled")
-    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
-        userService.updateDisabled(id, disabled);
+    @PatchMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
+        userService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
 
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<Void> updateProfileInfo(@PathVariable Integer id, @RequestParam String name,
+                                                  @RequestParam String email) {
+        userService.updateProfileInfo(id, name, email);
+        return new ResponseEntity<>(OK);
+    }
 }

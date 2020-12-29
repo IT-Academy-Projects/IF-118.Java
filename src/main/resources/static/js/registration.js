@@ -33,7 +33,7 @@ function registerRequestJson(data) {
             'Content-Type': 'application/json'
         },
         type: 'POST',
-        url: '/registration',
+        url: '/api/v1/registration',
         data: JSON.stringify(data),
         dataType: 'json',
 

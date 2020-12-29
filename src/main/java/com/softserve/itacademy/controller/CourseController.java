@@ -1,17 +1,18 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.dto.CourseDto;
+import com.softserve.itacademy.request.CourseRequest;
+import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/v1/courses")
 public class CourseController {
 
     private final CourseService courseService;
@@ -20,8 +21,13 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest courseDto) {
+        return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
+    }
+
     @GetMapping
-    public ResponseEntity<List<CourseDto>> findAll() {
+    public ResponseEntity<List<CourseResponse>> findAll() {
         return new ResponseEntity<>(courseService.findAll(), HttpStatus.OK);
     }
 
@@ -31,10 +37,12 @@ public class CourseController {
         return new ResponseEntity<>(OK);
     }
 
-    @DeleteMapping("/{id}/disabled")
-    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestParam Boolean disabled) {
-        courseService.updateDisabled(id, disabled);
+    @PatchMapping("/{id}/disabled")
+    public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disabledRequest) {
+        courseService.updateDisabled(id, disabledRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
+
+    //TODO create readByID and update courses
 
 }
