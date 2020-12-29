@@ -3,28 +3,26 @@ package com.softserve.itacademy.service.converters;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.response.UserResponse;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class UserConverter {
 
+    private final ModelMapper mapper;
+
     public UserResponse convertToDto(User user) {
-        return UserResponse
-                .builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .disabled(user.getDisabled())
-                .build();
+        UserResponse map = mapper.map(user, UserResponse.class);
+        map.setDisabled(user.getDisabled());
+        return map;
     }
 
     public User convertToUser(UserRequest userRequest) {
-        return User.builder()
-                .name(userRequest.getName())
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .disabled(false)
-                .build();
+        User map = mapper.map(userRequest, User.class);
+        map.setDisabled(false);
+        return map;
 
     }
 }
