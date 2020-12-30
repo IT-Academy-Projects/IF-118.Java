@@ -40,6 +40,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+
         <!-- DATASOURCE -->
         <dependency>
             <groupId>mysql</groupId>
@@ -52,6 +53,7 @@
         </dependency>
 
         <!-- DB validation -->
+
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -63,6 +65,7 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>2.0.2</version>
         </dependency>
+
 
         <!-- UTILS -->
         <dependency>
@@ -76,6 +79,7 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>javax.validation</groupId>

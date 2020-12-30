@@ -1,10 +1,7 @@
 package com.softserve.itacademy.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -15,6 +12,7 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 @Entity
 public class Material extends BasicEntity {
 

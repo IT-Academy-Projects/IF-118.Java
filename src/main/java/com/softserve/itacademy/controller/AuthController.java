@@ -1,7 +1,7 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.security.dto.RegistrationDto;
-import com.softserve.itacademy.security.dto.SuccessRegistrationDto;
+import com.softserve.itacademy.security.dto.RegistrationRequest;
+import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<SuccessRegistrationDto> register(
-            @Valid @RequestBody RegistrationDto dto
+    public ResponseEntity<SuccessRegistrationResponse> register(
+            @Valid @RequestBody RegistrationRequest dto
     ) {
         return new ResponseEntity<>(registrationService.registerUser(dto), HttpStatus.CREATED);
     }

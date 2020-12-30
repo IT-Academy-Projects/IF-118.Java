@@ -9,7 +9,7 @@ function handleLogin() {
         showError("Email and password shouldn't be empty")
     } else {
         loginRequest({
-            "username": email, // Key should be username due to using Spring Security default auth manager
+            "email": email,
             "password": password,
             "remember-me": rememberMe
         })

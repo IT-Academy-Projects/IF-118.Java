@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Builder
 @Accessors(chain = true)
 @Table(name = "users")
+@Builder
 public class User extends BasicEntity {
 
     @Column(nullable = false)
