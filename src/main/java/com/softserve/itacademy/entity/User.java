@@ -1,13 +1,13 @@
 package com.softserve.itacademy.entity;
 
 import com.softserve.itacademy.entity.security.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+
+import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,8 +40,10 @@ public class User extends BasicEntity {
     private String password;
 
     @Column(nullable = false)
-    private Boolean disabled;
+    @Builder.Default
+    private Boolean disabled = false;
 
+    @Singular
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
@@ -48,6 +51,17 @@ public class User extends BasicEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_roles_users_role_id"))}
     )
     private Set<Role> roles = new HashSet<>();
+
+    @Transient
+    public Set<GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(Role::getAuthorities)
+                .flatMap(Set::stream)
+                .map(authority -> {
+                    return new SimpleGrantedAuthority(authority.getName());
+                })
+                .collect(Collectors.toSet());
+    }
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();

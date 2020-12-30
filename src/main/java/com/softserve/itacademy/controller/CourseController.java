@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/courses")
+@RequestMapping("/api/v1/users/{id}/courses")
 public class CourseController {
 
     private final CourseService courseService;
@@ -21,14 +21,14 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest courseDto) {
         return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> findAll() {
-        return new ResponseEntity<>(courseService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<CourseResponse>> findByOwner(@PathVariable Integer id) {
+        return new ResponseEntity<>(courseService.findByOwner(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

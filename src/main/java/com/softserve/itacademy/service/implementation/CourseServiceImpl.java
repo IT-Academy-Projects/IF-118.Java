@@ -31,21 +31,27 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseResponse create(CourseRequest courseDto) {
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
-        Set<Integer> groupIds = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
-                .orElse(Collections.emptySet());    //set an empty set if groupIds is null
-
-        Set<Group> groups = groupIds.stream()
+        Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
+                .orElse(Collections.emptySet()).stream()    //set an empty set if groupIds is null
                 .map(groupService::findById)
                 .collect(Collectors.toSet());
+
         Course course = courseConverter.convertToCourse(courseDto, groups);
-        Course createdCourse = courseRepository.save(course);
-        return courseConverter.convertToDto(createdCourse);
+        return courseConverter.convertToResponse(courseRepository.save(course));
     }
 
     @Override
     public List<CourseResponse> findAll() {
         return courseRepository.findAll().stream()
-                .map(courseConverter::convertToDto)
+                .map(courseConverter::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseResponse> findByOwner(Integer id) {
+        return Optional.ofNullable(courseRepository.findByOwner(id))
+                .orElse(Collections.emptyList()).stream()
+                .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +69,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.convertToDto(getById(id));
+        return courseConverter.convertToResponse(getById(id));
     }
 
     @Override

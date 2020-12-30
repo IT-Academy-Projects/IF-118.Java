@@ -5,6 +5,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
+import com.softserve.itacademy.service.converters.CourseConverter;
 import com.softserve.itacademy.service.implementation.CourseServiceImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.Set;
 
 public class CourseServiceTest {
@@ -28,6 +30,8 @@ public class CourseServiceTest {
     private GroupService groupService;
     @Mock
     private UserService userService;
+    @Mock
+    private CourseConverter courseConverter;
 
     @InjectMocks
     private CourseServiceImpl courseServiceImpl;
@@ -40,6 +44,8 @@ public class CourseServiceTest {
     @Test
     public void create_whenValidData_thenCreateCourse() {
         when(courseRepository.save(any(Course.class))).thenReturn(generateCourse());
+        when(courseConverter.convertToCourse(any(), any())).thenReturn(generateCourse());
+        when(courseConverter.convertToResponse(any(Course.class))).thenReturn(generateCourseResponse());
 
         CourseResponse courseDto = courseServiceImpl.create(generateCourseDto());
         assertEquals("NewCourse", courseDto.getName());
@@ -48,19 +54,27 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void create_whenInvaildOwnerId_thenThrowsNotFounfExeption() {
+    public void create_whenInvalidOwnerId_thenThrowsNotFoundException() {
         when(userService.findById(anyInt())).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
     }
 
     @Test
-    public void create_whenInvaildGroupId_thenThrowsNotFounfExeption() {
+    public void create_whenInvalidGroupId_thenThrowsNotFoundException() {
         when(groupService.findById(anyInt())).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
     }
 
+    private CourseResponse generateCourseResponse() {
+        return CourseResponse.builder()
+                .name("NewCourse")
+                .ownerId(1)
+                .groupIds(Set.of(1,2,3))
+                .disabled(false)
+                .build();
+    }
     private CourseRequest generateCourseDto() {
         return CourseRequest.builder()
                 .name("NewCourse")
@@ -70,9 +84,12 @@ public class CourseServiceTest {
     }
 
     private Course generateCourse() {
-        Course course = new Course();
-        course.setName("NewCourse");
-        course.setOwnerId(1);
-        return course;
+        return Course.builder()
+                .name("NewCourse")
+                .ownerId(1)
+                .disabled(false)
+                .groups(Collections.emptySet())
+                .materials(Collections.emptyList())
+                .build();
     }
 }

@@ -5,29 +5,36 @@
     <title>SoftClass</title>
     <meta name="description" content="Study and learn with SoftClass">
 
-
     <!-- Bootstrap, jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Custom -->
-    <link rel="stylesheet" href="css/login.css">
-    <script src="js/login.js"></script>
+    <link rel="stylesheet" href="css/registration.css">
+    <script src="js/registration.js"></script>
 
 </head>
 
 <body>
+
+
 <div class="container login-container">
-    <div class="col-md-12 col-md-offset-4">
+    <div class="col-md-12col-md-offset-4">
         <div>
+
             <div class="alert alert-danger" id="error-label" style="display: none"></div>
 
-            <form action="/login" method="post" id="login-form">
+            <form action="/login" method="post">
                 <div class="form-group">
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" autofocus autocomplete="off"
                            aria-describedby="emailHelp" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" autofocus autocomplete="off"
+                           aria-describedby="emailHelp" placeholder="Name">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -37,16 +44,25 @@
                         and
                         contain one digit and one letter</small>
                 </div>
-                <div class="form-group form-check">
-                    <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
-                    <label class="form-check-label" for="remember-me">Remember Me</label>
+                <div class="form-group">
+                    <label for="passwordRepeat">Confirm password</label>
+                    <input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat"
+                           placeholder="Confirm password">
                 </div>
-                <input type="button" class="btn btn-primary" name="login" id="login" value="Login"
-                       onclick="handleLogin()">
+
+                <label for="pickedRole">Choose account type:</label>
+                <select name="pickedRole" id="pickedRole" class="form-control">
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                </select>
+
+                <input type="button" class="btn btn-primary" name="register" id="register" value="Register"
+                       onclick="handleRegister()" style="margin-top: 10px">
             </form>
         </div>
     </div>
 </div>
+
 </body>
 
 </html>

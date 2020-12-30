@@ -10,6 +10,7 @@ public interface CourseService {
     CourseResponse readById(Integer id);
     CourseResponse update(CourseRequest courseDto);
     List<CourseResponse> findAll();
+    List<CourseResponse> findByOwner(Integer id);
     void delete(Integer id);
     void updateDisabled(Integer id, boolean disabled);
 }
