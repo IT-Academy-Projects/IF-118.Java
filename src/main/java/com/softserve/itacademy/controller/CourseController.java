@@ -4,6 +4,7 @@ import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
+import com.softserve.itacademy.service.converters.CourseConverter;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,9 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest courseDto) {
-        return new ResponseEntity<>(courseService.create(courseDto), HttpStatus.CREATED);
+    public ResponseEntity<CourseResponse> create(@PathVariable Integer id, @RequestBody CourseRequest courseRequest) {
+        courseRequest.setOwnerId(id);
+        return new ResponseEntity<>(courseService.create(courseRequest), HttpStatus.CREATED);
     }
 
     @GetMapping
