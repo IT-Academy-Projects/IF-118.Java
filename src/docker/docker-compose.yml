@@ -1,0 +1,23 @@
+version: "3"
+services:
+  mysqldb:
+    image: mysql
+    networks:
+      - project-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=postgres
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_HOST=%
+
+  project:
+    image: project
+    ports:
+      - "8080:8080"
+    networks:
+      - project-mysql
+    depends_on:
+      - mysqldb
+    entrypoint: ["./wait-for-it.sh", "mysqldb:3306", "--", "java","-jar","app.jar"]
+
+networks:
+  project-mysql:
