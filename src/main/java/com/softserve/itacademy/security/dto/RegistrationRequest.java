@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Setter
 @Getter
-public class RegistrationDto {
+public class RegistrationRequest {
 
     @NotBlank(message = "Email cannot be empty\"")
     @Email(message = "Email is invalid")

@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SuccessRegistrationDto {
+public class SuccessRegistrationResponse {
     private Integer id;
     private String name;
     private String email;
