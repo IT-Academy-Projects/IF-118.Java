@@ -71,7 +71,7 @@ public class CourseServiceImpl implements CourseService {
         return null;
     }
 
-    private Course getById(Integer id) {
+    public Course getById(Integer id) {
         return courseRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 

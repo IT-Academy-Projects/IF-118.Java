@@ -10,4 +10,5 @@ public interface GroupService {
     void delete(Integer id);
     void updateDisabled(Integer id, boolean disabled);
     Group findById(Integer id);
+    Group getById(Integer id);
 }
