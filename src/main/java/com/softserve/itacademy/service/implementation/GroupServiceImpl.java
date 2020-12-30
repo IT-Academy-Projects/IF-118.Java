@@ -43,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
         return getById(id);
     }
 
-    private Group getById(Integer id) {
+    public Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 }
