@@ -22,8 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationProvider authenticationProvider;
 
     @Autowired
-    public SecurityConfig(AuthenticationProvider ownAuthenticationProvider) {
-        this.authenticationProvider = ownAuthenticationProvider;
+    public SecurityConfig(AuthenticationProvider ownAuthProvider) {
+        this.authenticationProvider = ownAuthProvider;
     }
 
     public OwnAuthFilter ownAuthFilter(AuthenticationManager authenticationManager) {
