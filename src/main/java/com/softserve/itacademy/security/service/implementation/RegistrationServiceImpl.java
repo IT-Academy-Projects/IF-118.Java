@@ -1,36 +1,44 @@
 package com.softserve.itacademy.security.service.implementation;
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.security.dto.RegistrationDto;
-import com.softserve.itacademy.security.dto.SuccessRegistrationDto;
+import com.softserve.itacademy.security.dto.RegistrationRequest;
+import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
 import com.softserve.itacademy.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class DefaultRegistrationService implements RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
 
     private RoleService roleService;
 
     private UserService userService;
 
-    @Autowired
-    public DefaultRegistrationService(RoleService roleService, UserService userService) {
+    private PasswordEncoder passwordEncoder;
+
+//    @Autowired
+//    public DefaultRegistrationService(RoleService roleService, UserService userService) {
+//        this.roleService = roleService;
+//        this.userService = userService;
+//    }
+
+
+    public RegistrationServiceImpl(RoleService roleService, UserService userService, PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+    //private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     @Transactional
     @Override
-    public SuccessRegistrationDto registerUser(RegistrationDto dto) {
+    public SuccessRegistrationResponse registerUser(RegistrationRequest dto) {
 
         if (!(dto.getPickedRole().equals("STUDENT") || dto.getPickedRole().equals("TEACHER"))) {
             throw new BadCredentialsException("You can't pick such role");
@@ -45,6 +53,6 @@ public class DefaultRegistrationService implements RegistrationService {
 
         userService.addUser(user);
 
-         return SuccessRegistrationDto.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
+         return SuccessRegistrationResponse.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
     }
 }

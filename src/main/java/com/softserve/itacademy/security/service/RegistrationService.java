@@ -1,10 +1,10 @@
 package com.softserve.itacademy.security.service;
 
-import com.softserve.itacademy.security.dto.RegistrationDto;
-import com.softserve.itacademy.security.dto.SuccessRegistrationDto;
+import com.softserve.itacademy.security.dto.RegistrationRequest;
+import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface RegistrationService {
     @Transactional
-    SuccessRegistrationDto registerUser(RegistrationDto dto);
+    SuccessRegistrationResponse registerUser(RegistrationRequest dto);
 }

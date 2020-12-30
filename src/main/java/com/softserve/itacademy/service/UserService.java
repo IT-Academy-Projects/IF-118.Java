@@ -16,6 +16,7 @@ public interface UserService {
     void addUser(User user);
 
     UserResponse findById(Integer id);
+
     List<UserResponse> findAll();
 
     User getById(Integer id);
