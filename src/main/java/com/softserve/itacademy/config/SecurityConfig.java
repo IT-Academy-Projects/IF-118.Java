@@ -45,14 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .mvcMatchers( "/registration", "/api/v1/registration").permitAll()
+                .mvcMatchers("/registration", "/api/v1/registration").permitAll()
+                .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin(loginConfigurer -> loginConfigurer
                         .loginProcessingUrl("/login")
                         .loginPage("/login").permitAll()
                         .successForwardUrl("/")
-                        .defaultSuccessUrl("/" )
+                        .defaultSuccessUrl("/")
                         .failureUrl("/login-error"))
                 .logout(logoutConfigurer -> {
                     logoutConfigurer
@@ -71,6 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-       auth.authenticationProvider(authenticationProvider);
+        auth.authenticationProvider(authenticationProvider);
     }
 }
