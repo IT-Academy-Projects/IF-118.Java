@@ -1,11 +1,11 @@
 package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import com.softserve.itacademy.request.GroupRequest;
 
 @AllArgsConstructor
 @Component

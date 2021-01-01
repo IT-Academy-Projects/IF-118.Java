@@ -1,7 +1,6 @@
 package com.softserve.itacademy.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.softserve.itacademy.entity.Group;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
