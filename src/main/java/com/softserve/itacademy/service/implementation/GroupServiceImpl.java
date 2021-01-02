@@ -43,7 +43,24 @@ public class GroupServiceImpl implements GroupService {
         return getById(id);
     }
 
+    //TODO make private
     public Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public List<GroupResponse> findByOwner(Integer ownerId) {
+        return groupRepository.findByOwnerId(ownerId).stream()
+                .filter(group -> !group.getDisabled())
+                .map(groupConverter::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GroupResponse> findByStudent(Integer studentId) {
+        return groupRepository.findByStudentId(studentId).stream()
+                .filter(response -> !response.getDisabled())
+                .map(groupConverter::convertToDto)
+                .collect(Collectors.toList());
     }
 }

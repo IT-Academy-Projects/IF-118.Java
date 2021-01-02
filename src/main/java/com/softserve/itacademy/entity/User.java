@@ -1,5 +1,6 @@
 package com.softserve.itacademy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.itacademy.entity.security.Role;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -64,6 +65,7 @@ public class User extends BasicEntity {
     }
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)

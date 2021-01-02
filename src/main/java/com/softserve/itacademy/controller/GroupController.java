@@ -39,4 +39,13 @@ public class GroupController {
         return new ResponseEntity<>(OK);
     }
 
+    @GetMapping("/{id}/groups")
+    public ResponseEntity<List<GroupResponse>> findGroupsByOwner(@PathVariable("id") Integer ownerId) {
+        return new ResponseEntity<>(groupService.findByOwner(ownerId), OK);
+    }
+
+    @GetMapping("/student/{id}")
+    public ResponseEntity<List<GroupResponse>> findByStudent(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(groupService.findByStudent(id), OK);
+    }
 }

@@ -62,6 +62,22 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseResponse> findByOwnerId(Integer ownerId) {
+        return courseRepository.findByOwnerId(ownerId).stream()
+                .filter(course -> !course.getDisabled())
+                .map(courseConverter::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseResponse> findByStudentId(Integer id) {
+        return courseRepository.findByStudentId(id).stream()
+                .filter(course -> !course.getDisabled())
+                .map(courseConverter::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public CourseResponse readById(Integer id) {
         return courseConverter.convertToDto(getById(id));
     }

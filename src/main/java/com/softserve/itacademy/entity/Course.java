@@ -1,5 +1,6 @@
 package com.softserve.itacademy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class Course extends BasicEntity {
     private Boolean disabled;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
@@ -48,7 +50,7 @@ public class Course extends BasicEntity {
         return "Course{" +
                 "name='" + name + '\'' +
                 ", ownerId=" + ownerId +
-                ", groups=" + groups +
+//                ", groups=" + groups +
                 //", users=" + users +
                 ", materials=" + materials +
                 '}';
