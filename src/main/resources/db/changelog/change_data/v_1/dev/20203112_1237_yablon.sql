@@ -2,7 +2,7 @@
 
 -- changeSet YabVol:change_data-1.0.0 endDelimiter:; splitStatements:true
 
--- All passwords are: password1
+-- All passwords are: password, password1, password2, passwordst1, passwordst2, passwordst3, passwordst4
 -- INSERT TEACHERS
 insert into users(name, password, email, created_at, updated_at, disabled)
 values ('Teacher 1', '$2a$08$HNNmFKIjddTd.viOWqOP.OaIvbtQzkNdYe/D7GfVEjcg/lw0HezYS', 'teacher1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09', true);
