@@ -1,6 +1,7 @@
 package com.softserve.itacademy.exception.handler;
 
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
+import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.enums.ErrorType;
@@ -26,7 +27,7 @@ public class GenericExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
         log.error(exception.getMessage());
-        ErrorDto errorDto = new ErrorDto(errorConfigurationProperties.getExceptions()
+        ErrorRequest errorRequest = new ErrorRequest(errorConfigurationProperties.getExceptions()
                 .get(ErrorType.NOT_FOUND.toString()).getMessage());
         return new ResponseEntity<>(errorRequest, NOT_FOUND);
     }

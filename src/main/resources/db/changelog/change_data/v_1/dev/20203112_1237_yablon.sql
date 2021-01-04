@@ -2,29 +2,29 @@
 
 -- changeSet YabVol:change_data-1.0.0 endDelimiter:; splitStatements:true
 
--- All passwords are: password1
+-- All passwords are: password, password1, password2, passwordst1, passwordst2, passwordst3, passwordst4
 -- INSERT TEACHERS
 insert into users(name, password, email, created_at, updated_at, disabled)
-values ('Teacher 1', 'password', 'teacher1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09', true);
+values ('Teacher 1', '$2a$08$HNNmFKIjddTd.viOWqOP.OaIvbtQzkNdYe/D7GfVEjcg/lw0HezYS', 'teacher1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09', true);
 
 insert into users(name, password, email, created_at, updated_at)
-values ('Teacher 2', 'password2', 'teacher2@gmail.com', '2020-12-23 12:40:09', '2020-12-23 12:40:09');
+values ('Teacher 2', '$2a$08$v3MRGTNOHykHKpwImRvOHO32Vq1qKI3njWPT1GmPZpnWLgz6aiIK6', 'teacher2@gmail.com', '2020-12-23 12:40:09', '2020-12-23 12:40:09');
 
 insert into users(name, password, email, created_at, updated_at)
-values ('Teacher 3', 'password3', 'teacher3@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
+values ('Teacher 3', '$2a$08$zJXqjONe/dTzN1nN3b0XveWTwzyU9MOOGoTo9.bkVq/kfF8W.QpMK', 'teacher3@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
 
 -- INSERT STUDENTS
 insert into users(name, password, email, created_at, updated_at)
-values ('Student 1', 'password', 'student1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09');
+values ('Student 1', '$2a$08$2iV6AjAa0N8mECoUjAOxg.oCu/TZs3ZM7b9XGds7GvUB0JtdmBvbq', 'student1@gmail.com', '2020-12-23 11:40:09', '2020-12-23 11:40:09');
 
 insert into users(name, password, email, created_at, updated_at)
-values ('Student 2', 'password2', 'student2@gmail.com', '2020-12-23 12:40:09', '2020-12-23 12:40:09');
+values ('Student 2', '$2a$08$2CfIZNC.I19/W.O.8w5BpOVU1ozn8bWzDM99ocaAlIGEErE2nzSSK', 'student2@gmail.com', '2020-12-23 12:40:09', '2020-12-23 12:40:09');
 
 insert into users(name, password, email, created_at, updated_at)
-values ('Student 3', 'password3', 'student3@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
+values ('Student 3', '$2a$08$wZA1pXskRyO7FYSV2qcUjOPybboVw9grE40LQL2I6xXIqCAA4ycoG', 'student3@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
 
 insert into users(name, password, email, created_at, updated_at)
-values ('Student 4', 'password3', 'student4@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
+values ('Student 4', '$2a$08$Ypcsdxl1BqnexQPnNKePn.ZdgDpvH8jHgiURDpAL0wbX5uyWRTP9.', 'student4@gmail.com', '2020-12-23 13:40:09', '2020-12-23 13:40:09');
 
 -- INSERT COURSES
 insert into courses(name, owner_id, created_at, updated_at)
