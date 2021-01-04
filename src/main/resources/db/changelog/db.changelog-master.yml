@@ -5,3 +5,5 @@ databaseChangeLog:
       path: db/changelog/change_data/v_1/prod
   - includeAll:
       path: db/changelog/change_data/v_1/dev
+  - include: #TODO: Move it
+      file: db/changelog/change_data/db.changelog-change_data_v1.0.sql
