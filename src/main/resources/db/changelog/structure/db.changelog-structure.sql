@@ -1,7 +1,8 @@
 -- liquibase formatted sql
 
 -- changeSet YabVol:structure-1.0 endDelimiter:; splitStatements:true
-
+-- TODO bk don't use such indented formatting. It's hard to read such text
+-- todo bk If you decided to use upper case so keep this style across the all SQL scripts
 CREATE TABLE if not exists `courses`
 (
     `id`         int      NOT NULL AUTO_INCREMENT,

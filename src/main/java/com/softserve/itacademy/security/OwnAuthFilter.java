@@ -35,7 +35,7 @@ public class OwnAuthFilter extends AbstractAuthenticationProcessingFilter {
 
         String email = getEmail(httpServletRequest);
         String password = getPassword(httpServletRequest);
-
+//TODO bk I don't like this. Let's refactor it together
         email = email != null ? email : "";
         email = email.trim();
 

@@ -1,3 +1,5 @@
+#TODO bk remove all the redundancy in this file. Keep it clear
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

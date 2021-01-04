@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+//TODO bk where is your logging????
 @AllArgsConstructor
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -30,6 +31,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse create(CourseRequest courseDto) {
+//        TODO bk code is quite simple, inline comments are redundant
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
         Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
                 .orElse(Collections.emptySet()).stream()    //set an empty set if groupIds is null
@@ -49,6 +51,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
+//        TODO bk wrong usage of Optional here
         return Optional.ofNullable(courseRepository.findByOwner(id))
                 .orElse(Collections.emptyList()).stream()
                 .map(courseConverter::convertToResponse)

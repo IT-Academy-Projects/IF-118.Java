@@ -15,6 +15,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
+//TODO bk keep more general path here (api/v1/courses). I'll explain it later why your path is wrong
 @RequestMapping("/api/v1/users/{id}/courses")
 public class CourseController {
 
@@ -23,7 +24,7 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-
+//TODO bk Let's discuss the format of the response
     @PostMapping
     public ResponseEntity<CourseResponse> create(@PathVariable Integer id, @RequestBody CourseRequest courseRequest) {
         courseRequest.setOwnerId(id);
@@ -40,7 +41,7 @@ public class CourseController {
         courseService.delete(id);
         return new ResponseEntity<>(OK);
     }
-
+// TODO bk path is not ok.
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disabledRequest) {
         courseService.updateDisabled(id, disabledRequest.isDisabled());

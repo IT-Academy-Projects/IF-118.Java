@@ -3,6 +3,7 @@ package com.softserve.itacademy.config;
 import com.softserve.itacademy.security.OwnAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,13 +22,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationProvider authenticationProvider;
 
+//    TODO bk annotation here is not required
     @Autowired
     public SecurityConfig(AuthenticationProvider ownAuthProvider) {
         this.authenticationProvider = ownAuthProvider;
     }
 
     public OwnAuthFilter ownAuthFilter(AuthenticationManager authenticationManager) {
-        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", "POST"));
+//        TODO bk use this enum instead of hardcoded values https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpMethod.html
+        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()));
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }

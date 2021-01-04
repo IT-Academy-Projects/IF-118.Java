@@ -22,6 +22,7 @@ public class CourseRequest {
     @JsonProperty("owner")
     private Integer ownerId;
 
+//    TODO bk keep the same json field name as in your bean and remove this annotation. It's less confusing and more supportable
     @JsonProperty("groups")
     private Set<Integer> groupIds;
 

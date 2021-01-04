@@ -1,6 +1,7 @@
 -- liquibase formatted sql
 -- changeSet Pitulei:default_roles_and_authorities endDelimiter:; splitStatements:true
 
+--TODO bk using hardcoded ids here is not a good practice.
 -- AUTHORITY
 INSERT INTO authority (id, created_at, updated_at, name)
 VALUES (1, now(), now(), 'user.update'),

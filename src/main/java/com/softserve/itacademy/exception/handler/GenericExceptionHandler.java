@@ -36,6 +36,7 @@ public class GenericExceptionHandler {
     public ResponseEntity<ErrorRequest> handleAccessDeniedException(DisabledObjectException exception) {
         log.info(exception.getMessage());
         ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
+//        TODO bk I'd rather return bad request here due to security reason. I'll explain why
         return new ResponseEntity<>(errorRequest, GONE);
     }
 

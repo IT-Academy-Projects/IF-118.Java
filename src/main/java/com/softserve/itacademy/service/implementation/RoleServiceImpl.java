@@ -24,6 +24,6 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByName(name).orElseThrow(NotFoundException::new);
     }
 
-
+//TODO bk to many extra spaces
 
 }

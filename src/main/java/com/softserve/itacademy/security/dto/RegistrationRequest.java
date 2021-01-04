@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class RegistrationRequest {
 
+//    TODO bk this is not a good practice to keep such an error messages here. I'll explain why
     @NotBlank(message = "Email cannot be empty\"")
     @Email(message = "Email is invalid")
     private String email;

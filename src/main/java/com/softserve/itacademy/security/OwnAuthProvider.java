@@ -20,7 +20,7 @@ import javax.security.auth.login.AccountLockedException;
 @Slf4j
 @Component
 public class OwnAuthProvider implements AuthenticationProvider {
-
+//TODO private final
     UserRepository userRepository;
 
     PasswordEncoder passwordEncoder;
