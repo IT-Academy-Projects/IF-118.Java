@@ -1,40 +1,33 @@
 package com.softserve.itacademy.security.service.implementation;
 
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
+import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
-import com.softserve.itacademy.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    private UserService userService;
+    private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    public DefaultRegistrationService(RoleService roleService, UserService userService) {
-//        this.roleService = roleService;
-//        this.userService = userService;
-//    }
-
-
-    public RegistrationServiceImpl(RoleService roleService, UserService userService, PasswordEncoder passwordEncoder) {
-        this.roleService = roleService;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    //private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+    private final MailSender mailSender;
 
     @Transactional
     @Override
@@ -49,10 +42,46 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .name(dto.getName())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(roleService.findByName("USER"))
-                .role(roleService.findByName(dto.getPickedRole())).build();
+                .role(roleService.findByName(dto.getPickedRole()))
+                .activationCode(UUID.randomUUID().toString()).build();
 
-        userService.addUser(user);
+        addUser(user);
 
-         return SuccessRegistrationResponse.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
+        sendMessage(user);
+
+        return SuccessRegistrationResponse.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
     }
+
+    private void addUser(User user) {
+
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new BadCredentialsException("Email is not unique");
+        }
+
+        userRepository.save(user);
+    }
+
+    private void sendMessage(User user) {
+        if (!user.getEmail().isBlank()) {
+            String message = String.format(
+                    "Hello, %s! \n" + "Your activation link: http://localhost8080/api/v1/activation/%s",
+                    user.getName(),
+                    user.getActivationCode()
+            );
+
+            mailSender.send(user.getEmail(), "SoftClass activation", message);
+        }
+    }
+
+
+    @Override
+    public ActivationResponse activateUser(String code) {
+        User user = userRepository.findByActivationCode(code).orElseThrow(NotFoundException::new);
+        user.setActivated(true);
+        userRepository.save(user);
+        return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
+    }
+
 }
+
+

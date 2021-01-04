@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class RegistrationRequest {
 
-    @NotBlank(message = "Email cannot be empty\"")
+    @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is invalid")
     private String email;
 

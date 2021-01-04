@@ -36,12 +36,19 @@ public class User extends BasicEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false)
     @Builder.Default
     private Boolean disabled = false;
+
+    @Column
+    @Builder.Default
+    private Boolean activated = false;
+
+    @Column
+    private String activationCode;
 
     @Singular
     @ManyToMany(fetch = FetchType.LAZY)
@@ -79,5 +86,8 @@ public class User extends BasicEntity {
         this.groups.add(group);
     }
 
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 
 }

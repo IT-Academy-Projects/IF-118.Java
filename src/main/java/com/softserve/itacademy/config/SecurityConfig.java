@@ -1,7 +1,10 @@
 package com.softserve.itacademy.config;
 
-import com.softserve.itacademy.security.OwnAuthFilter;
+import com.softserve.itacademy.security.ownauth.OwnAuthFilter;
+import com.softserve.itacademy.security.oauth2.OAuthSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,20 +14,26 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AuthenticationProvider authenticationProvider;
+    private final OidcUserService oidcUserService;
 
-    @Autowired
-    public SecurityConfig(AuthenticationProvider ownAuthProvider) {
-        this.authenticationProvider = ownAuthProvider;
-    }
+    private final OAuthSuccessHandler oAuthSuccessHandler;
+
+    private final AuthenticationProvider authenticationProvider;
 
     public OwnAuthFilter ownAuthFilter(AuthenticationManager authenticationManager) {
         OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", "POST"));
@@ -42,36 +51,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
-                .addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .mvcMatchers("/registration", "/api/v1/registration").permitAll()
+        http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+
+        http.authorizeRequests()
+                .mvcMatchers("/", "/registration", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
-                .anyRequest().authenticated()
+                .anyRequest().authenticated()//.anyRequest().hasAuthority("application.read")
                 .and()
-                .formLogin(loginConfigurer -> loginConfigurer
-                        .loginProcessingUrl("/login")
-                        .loginPage("/login").permitAll()
-                        .successForwardUrl("/")
-                        .defaultSuccessUrl("/")
-                        .failureUrl("/login-error"))
-                .logout(logoutConfigurer -> {
-                    logoutConfigurer
-                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                            .logoutSuccessUrl("/")
-                            .permitAll();
-                })
-                .rememberMe()
+                .csrf().disable() //TODO: Implement CSRF
+//                .exceptionHandling().authenticationEntryPoint()
+                .oauth2Login()
+                    .loginPage("/login").permitAll()
+                    .userInfoEndpoint()
+                    .oidcUserService(oidcUserService)
+                .and()
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(customAuthorizationRequestRepository())
+                .and()
+                    .successHandler(oAuthSuccessHandler)
                 .and()
                 .logout()
-                .permitAll()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl("/")
+                        .permitAll()
                 .and()
-                .csrf().disable(); //TODO: Implement CSRF
-
+                    .rememberMe()
+                .and()
+                    .logout()
+                .permitAll();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
+    }
+
+    @Bean
+    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> customAuthorizationRequestRepository() {
+        return new HttpSessionOAuth2AuthorizationRequestRepository();
     }
 }

@@ -4,6 +4,7 @@ import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
