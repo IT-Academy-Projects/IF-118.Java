@@ -3,6 +3,7 @@ package com.softserve.itacademy.controller;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
+import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,13 @@ public class GroupController {
 
     public GroupController(GroupService groupService) {
         this.groupService = groupService;
+    }
+
+    @GroupCreatePermission
+    @PostMapping("/create/users/{owner_id}")
+    public ResponseEntity<GroupResponse> create(@PathVariable("owner_id") Integer ownerId, @RequestBody GroupRequest groupRequest) {
+        groupRequest.setOwnerId(ownerId);
+        return new ResponseEntity<>(groupService.create(groupRequest), HttpStatus.CREATED);
     }
 
     @GetMapping
