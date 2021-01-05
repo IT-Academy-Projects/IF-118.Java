@@ -11,6 +11,7 @@ import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
@@ -30,18 +32,22 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse create(CourseRequest courseDto) {
-        userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
-        Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
-                .orElse(Collections.emptySet()).stream()    //set an empty set if groupIds is null
+        log.info("Creating course {}", courseDto);
+        userService.findById(courseDto.getOwnerId());
+        Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())
+                .orElse(Collections.emptySet()).stream()
                 .map(groupService::findById)
                 .collect(Collectors.toSet());
 
         Course course = courseConverter.convertToCourse(courseDto, groups);
-        return courseConverter.convertToResponse(courseRepository.save(course));
+        Course savedCourse = courseRepository.save(course);
+        log.info("Created course {}", savedCourse);
+        return courseConverter.convertToResponse(savedCourse);
     }
 
     @Override
     public List<CourseResponse> findAll() {
+        log.info("Searching for courses...");
         return courseRepository.findAll().stream()
                 .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
@@ -49,6 +55,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
+        log.info("Searching courses for user {}", id);
         return courseRepository.findByOwner(id)
                 .orElse(Collections.emptyList()).stream()
                 .map(courseConverter::convertToResponse)
@@ -57,6 +64,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void delete(Integer id) {
+        log.info("Deleting course {}", id);
         courseRepository.delete(getById(id));
     }
 
