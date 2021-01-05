@@ -49,7 +49,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
-        return Optional.ofNullable(courseRepository.findByOwner(id))
+        return courseRepository.findByOwner(id)
                 .orElse(Collections.emptyList()).stream()
                 .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
