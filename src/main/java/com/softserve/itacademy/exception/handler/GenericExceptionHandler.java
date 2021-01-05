@@ -1,6 +1,7 @@
 package com.softserve.itacademy.exception.handler;
 
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
+import com.softserve.itacademy.exception.FileHasNoExtension;
 import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.request.ErrorRequest;
@@ -11,8 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import static org.springframework.http.HttpStatus.GONE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @ControllerAdvice
@@ -37,6 +37,12 @@ public class GenericExceptionHandler {
         log.info(exception.getMessage());
         ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, GONE);
+    }
+
+    @ExceptionHandler(FileHasNoExtension.class)
+    public ResponseEntity<ErrorRequest> handleFileHasNoExtension(FileHasNoExtension exception) {
+        ErrorRequest errorRequest = new ErrorRequest("Wrong file format");
+        return new ResponseEntity<>(errorRequest, BAD_REQUEST);
     }
 
 }

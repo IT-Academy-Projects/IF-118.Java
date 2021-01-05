@@ -3,10 +3,7 @@ package com.softserve.itacademy.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +14,12 @@ import javax.persistence.ManyToOne;
 public class Material extends BasicEntity {
 
     private String name;
+
+    @Column(name = "owner_id")
+    private Integer ownerId;
+
+    @Column(name = "file_reference")
+    private String fileReference;
 
     @ManyToOne
     @JoinColumn(name = "course_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_material"))
