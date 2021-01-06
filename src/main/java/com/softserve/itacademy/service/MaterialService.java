@@ -10,6 +10,6 @@ public interface MaterialService {
     MaterialResponse findById(Integer id);
     MaterialResponse create(MaterialRequest materialRequest, MultipartFile file);
     Material getById(Integer id);
-    String saveFile(MultipartFile file);
+    byte[] downloadFile(String fileReference);
 
 }

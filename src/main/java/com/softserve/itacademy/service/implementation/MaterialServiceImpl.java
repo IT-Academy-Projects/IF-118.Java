@@ -1,12 +1,10 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtension;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.MaterialResponse;
@@ -14,6 +12,7 @@ import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,10 +21,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Objects;
 import java.util.UUID;
 
-import static com.softserve.itacademy.service.s3.S3Util.TEMPORARY_STORAGE_PATH;
+import static com.softserve.itacademy.service.s3.S3Util.*;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -34,6 +32,8 @@ public class MaterialServiceImpl implements MaterialService {
     private CourseService courseService;
     private MaterialConverter materialConverter;
     private AmazonS3ClientService amazonS3ClientService;
+
+    private final String folder = "materials";
 
     @Autowired
     public MaterialServiceImpl(MaterialRepository materialRepository,
@@ -73,7 +73,7 @@ public class MaterialServiceImpl implements MaterialService {
         return materialRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public String saveFile(MultipartFile file) {
+    private String saveFile(MultipartFile file) {
         String[] split = file.getOriginalFilename().split("\\.");
         if (split.length < 1) { throw new FileHasNoExtension(); }
         String extension = split[split.length - 1];
@@ -86,9 +86,20 @@ public class MaterialServiceImpl implements MaterialService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        amazonS3ClientService.upload(tempFile, "materials", fileReference);
+
+        amazonS3ClientService.upload(BUCKET_NAME,  folder + "/" + fileReference, tempFile);
         tempFile.delete();
         return fileReference;
+    }
+
+    public byte[] downloadFile(String fileReference) {
+        byte[] bytes = new byte[0];
+        try {
+            bytes = FileUtils.readFileToByteArray(amazonS3ClientService.download(BUCKET_NAME, folder + "/" + fileReference));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 
 }

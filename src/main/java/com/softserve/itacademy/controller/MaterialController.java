@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.MaterialService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -33,9 +31,9 @@ public class MaterialController {
         return new ResponseEntity<>(materialService.create(materialRequest, file), HttpStatus.CREATED);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> test(@RequestPart(value = "file") MultipartFile file) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping("/{id}/file")
+//    public ResponseEntity<Resource> download(@PathVariable Integer id) {
+//        return new ResponseEntity<>(new ByteArrayResource(materialService.downloadFile("")), HttpStatus.OK);
+//    }
 
 }
