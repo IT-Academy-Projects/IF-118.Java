@@ -20,9 +20,9 @@ import javax.security.auth.login.AccountLockedException;
 @Component
 public class OwnAuthProvider implements AuthenticationProvider {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public OwnAuthProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -40,6 +40,10 @@ public class OwnAuthProvider implements AuthenticationProvider {
 
         if(user.getDisabled()) {
             throw new AccountLockedException("Account is disabled");
+        }
+
+        if(!user.getActivated()) {
+            throw new AccountLockedException("Account is not activated");
         }
 
         log.debug("Using OwnAuthProvider");

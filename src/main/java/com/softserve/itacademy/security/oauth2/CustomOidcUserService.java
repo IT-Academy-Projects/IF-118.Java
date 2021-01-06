@@ -16,13 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Service
 public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
 
     private final RoleService roleService;
+
+    public CustomOidcUserService(UserRepository userRepository, RoleService roleService) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
+    }
 
     @Transactional
     @Override

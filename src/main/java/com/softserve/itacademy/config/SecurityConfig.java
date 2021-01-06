@@ -1,11 +1,10 @@
 package com.softserve.itacademy.config;
 
-import com.softserve.itacademy.security.ownauth.OwnAuthFilter;
 import com.softserve.itacademy.security.oauth2.OAuthSuccessHandler;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.softserve.itacademy.security.ownauth.OwnAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,8 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
@@ -23,7 +20,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -35,8 +31,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationProvider authenticationProvider;
 
+    public SecurityConfig(OidcUserService oidcUserService, OAuthSuccessHandler oAuthSuccessHandler, AuthenticationProvider authenticationProvider) {
+        this.oidcUserService = oidcUserService;
+        this.oAuthSuccessHandler = oAuthSuccessHandler;
+        this.authenticationProvider = authenticationProvider;
+    }
+
     public OwnAuthFilter ownAuthFilter(AuthenticationManager authenticationManager) {
-        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", "POST"));
+        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()));
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
@@ -72,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(oAuthSuccessHandler)
                 .and()
                 .logout()
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.POST.name()))
                         .logoutSuccessUrl("/")
                         .permitAll()
                 .and()
@@ -83,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider);
     }
 

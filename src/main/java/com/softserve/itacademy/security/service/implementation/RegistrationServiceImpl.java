@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
@@ -28,6 +27,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordEncoder passwordEncoder;
 
     private final MailSender mailSender;
+
+    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+        this.roleService = roleService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
+    }
 
     @Transactional
     @Override
@@ -62,9 +68,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void sendMessage(User user) {
+        //TODO: Front End for activation
         if (!user.getEmail().isBlank()) {
             String message = String.format(
-                    "Hello, %s! \n" + "Your activation link: http://localhost8080/api/v1/activation/%s",
+                    "Hello, %s! \n" + "Your activation link: http://localhost:8080/api/v1/activation/%s",
                     user.getName(),
                     user.getActivationCode()
             );

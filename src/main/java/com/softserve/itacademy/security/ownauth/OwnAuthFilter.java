@@ -24,17 +24,8 @@ public class OwnAuthFilter extends AbstractAuthenticationProcessingFilter {
 
         String email = getEmail(httpServletRequest);
         String password = getPassword(httpServletRequest);
-
-        email = email != null ? email : "";
-        email = email.trim();
-
-        password = password != null ? password : "";
-        password = password.trim();
-
         log.debug("Authentication Email: " + email);
-
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
-
         token.setDetails(httpServletRequest);
 
         return this.getAuthenticationManager().authenticate(token);

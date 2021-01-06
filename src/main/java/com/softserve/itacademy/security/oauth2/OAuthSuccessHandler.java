@@ -23,8 +23,11 @@ import java.util.Map;
 @Component
 public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Autowired
     private UserRepository userRepository;
+
+    public OAuthSuccessHandler(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional
@@ -32,7 +35,6 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         if (response.isCommitted()) {
             return;
         }
-
 
         DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
         Map<String, Object> attributes = oidcUser.getAttributes();
