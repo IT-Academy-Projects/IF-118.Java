@@ -3,6 +3,7 @@ package com.softserve.itacademy.service;
 
 
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.transaction.annotation.Transactional;
 import com.softserve.itacademy.response.UserResponse;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UserService {
     @Transactional
     void addUser(User user);
 
-    UserResponse findById(Integer id);
+    UserFullTinyProjection findById(Integer id);
 
     List<UserResponse> findAll();
 

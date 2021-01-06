@@ -1,7 +1,7 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.request.DisableRequest;
-import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable Integer id) {
+    public ResponseEntity<UserFullTinyProjection> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.findById(id), OK);
     }
 
