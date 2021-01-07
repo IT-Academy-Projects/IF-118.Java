@@ -1,6 +1,7 @@
 package com.softserve.itacademy.exception.handler;
 
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
+import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.enums.ErrorType;

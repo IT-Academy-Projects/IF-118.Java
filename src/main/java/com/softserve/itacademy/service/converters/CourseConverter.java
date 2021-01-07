@@ -17,7 +17,7 @@ public class CourseConverter {
 
     private final ModelMapper mapper;
 
-    public CourseResponse convertToDto(Course course) {
+    public CourseResponse convertToResponse(Course course) {
         CourseResponse map = mapper.map(course, CourseResponse.class);
         map.setGroupIds((course.getGroups().stream()
                 .map(Group::getId)

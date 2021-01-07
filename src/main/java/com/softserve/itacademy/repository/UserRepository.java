@@ -1,6 +1,5 @@
 package com.softserve.itacademy.repository;
 
-import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,5 +29,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
+
 
 }

@@ -9,9 +9,10 @@ import java.util.List;
 public interface CourseService {
     CourseResponse create(CourseRequest courseDto);
     CourseResponse readById(Integer id);
-    Course getById(Integer id);
     CourseResponse update(CourseRequest courseDto);
     List<CourseResponse> findAll();
+    List<CourseResponse> findByOwner(Integer id);
+    Course getById(Integer id);
     void delete(Integer id);
     void updateDisabled(Integer id, boolean disabled);
     List<CourseResponse> findByOwnerId(Integer ownerId);

@@ -17,9 +17,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "update courses set courses.disabled = :disabled where courses.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
 
-    List<Course> findByOwnerId(Integer ownerId);
+    @Query(value = "select * from courses where owner_id=:id", nativeQuery = true)
+    List<Course> findByOwner(Integer id);
 
-    @Query(value = "select id, created_at, updated_at, name, owner_id, disabled from courses join users_courses uc on courses.id = uc.course_id where user_id = ?1", nativeQuery = true)
-    List<Course> findByStudentId(Integer studentId);
 }
-

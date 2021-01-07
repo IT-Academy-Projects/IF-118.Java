@@ -14,12 +14,16 @@ docker build -t project -f src/docker/Dockerfile .
 ```
 docker-compose -f src/docker/docker-compose.yml up
 ```
-4. To stop the application:
+4. Access site at: 
+```
+localhost:8080
+```
+5. To stop the application:
 ```
 Ctrl+C
 docker-compose -f src/docker/docker-compose.yml down
 ```
-5. Delete unused image:
+6. Delete unused image:
 ```
 docker images
 docker image rm <repo:tag>

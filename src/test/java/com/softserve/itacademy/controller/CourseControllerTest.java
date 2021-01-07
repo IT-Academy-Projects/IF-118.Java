@@ -42,7 +42,7 @@
 //        CourseResponse courseDto = getCourseDto();
 //        when(courseService.create(any(CourseRequest.class))).thenReturn(courseDto);
 //
-//        this.mockMvc.perform(post("/api/v1/courses/create")
+//        this.mockMvc.perform(post("/api/v1/users/1/courses")
 //                .content(asJsonString(courseDto))
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .accept(MediaType.APPLICATION_JSON)
@@ -58,7 +58,7 @@
 //        when(courseService.create(any(CourseRequest.class))).thenThrow(NotFoundException.class);
 //        when(errorConfigurationProperties.getExceptions()).thenReturn(Map.of("NOT_FOUND", new ErrorRequest("Such entity not found")));
 //
-//        this.mockMvc.perform(post("/api/v1/courses/create")
+//        this.mockMvc.perform(post("/api/v1/users/1/courses")
 //                .content(asJsonString(getCourseDto()))
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .accept(MediaType.APPLICATION_JSON)
