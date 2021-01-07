@@ -21,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.softserve.itacademy.service.s3.S3Util.BUCKET_NAME;
-import static com.softserve.itacademy.service.s3.S3Util.MATERIALS_FOLDER;
+import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
+import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
