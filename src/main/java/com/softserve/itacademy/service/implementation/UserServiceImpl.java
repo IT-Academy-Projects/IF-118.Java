@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
@@ -22,8 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
 
     @Override
-    public UserResponse findById(Integer id) {
-        return userConverter.convertToDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    public UserFullTinyProjection findById(Integer id) {
+        return userRepository.findProjectedById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override

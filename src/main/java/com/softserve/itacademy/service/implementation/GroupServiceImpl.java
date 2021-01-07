@@ -1,7 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.request.GroupRequest;
+import com.softserve.itacademy.projection.GroupFullProjection;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.response.GroupResponse;
@@ -39,8 +39,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group findById(Integer id) {
-        return getById(id);
+    public GroupFullProjection findById(Integer id) {
+        return groupRepository.findProjectedById(id).orElseThrow(NotFoundException::new);
     }
 
     //TODO make private

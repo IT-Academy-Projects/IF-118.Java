@@ -33,7 +33,7 @@ public class CourseServiceImpl implements CourseService {
         userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
         Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
                 .orElse(Collections.emptySet()).stream()    //set an empty set if groupIds is null
-                .map(groupService::findById)
+                .map(groupService::getById)
                 .collect(Collectors.toSet());
 
         Course course = courseConverter.convertToCourse(courseDto, groups);

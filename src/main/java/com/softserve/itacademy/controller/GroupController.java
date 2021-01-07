@@ -1,7 +1,7 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.projection.GroupFullProjection;
 import com.softserve.itacademy.request.DisableRequest;
-import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,11 @@ public class GroupController {
     @GetMapping
     public ResponseEntity<List<GroupResponse>> findAll() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GroupFullProjection> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(groupService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
