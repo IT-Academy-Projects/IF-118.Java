@@ -3,27 +3,26 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
-import com.softserve.itacademy.exception.FileHasNoExtension;
+import com.softserve.itacademy.exception.FileHasNoExtensionException;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
+import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.UUID;
 
-import static com.softserve.itacademy.service.s3.S3Util.*;
+import static com.softserve.itacademy.service.s3.S3Util.BUCKET_NAME;
+import static com.softserve.itacademy.service.s3.S3Util.MATERIALS_FOLDER;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -32,8 +31,6 @@ public class MaterialServiceImpl implements MaterialService {
     private CourseService courseService;
     private MaterialConverter materialConverter;
     private AmazonS3ClientService amazonS3ClientService;
-
-    private final String folder = "materials";
 
     @Autowired
     public MaterialServiceImpl(MaterialRepository materialRepository,
@@ -69,35 +66,41 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    public DownloadFileResponse downloadById(Integer id) {
+        Material material = getById(id);
+        String[] split = material.getFileReference().split("\\.");
+        if (split.length < 1) { throw new FileHasNoExtensionException(); }
+        String extension = split[split.length - 1];
+        return DownloadFileResponse.builder()
+                .file(downloadFile(material.getFileReference()))
+                .fileName(material.getName() + "." + extension)
+                .build();
+    }
+
+    @Override
     public Material getById(Integer id) {
         return materialRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     private String saveFile(MultipartFile file) {
         String[] split = file.getOriginalFilename().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtension(); }
+        if (split.length < 1) { throw new FileHasNoExtensionException(); }
         String extension = split[split.length - 1];
         String fileReference = UUID.randomUUID().toString().toLowerCase() + "." + extension;
-
-        File tempFile = new File(TEMPORARY_STORAGE_PATH, fileReference);
-
-        try (OutputStream os = new FileOutputStream(tempFile)) {
-            os.write(file.getBytes());
+        try {
+            amazonS3ClientService.upload(BUCKET_NAME,  MATERIALS_FOLDER + "/" + fileReference, file.getInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileProcessingException("Cannot write file");
         }
-
-        amazonS3ClientService.upload(BUCKET_NAME,  folder + "/" + fileReference, tempFile);
-        tempFile.delete();
         return fileReference;
     }
 
-    public byte[] downloadFile(String fileReference) {
+    private byte[] downloadFile(String fileReference) {
         byte[] bytes = new byte[0];
         try {
-            bytes = FileUtils.readFileToByteArray(amazonS3ClientService.download(BUCKET_NAME, folder + "/" + fileReference));
+            bytes = amazonS3ClientService.download(BUCKET_NAME, MATERIALS_FOLDER + "/" + fileReference);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileProcessingException("Cannot read file");
         }
         return bytes;
     }

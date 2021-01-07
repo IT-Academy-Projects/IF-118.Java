@@ -6,17 +6,14 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
-
-import static com.softserve.itacademy.service.s3.S3Util.TEMPORARY_STORAGE_PATH;
+import java.io.InputStream;
 
 @Service
 public class AmazonS3ClientService {
@@ -43,16 +40,13 @@ public class AmazonS3ClientService {
                 .build();
     }
 
-    public void upload(String bucketName, String filename, File file) {
-        s3client.putObject(bucketName, filename, file);
+    public void upload(String bucketName, String filename, InputStream inputStream) {
+        s3client.putObject(bucketName, filename, inputStream, new ObjectMetadata());
     }
 
-    public File download(String bucketName, String fileReference) throws IOException {
+    public byte[] download(String bucketName, String fileReference) throws IOException {
         S3Object s3object = s3client.getObject(bucketName, fileReference);
-        S3ObjectInputStream inputStream = s3object.getObjectContent();
-        File downloadedFile = new File(TEMPORARY_STORAGE_PATH, fileReference);
-        FileUtils.copyInputStreamToFile(inputStream, downloadedFile);
-        return downloadedFile;
+        return s3object.getObjectContent().readAllBytes();
     }
 
 }

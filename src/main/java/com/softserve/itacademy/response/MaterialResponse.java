@@ -14,7 +14,6 @@ public class MaterialResponse {
     private Integer id;
     private Integer ownerId;
     private String name;
-    private String fileReference;
     private Integer courseId;
 
 }

@@ -1,10 +1,10 @@
 package com.softserve.itacademy.exception.handler;
 
 import com.softserve.itacademy.config.ErrorConfigurationProperties;
-import com.softserve.itacademy.exception.FileHasNoExtension;
+import com.softserve.itacademy.exception.FileHasNoExtensionException;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.exception.DisabledObjectException;
-import com.softserve.itacademy.request.ErrorRequest;
 import com.softserve.itacademy.enums.ErrorType;
 import com.softserve.itacademy.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +39,15 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(errorRequest, GONE);
     }
 
-    @ExceptionHandler(FileHasNoExtension.class)
-    public ResponseEntity<ErrorRequest> handleFileHasNoExtension(FileHasNoExtension exception) {
+    @ExceptionHandler(FileHasNoExtensionException.class)
+    public ResponseEntity<ErrorRequest> handleFileHasNoExtensionException(FileHasNoExtensionException exception) {
         ErrorRequest errorRequest = new ErrorRequest("Wrong file format");
+        return new ResponseEntity<>(errorRequest, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileProcessingException.class)
+    public ResponseEntity<ErrorRequest> handleFileProcessingException(FileProcessingException exception) {
+        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, BAD_REQUEST);
     }
 
