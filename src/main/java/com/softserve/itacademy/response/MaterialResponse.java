@@ -15,5 +15,6 @@ public class MaterialResponse {
     private Integer ownerId;
     private String name;
     private Integer courseId;
+    private String description;
 
 }

@@ -20,6 +20,7 @@ public class Material extends BasicEntity {
 
     @Column(name = "file_reference")
     private String fileReference;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "course_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_material"))

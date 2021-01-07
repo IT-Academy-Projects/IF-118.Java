@@ -57,6 +57,7 @@ public class MaterialServiceImpl implements MaterialService {
         Material material = Material.builder()
                 .name(materialRequest.getName())
                 .ownerId(materialRequest.getOwnerId())
+                .description(materialRequest.getDescription())
                 .course(course)
                 .fileReference(saveFile(file))
                 .build();
