@@ -23,6 +23,9 @@ public class UserResponse {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("activationCode")
+    private String activationCode;
+
     @JsonProperty("disabled")
     private Boolean disabled;
 }
