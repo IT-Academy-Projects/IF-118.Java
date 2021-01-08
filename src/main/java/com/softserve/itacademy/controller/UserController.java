@@ -1,12 +1,19 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
-import com.softserve.itacademy.request.UserRequest;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -43,5 +50,13 @@ public class UserController {
                                                   @RequestParam String email) {
         userService.updateProfileInfo(id, name, email);
         return new ResponseEntity<>(OK);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<Boolean> checkIfTeacher(@AuthenticationPrincipal User currentUser) {
+        if(currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("TEACHER"))){
+            return new ResponseEntity<>(false, OK);
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

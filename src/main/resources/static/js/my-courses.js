@@ -1,4 +1,5 @@
 showCourses();
+getCurrent();
 function showCourses() {
     $('#table-content').html('');
     $.ajax(`/api/v1/courses`).then(data => {
@@ -26,6 +27,14 @@ function createCourse() {
         contentType: "application/json; charset=utf-8",
         success: function() {
             showCourses();
+        }
+    });
+}
+
+function getCurrent() {
+    $.ajax(`/api/v1/users/current`).then(data => {
+        if (data){
+            $('#create-course').show();
         }
     });
 }

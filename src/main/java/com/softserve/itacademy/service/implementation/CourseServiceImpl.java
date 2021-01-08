@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,11 +34,13 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponse create(CourseRequest courseDto) {
         log.info("Creating course {}", courseDto);
         userService.findById(courseDto.getOwnerId());
-        Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())
-                .orElse(Collections.emptySet()).stream()
-                .map(groupService::findById)
-                .collect(Collectors.toSet());
-
+        Set<Group> groups = new HashSet<>();
+        Set<Integer> groupIds = courseDto.getGroupIds();
+        if (!groupIds.isEmpty()) {
+            groups = groupIds.stream()
+                    .map(groupService::findById)
+                    .collect(Collectors.toSet());
+        }
         Course course = courseConverter.convertToCourse(courseDto, groups);
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
@@ -56,8 +58,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
         log.info("Searching courses for user {}", id);
-        return courseRepository.findByOwner(id)
-                .orElse(Collections.emptyList()).stream()
+        List<Course> coursesByOwner = courseRepository.findByOwner(id);
+        if (coursesByOwner.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return coursesByOwner.stream()
                 .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
     }

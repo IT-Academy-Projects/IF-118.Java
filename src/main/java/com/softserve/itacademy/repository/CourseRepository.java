@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
@@ -19,6 +18,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     int updateDisabled(Integer id, boolean disabled);
 
     @Query(value = "select * from courses where owner_id=:id", nativeQuery = true)
-    Optional<List<Course>> findByOwner(Integer id);
+    List<Course> findByOwner(Integer id);
 
 }
