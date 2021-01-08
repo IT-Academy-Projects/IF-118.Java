@@ -21,6 +21,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users u where u.email = ?" , nativeQuery = true)
     Optional<User> findByEmail(String email);
 
+    @Query(value = "select * from users u where u.activation_code = ?" , nativeQuery = true)
+    Optional<User> findByActivationCode(String code);
+
     @Modifying
     @Transactional
     @Query(value = "update users set users.name=:name, users.email=:email where users.id=:id", nativeQuery = true)
@@ -30,7 +33,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
-
-    Optional<UserFullTinyProjection> findProjectedById(Integer id);
 
 }

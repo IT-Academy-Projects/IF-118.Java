@@ -1,6 +1,8 @@
 package com.softserve.itacademy.security.dto;
 
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 
@@ -12,22 +14,21 @@ import javax.validation.constraints.Pattern;
 @Getter
 public class RegistrationRequest {
 
-    @NotBlank(message = "Email cannot be empty\"")
-    @Email(message = "Email is invalid")
+    @NotBlank
+    @Email
     private String email;
 
-    @NotBlank(message = "Password cannot be empty")
+    @NotBlank
     @Pattern(
-            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-            message = "Password should be minimum eight characters and contain atl east one letter and one number "
+            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
     )
     private String password;
 
-    @NotBlank(message = "Name cannot be empty")
-    @Length(min = 3, max = 30, message = "Username should be between 3 and 30 characters long")
+    @NotBlank
+    @Length(min = 3, max = 30)
     private String name;
 
-    @NotBlank(message = "Pick a role")
+    @NotBlank
     private String pickedRole;
 
 

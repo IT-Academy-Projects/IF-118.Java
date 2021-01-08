@@ -16,7 +16,7 @@ public interface UserService {
     @Transactional
     void addUser(User user);
 
-    UserFullTinyProjection findById(Integer id);
+    UserResponse findById(Integer id);
 
     List<UserResponse> findAll();
 
