@@ -1,5 +1,5 @@
 showCourses();
-getCurrent();
+showCourseCreateForm();
 function showCourses() {
     $('#table-content').html('');
     $.ajax(`/api/v1/courses`).then(data => {
@@ -31,7 +31,7 @@ function createCourse() {
     });
 }
 
-function getCurrent() {
+function showCourseCreateForm() {
     $.ajax(`/api/v1/users/current`).then(data => {
         if (data){
             $('#create-course').show();
