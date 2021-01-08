@@ -13,5 +13,7 @@ public class MaterialRequest {
 
     private String name;
     private int courseId;
+    private int ownerId;
+    private String description;
 
 }
