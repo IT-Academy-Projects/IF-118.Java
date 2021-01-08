@@ -39,6 +39,13 @@ function registerRequestJson(data) {
 
         success: function (data, textStatus, xhr) {
             window.location.replace('/login');
+        },
+
+        error: function (request, textStatus, errorThrown) {
+            console.log(request)
+            showError(request.responseJSON.error)
+            $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+            $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
         }
     });
 }

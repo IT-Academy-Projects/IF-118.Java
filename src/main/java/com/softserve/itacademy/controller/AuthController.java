@@ -1,14 +1,19 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,9 +23,8 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1")
 public class AuthController {
 
-    RegistrationService registrationService;
+    private final RegistrationService registrationService;
 
-    @Autowired
     public AuthController(RegistrationService registrationService) {
         this.registrationService = registrationService;
     }
@@ -30,6 +34,11 @@ public class AuthController {
             @Valid @RequestBody RegistrationRequest dto
     ) {
         return new ResponseEntity<>(registrationService.registerUser(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/activation/{code}")
+    public ResponseEntity<ActivationResponse> activation(@PathVariable String code) {
+        return new ResponseEntity<>(registrationService.activateUser(code), HttpStatus.OK);
     }
 
     @GetMapping("/login-error")

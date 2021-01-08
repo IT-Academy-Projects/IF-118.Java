@@ -1,4 +1,4 @@
-package com.softserve.itacademy.security;
+package com.softserve.itacademy.security.ownauth;
 
 
 import com.softserve.itacademy.entity.User;
@@ -14,16 +14,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountException;
 import javax.security.auth.login.AccountLockedException;
 
 @Slf4j
 @Component
 public class OwnAuthProvider implements AuthenticationProvider {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public OwnAuthProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -42,6 +41,12 @@ public class OwnAuthProvider implements AuthenticationProvider {
         if(user.getDisabled()) {
             throw new AccountLockedException("Account is disabled");
         }
+
+        if(!user.getActivated()) {
+            throw new AccountLockedException("Account is not activated");
+        }
+
+        log.debug("Using OwnAuthProvider");
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());

@@ -17,8 +17,23 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
     enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH2_GOOGLE_ID}
+            client-secret: ${OAUTH2_GOOGLE_SECRET}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    protocol: ${MAIL_PROTOCOL}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    debug: true
 
 errors:
   exceptions:
     NOT_FOUND:
       message: "Such entity not found"
+

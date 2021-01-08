@@ -1,7 +1,9 @@
 package com.softserve.itacademy.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -9,13 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 public class MaterialResponse {
 
-    @JsonProperty("id")
     private Integer id;
-
-    @JsonProperty("name")
+    private Integer ownerId;
     private String name;
-
-    @JsonProperty("courseId")
     private Integer courseId;
+    private String description;
 
 }

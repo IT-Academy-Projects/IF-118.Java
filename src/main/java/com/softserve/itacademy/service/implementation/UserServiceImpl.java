@@ -50,15 +50,4 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Transactional
-    @Override
-    public void addUser(User user) {
-
-        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new BadCredentialsException("Email is not unique");
-        }
-
-        userRepository.save(user);
-    }
-
 }
