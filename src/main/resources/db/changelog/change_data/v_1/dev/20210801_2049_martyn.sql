@@ -3,6 +3,8 @@
 
 CREATE TABLE IF NOT EXISTS `invitation` (
     `id` INT NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME DEFAULT NULL,
     `expiration_date` DATETIME NOT NULL,
     `approved` BOOLEAN DEFAULT FALSE ,
     `link` VARCHAR(255) NOT NULL,
