@@ -2,10 +2,14 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.projection.GroupFullProjection;
+import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.DisabledObjectException;
+import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
+import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,20 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
+    private final UserService userService;
+
+    @Override
+    public GroupResponse create(GroupRequest groupRequest){
+        User owner = userService.getById(groupRequest.getOwnerId());
+
+        if (owner.getDisabled()) {
+            throw new DisabledObjectException();
+        }
+
+        Group newGroup = groupConverter.convertToGroup(groupRequest);
+
+        return groupConverter.convertToDto(groupRepository.save(newGroup));
+    }
 
     @Override
     public List<GroupResponse> findAll() {
