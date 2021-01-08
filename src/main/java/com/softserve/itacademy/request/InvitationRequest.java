@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class InvitationRequest {
 
+    private String email;
     private LocalDateTime expirationDate;
     private Boolean approved;
     private String link;
