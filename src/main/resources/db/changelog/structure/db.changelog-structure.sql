@@ -48,9 +48,12 @@ CREATE TABLE if not exists `users`
 CREATE TABLE if not exists `material`
 (
     `id`         int      NOT NULL AUTO_INCREMENT,
+    `owner_id`   int      NOT NULL,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `description`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `file_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `course_id`  int                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `fk_course_material` (`course_id`),

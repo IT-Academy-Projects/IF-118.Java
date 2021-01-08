@@ -1,11 +1,14 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
+import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +23,13 @@ public class GroupController {
 
     public GroupController(GroupService groupService) {
         this.groupService = groupService;
+    }
+
+    @GroupCreatePermission
+    @PostMapping
+    public ResponseEntity<GroupResponse> create(@AuthenticationPrincipal User user, @RequestBody GroupRequest groupRequest) {
+        groupRequest.setOwnerId(user.getId());
+        return new ResponseEntity<>(groupService.create(groupRequest), HttpStatus.CREATED);
     }
 
     @GetMapping

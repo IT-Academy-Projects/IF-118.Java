@@ -73,15 +73,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .successHandler(oAuthSuccessHandler)
                 .and()
-                .logout()
+                    .logout()
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.POST.name()))
                         .logoutSuccessUrl("/")
                         .permitAll()
                 .and()
                     .rememberMe()
-                .and()
-                    .logout()
-                .permitAll();
     }
 
     @Override
