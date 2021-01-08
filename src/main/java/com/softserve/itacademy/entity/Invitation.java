@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 public class Invitation extends BasicEntity{
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private LocalDateTime expirationDate;
 
     @Column(nullable = false)
