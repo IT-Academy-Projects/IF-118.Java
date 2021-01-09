@@ -13,10 +13,7 @@ public interface UserService {
 
     void updateDisabled(Integer id, Boolean disabled);
 
-    @Transactional
-    void addUser(User user);
-
-    UserResponse findById(Integer id);
+    UserFullTinyProjection findById(Integer id);
 
     List<UserResponse> findAll();
 

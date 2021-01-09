@@ -8,9 +8,7 @@ import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
-                .map(userConverter::convertToDto).collect(Collectors.toList());
+                .map(userConverter::of).collect(Collectors.toList());
     }
 
     @Override

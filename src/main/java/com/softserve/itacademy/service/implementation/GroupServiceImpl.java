@@ -1,7 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.projection.GroupFullProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.request.GroupRequest;
@@ -33,15 +32,22 @@ public class GroupServiceImpl implements GroupService {
             throw new DisabledObjectException();
         }
 
-        Group newGroup = groupConverter.convertToGroup(groupRequest);
+        Group newGroup = groupConverter.of(groupRequest);
 
-        return groupConverter.convertToDto(groupRepository.save(newGroup));
+        return groupConverter.of(groupRepository.save(newGroup));
     }
 
     @Override
     public List<GroupResponse> findAll() {
         return groupRepository.findAll().stream()
-                .map(groupConverter::convertToDto).collect(Collectors.toList());
+                .map(groupConverter::of).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GroupResponse> findByOwner(Integer id) {
+        return groupRepository.findByOwnerId(id).stream()
+                .map(groupConverter::of)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -57,8 +63,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupFullProjection findById(Integer id) {
-        return groupRepository.findProjectedById(id).orElseThrow(NotFoundException::new);
+    public GroupResponse findById(Integer id) {
+        return groupConverter.of(getById(id));
     }
 
     //TODO make private
@@ -66,19 +72,5 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    @Override
-    public List<GroupResponse> findByOwner(Integer ownerId) {
-        return groupRepository.findByOwnerId(ownerId).stream()
-                .filter(group -> !group.getDisabled())
-                .map(groupConverter::convertToDto)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public List<GroupResponse> findByStudent(Integer studentId) {
-        return groupRepository.findByStudentId(studentId).stream()
-                .filter(response -> !response.getDisabled())
-                .map(groupConverter::convertToDto)
-                .collect(Collectors.toList());
-    }
 }

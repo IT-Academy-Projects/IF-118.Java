@@ -36,14 +36,14 @@ public class CourseServiceImpl implements CourseService {
                 .map(groupService::getById)
                 .collect(Collectors.toSet());
 
-        Course course = courseConverter.convertToCourse(courseDto, groups);
-        return courseConverter.convertToResponse(courseRepository.save(course));
+        Course course = courseConverter.of(courseDto, groups);
+        return courseConverter.of(courseRepository.save(course));
     }
 
     @Override
     public List<CourseResponse> findAll() {
         return courseRepository.findAll().stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseResponse> findByOwner(Integer id) {
         return Optional.ofNullable(courseRepository.findByOwner(id))
                 .orElse(Collections.emptyList()).stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -68,24 +68,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseResponse> findByOwnerId(Integer ownerId) {
-        return courseRepository.findByOwnerId(ownerId).stream()
-                .filter(course -> !course.getDisabled())
-                .map(courseConverter::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CourseResponse> findByStudentId(Integer id) {
-        return courseRepository.findByStudentId(id).stream()
-                .filter(course -> !course.getDisabled())
-                .map(courseConverter::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.convertToResponse(getById(id));
+        return courseConverter.of(getById(id));
     }
 
     @Override

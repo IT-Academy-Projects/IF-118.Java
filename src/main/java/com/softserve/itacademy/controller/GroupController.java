@@ -1,8 +1,8 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.projection.GroupFullProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.service.GroupService;
@@ -38,8 +38,13 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GroupFullProjection> findById(@PathVariable Integer id) {
+    public ResponseEntity<GroupResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(groupService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<GroupResponse>> findByOwner(@PathVariable Integer id) {
+        return new ResponseEntity<>(groupService.findByOwner(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

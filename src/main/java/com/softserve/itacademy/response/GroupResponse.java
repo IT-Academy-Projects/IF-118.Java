@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -25,4 +27,8 @@ public class GroupResponse {
 
     @JsonProperty("disabled")
     private Boolean disabled;
+
+    private Set<CourseResponse> courses;
+
+    private Set<UserResponse> users;
 }
