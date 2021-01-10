@@ -2,14 +2,15 @@ package com.softserve.itacademy.security.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
+import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,16 +29,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final MailSender mailSender;
 
-    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+    private final InvitationRepository invitationRepository;
+
+    private final InvitationService invitationService;
+
+    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder, MailSender mailSender,
+                                   InvitationRepository invitationRepository, InvitationService invitationService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.invitationRepository = invitationRepository;
+        this.invitationService = invitationService;
     }
 
     @Transactional
     @Override
     public SuccessRegistrationResponse registerUser(RegistrationRequest dto) {
+
 
         if (!(dto.getPickedRole().equals("STUDENT") || dto.getPickedRole().equals("TEACHER"))) {
             throw new BadCredentialsException("You can't pick such role");
@@ -51,7 +61,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .role(roleService.findByName(dto.getPickedRole()))
                 .activationCode(UUID.randomUUID().toString()).build();
 
+
         addUser(user);
+
+        if (isInvited(dto.getEmail())) {
+            invitationService.setUserId(userRepository.findByEmail(dto.getEmail()).get().getId());
+        }
 
         sendMessage(user);
 
@@ -87,6 +102,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setActivated(true);
         userRepository.save(user);
         return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
+    }
+
+    private boolean isInvited(String email) {
+        return invitationRepository.existsByEmail(email);
     }
 
 }

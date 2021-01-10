@@ -32,6 +32,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
+
+    boolean existsByEmail(String email);
   
 }
 

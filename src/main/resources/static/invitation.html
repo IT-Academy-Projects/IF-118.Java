@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <script src="invitation.js"></script>
+</head>
+<body>
+<form action="/api/v1/invite" method="post">
+    <label for="email">Email: </label>
+    <input name="email" id="email" placeholder="Email" type="email"/>
+    <br/>
+    <br/>
+    <label for="userId">User Id: </label>
+    <input name="userId" id="userId" placeholder="UserId" type="number"/>
+    <br/>
+    <br/>
+    <label for="courseId">Course Id: </label>
+    <input
+            name="courseId"
+            id="courseId"
+            placeholder="CourseId"
+            type="number"
+    />
+    <br/>
+    <br/>
+    <label for="groupId">Group Id: </label>
+    <input name="groupId" id="groupId" placeholder="GroupId" type="number"/>
+    <br/>
+    <br/>
+    <input type="submit" value="Save"/>
+</form>
+</body>
+</html>
