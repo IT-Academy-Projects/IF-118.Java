@@ -36,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
         userService.findById(courseDto.getOwnerId());
         Set<Group> groups = new HashSet<>();
         Set<Integer> groupIds = courseDto.getGroupIds();
-        if (!groupIds.isEmpty()) {
+        if (groupIds != null) {
             groups = groupIds.stream()
                     .map(groupService::findById)
                     .collect(Collectors.toSet());
@@ -59,7 +59,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseResponse> findByOwner(Integer id) {
         log.info("Searching courses for user {}", id);
         List<Course> coursesByOwner = courseRepository.findByOwner(id);
-        if (coursesByOwner.isEmpty()) {
+        if (coursesByOwner == null) {
             return Collections.emptyList();
         }
         return coursesByOwner.stream()
