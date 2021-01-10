@@ -41,12 +41,6 @@ public class CourseController {
         return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        courseService.delete(id);
-        return new ResponseEntity<>(OK);
-    }
-
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disabledRequest) {
         courseService.updateDisabled(id, disabledRequest.isDisabled());

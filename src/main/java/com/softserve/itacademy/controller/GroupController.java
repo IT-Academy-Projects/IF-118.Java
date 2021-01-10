@@ -37,12 +37,6 @@ public class GroupController {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        groupService.delete(id);
-        return new ResponseEntity<>(OK);
-    }
-
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
         groupService.updateDisabled(id, disableRequest.isDisabled());
