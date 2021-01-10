@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `invitation` (
     `expiration_date` DATETIME NOT NULL,
     `approved` BOOLEAN DEFAULT FALSE ,
     `link` VARCHAR(255) NOT NULL,
-    `user_id` INT NOT NULL,
+    `user_id` INT DEFAULT NULL,
     `course_id` INT DEFAULT NULL,
     `group_id` INT DEFAULT NULL,
     PRIMARY KEY (`id`),
