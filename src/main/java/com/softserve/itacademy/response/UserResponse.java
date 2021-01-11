@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -18,4 +20,5 @@ public class UserResponse {
     private String email;
     private String activationCode;
     private Boolean disabled;
+
 }
