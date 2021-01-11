@@ -16,15 +16,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class CourseResponse {
 
-    @JsonProperty
     private Integer id;
-    @JsonProperty("name")
     private String name;
-    @JsonProperty("ownerId")
     private Integer ownerId;
-    @JsonProperty("groups")
     private Set<Integer> groupIds;
-    @JsonProperty("disabled")
     private Boolean disabled;
 
 }

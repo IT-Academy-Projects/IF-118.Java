@@ -4,13 +4,13 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +20,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
 @Slf4j
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
-    private final GroupService groupService;
+    private final GroupRepository groupRepository;
     private final UserService userService;
     private final CourseConverter courseConverter;
+
+    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter,
+                             GroupRepository groupRepository) {
+        this.courseRepository = courseRepository;
+        this.groupRepository = groupRepository;
+        this.userService = userService;
+        this.courseConverter = courseConverter;
+    }
 
     @Override
     public CourseResponse create(CourseRequest courseDto) {
@@ -38,20 +45,20 @@ public class CourseServiceImpl implements CourseService {
         Set<Integer> groupIds = courseDto.getGroupIds();
         if (groupIds != null) {
             groups = groupIds.stream()
-                    .map(groupService::findById)
+                    .map(id -> groupRepository.findById(id).get())
                     .collect(Collectors.toSet());
         }
-        Course course = courseConverter.convertToCourse(courseDto, groups);
+        Course course = courseConverter.of(courseDto, groups);
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
-        return courseConverter.convertToResponse(savedCourse);
+        return courseConverter.of(savedCourse);
     }
 
     @Override
     public List<CourseResponse> findAll() {
         log.info("Searching for courses...");
         return courseRepository.findAll().stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
             return Collections.emptyList();
         }
         return coursesByOwner.stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -76,7 +83,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.convertToResponse(getById(id));
+        return courseConverter.of(getById(id));
     }
 
     @Override

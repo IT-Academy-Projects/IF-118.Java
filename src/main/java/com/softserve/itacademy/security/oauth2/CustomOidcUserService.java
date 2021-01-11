@@ -2,11 +2,7 @@ package com.softserve.itacademy.security.oauth2;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.UserRepository;
-import com.softserve.itacademy.repository.security.RoleRepository;
 import com.softserve.itacademy.service.RoleService;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.usertype.UserType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

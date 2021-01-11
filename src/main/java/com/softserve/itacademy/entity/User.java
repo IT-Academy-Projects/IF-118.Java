@@ -1,12 +1,26 @@
 package com.softserve.itacademy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.itacademy.entity.security.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Singular;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +76,7 @@ public class User extends BasicEntity {
     }
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -2,34 +2,42 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.projection.IdNameTupleProjection;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
-import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserConverter userConverter;
 
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter) {
+        this.userRepository = userRepository;
+        this.userConverter = userConverter;
+    }
+
     @Override
-    public UserResponse findById(Integer id) {
-        return userConverter.convertToDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    public UserFullTinyProjection findById(Integer id) {
+        return userRepository.findProjectedById(id).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public IdNameTupleProjection findUserNameById(Integer id) {
+        return userRepository.findUserProjectedById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
     public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
-                .map(userConverter::convertToDto).collect(Collectors.toList());
+                .map(userConverter::of).collect(Collectors.toList());
     }
 
     @Override

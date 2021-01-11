@@ -20,21 +20,19 @@ public class GenericExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
-        log.error(exception.getMessage());
         ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, NOT_FOUND);
     }
 
     @ExceptionHandler(DisabledObjectException.class)
     public ResponseEntity<ErrorRequest> handleAccessDeniedException(DisabledObjectException exception) {
-        log.info(exception.getMessage());
         ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, GONE);
     }
 
     @ExceptionHandler(FileHasNoExtensionException.class)
     public ResponseEntity<ErrorRequest> handleFileHasNoExtensionException(FileHasNoExtensionException exception) {
-        ErrorRequest errorRequest = new ErrorRequest("Wrong file format");
+        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, BAD_REQUEST);
     }
 

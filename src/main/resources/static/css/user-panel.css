@@ -14,8 +14,10 @@ button {
 }
 
 .content-wrapper {
+    padding: 24px;
     height: 100%;
     display: flex;
+    justify-content: space-around;
 }
 
 .menu-panel {
@@ -28,3 +30,24 @@ button {
 .my-btn {
     margin: 10px;
 }
+
+.user-info {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+#user-email, #user-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.course-list {
+    width: 600px;
+}
+
+.group-list {
+    width: 600px;
+}
+
