@@ -5,7 +5,6 @@
     <title>SoftClass</title>
     <meta name="description" content="Study and learn with SoftClass">
 
-
     <!-- Bootstrap, jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -22,9 +21,7 @@
     <div class="col-md-12 col-md-offset-4">
         <div>
 
-            <div class="row">
-                <p><a href="/oauth2/authorize/google"><img src="http://pngimg.com/uploads/google/google_PNG19635.png" style="height:60px"></a></p>
-            </div>
+            <h1 class="display-3">Login</h1>
 
             <div class="alert alert-danger" id="error-label" style="display: none"></div>
 
@@ -48,6 +45,10 @@
                 </div>
                 <input type="button" class="btn btn-primary" name="login" id="login" value="Login"
                        onclick="handleLogin()">
+
+                <div class="row">
+                    <p><a href="/oauth2/authorize/google"><img src="http://pngimg.com/uploads/google/google_PNG19635.png" style="height:60px"></a></p>
+                </div>
             </form>
         </div>
     </div>
