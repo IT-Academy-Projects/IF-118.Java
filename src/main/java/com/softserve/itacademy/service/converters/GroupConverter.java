@@ -13,11 +13,11 @@ public class GroupConverter {
 
     private final ModelMapper mapper;
 
-    public GroupResponse convertToDto(Group group) {
+    public GroupResponse of(Group group) {
         return mapper.map(group, GroupResponse.class);
     }
 
-    public Group convertToGroup(GroupRequest groupRequest) {
+    public Group of(GroupRequest groupRequest) {
         Group map = mapper.map(groupRequest, Group.class);
         map.setDisabled(false);
         return map;

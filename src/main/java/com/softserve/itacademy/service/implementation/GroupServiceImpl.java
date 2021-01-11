@@ -36,15 +36,15 @@ public class GroupServiceImpl implements GroupService {
             throw new DisabledObjectException("Object disabled");
         }
 
-        Group newGroup = groupConverter.convertToGroup(groupRequest);
+        Group newGroup = groupConverter.of(groupRequest);
 
-        return groupConverter.convertToDto(groupRepository.save(newGroup));
+        return groupConverter.of(groupRepository.save(newGroup));
     }
 
     @Override
     public List<GroupResponse> findAll() {
         return groupRepository.findAll().stream()
-                .map(groupConverter::convertToDto).collect(Collectors.toList());
+                .map(groupConverter::of).collect(Collectors.toList());
     }
 
     @Override
@@ -55,8 +55,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group findById(Integer id) {
-        return getById(id);
+    public GroupResponse findById(Integer id) {
+        return groupConverter.of(getById(id));
     }
 
     public Group getById(Integer id) {

@@ -4,6 +4,7 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
@@ -24,13 +25,13 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
-    private final GroupService groupService;
+    private final GroupRepository groupRepository;
     private final UserService userService;
     private final CourseConverter courseConverter;
 
-    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter) {
+    public CourseServiceImpl(CourseRepository courseRepository, GroupRepository groupRepository, UserService userService, CourseConverter courseConverter) {
         this.courseRepository = courseRepository;
-        this.groupService = groupService;
+        this.groupRepository = groupRepository;
         this.userService = userService;
         this.courseConverter = courseConverter;
     }
@@ -43,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
         Set<Integer> groupIds = courseDto.getGroupIds();
         if (groupIds != null) {
             groups = groupIds.stream()
-                    .map(groupService::findById)
+                    .map(id -> groupRepository.findById(id).get())
                     .collect(Collectors.toSet());
         }
         Course course = courseConverter.convertToCourse(courseDto, groups);
