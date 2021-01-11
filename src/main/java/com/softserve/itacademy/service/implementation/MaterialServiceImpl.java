@@ -14,7 +14,6 @@ import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +31,6 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialConverter materialConverter;
     private AmazonS3ClientService amazonS3ClientService;
 
-    @Autowired
     public MaterialServiceImpl(MaterialRepository materialRepository,
                                MaterialConverter materialConverter,
                                CourseService courseService,
@@ -52,7 +50,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public MaterialResponse create(MaterialRequest materialRequest, MultipartFile file) {
         Course course = courseService.getById(materialRequest.getCourseId());
-        if (course.getDisabled()) { throw new DisabledObjectException(); }
+        if (course.getDisabled()) { throw new DisabledObjectException("Object disabled"); }
 
         Material material = Material.builder()
                 .name(materialRequest.getName())
@@ -70,7 +68,7 @@ public class MaterialServiceImpl implements MaterialService {
     public DownloadFileResponse downloadById(Integer id) {
         Material material = getById(id);
         String[] split = material.getFileReference().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException(); }
+        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
         String extension = split[split.length - 1];
         return DownloadFileResponse.builder()
                 .file(downloadFile(material.getFileReference()))
@@ -85,7 +83,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     private String saveFile(MultipartFile file) {
         String[] split = file.getOriginalFilename().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException(); }
+        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
         String extension = split[split.length - 1];
         String fileReference = UUID.randomUUID().toString().toLowerCase() + "." + extension;
         try {

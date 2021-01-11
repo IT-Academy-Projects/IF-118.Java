@@ -2,8 +2,7 @@
 
 -- changeSet YabVol:structure-1.0 endDelimiter:; splitStatements:true
 
-CREATE TABLE if not exists `courses`
-(
+CREATE TABLE if not exists `courses`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
@@ -13,8 +12,7 @@ CREATE TABLE if not exists `courses`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE if not exists `authority`
-(
+CREATE TABLE if not exists `authority`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
@@ -22,8 +20,7 @@ CREATE TABLE if not exists `authority`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE if not exists `student_groups`
-(
+CREATE TABLE if not exists `student_groups`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
@@ -33,8 +30,7 @@ CREATE TABLE if not exists `student_groups`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE if not exists `users`
-(
+CREATE TABLE if not exists `users`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
@@ -45,8 +41,7 @@ CREATE TABLE if not exists `users`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE if not exists `material`
-(
+CREATE TABLE if not exists `material`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `owner_id`   int      NOT NULL,
     `created_at` datetime NOT NULL,
@@ -60,8 +55,7 @@ CREATE TABLE if not exists `material`
     CONSTRAINT `fk_course_material` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
 );
 
-CREATE TABLE if not exists `role`
-(
+CREATE TABLE if not exists `role`(
     `id`         int      NOT NULL AUTO_INCREMENT,
     `created_at` datetime NOT NULL,
     `updated_at` datetime                             DEFAULT NULL,
@@ -69,8 +63,7 @@ CREATE TABLE if not exists `role`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE if not exists `groups_courses`
-(
+CREATE TABLE if not exists `groups_courses`(
     `group_id`  int NOT NULL,
     `course_id` int NOT NULL,
     PRIMARY KEY (`group_id`, `course_id`),
@@ -79,8 +72,7 @@ CREATE TABLE if not exists `groups_courses`
     CONSTRAINT `fk__groups__courses__group_id` FOREIGN KEY (`group_id`) REFERENCES `student_groups` (`id`)
 );
 
-CREATE TABLE if not exists `groups_users`
-(
+CREATE TABLE if not exists `groups_users`(
     `group_id` int NOT NULL,
     `user_id`  int NOT NULL,
     PRIMARY KEY (`group_id`, `user_id`),
@@ -89,8 +81,7 @@ CREATE TABLE if not exists `groups_users`
     CONSTRAINT `fk__groups__users__user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
-CREATE TABLE if not exists `roles_authorities`
-(
+CREATE TABLE if not exists `roles_authorities`(
     `role_id`      int NOT NULL,
     `authority_id` int NOT NULL,
     PRIMARY KEY (`role_id`, `authority_id`),
@@ -99,8 +90,7 @@ CREATE TABLE if not exists `roles_authorities`
     CONSTRAINT `fk_roles_authorities_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 );
 
-CREATE TABLE if not exists `users_courses`
-(
+CREATE TABLE if not exists `users_courses`(
     `user_id`   int NOT NULL,
     `course_id` int NOT NULL,
     PRIMARY KEY (`user_id`, `course_id`),
@@ -109,8 +99,7 @@ CREATE TABLE if not exists `users_courses`
     CONSTRAINT `fk__users__courses__user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
-CREATE TABLE if not exists `users_roles`
-(
+CREATE TABLE if not exists `users_roles`(
     `user_id` int NOT NULL,
     `role_id` int NOT NULL,
     PRIMARY KEY (`user_id`, `role_id`),
