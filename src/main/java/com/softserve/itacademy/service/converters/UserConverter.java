@@ -7,22 +7,17 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Component
 public class UserConverter {
 
     private final ModelMapper mapper;
 
-    public UserResponse convertToDto(User user) {
+    public UserResponse of(User user) {
         UserResponse map = mapper.map(user, UserResponse.class);
         map.setDisabled(user.getDisabled());
         return map;
-    }
-
-    public User convertToUser(UserRequest userRequest) {
-        User map = mapper.map(userRequest, User.class);
-        map.setDisabled(false);
-        return map;
-
     }
 }

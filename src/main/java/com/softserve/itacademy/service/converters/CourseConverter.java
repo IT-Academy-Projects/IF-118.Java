@@ -18,7 +18,7 @@ public class CourseConverter {
 
     private final ModelMapper mapper;
 
-    public CourseResponse convertToResponse(Course course) {
+    public CourseResponse of(Course course) {
         CourseResponse map = mapper.map(course, CourseResponse.class);
         map.setGroupIds((course.getGroups().stream()
                 .map(Group::getId)
@@ -29,7 +29,7 @@ public class CourseConverter {
         return map;
     }
 
-    public Course convertToCourse(CourseRequest courseDto, Set<Group> groups) {
+    public Course of(CourseRequest courseDto, Set<Group> groups) {
         Course map = mapper.map(courseDto, Course.class);
         map.setDisabled(false);
         map.setGroups(groups);

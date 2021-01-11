@@ -10,6 +10,7 @@ public interface GroupService {
     GroupResponse create(GroupRequest groupRequest);
     List<GroupResponse> findAll();
     void updateDisabled(Integer id, boolean disabled);
-    Group findById(Integer id);
-    Group getById(Integer id);
+    GroupResponse findById(Integer id);
+//    Group getById(Integer id);
+    List<GroupResponse> findByOwner(Integer id);
 }
