@@ -47,17 +47,17 @@ public class CourseServiceImpl implements CourseService {
                     .map(id -> groupRepository.findById(id).get())
                     .collect(Collectors.toSet());
         }
-        Course course = courseConverter.convertToCourse(courseDto, groups);
+        Course course = courseConverter.of(courseDto, groups);
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
-        return courseConverter.convertToResponse(savedCourse);
+        return courseConverter.of(savedCourse);
     }
 
     @Override
     public List<CourseResponse> findAll() {
         log.info("Searching for courses...");
         return courseRepository.findAll().stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -69,7 +69,7 @@ public class CourseServiceImpl implements CourseService {
             return Collections.emptyList();
         }
         return coursesByOwner.stream()
-                .map(courseConverter::convertToResponse)
+                .map(courseConverter::of)
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +82,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.convertToResponse(getById(id));
+        return courseConverter.of(getById(id));
     }
 
     @Override
