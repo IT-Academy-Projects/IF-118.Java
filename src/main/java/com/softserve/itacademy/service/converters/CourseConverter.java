@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,9 @@ public class CourseConverter {
         CourseResponse map = mapper.map(course, CourseResponse.class);
         map.setGroupIds((course.getGroups().stream()
                 .map(Group::getId)
+                .collect(Collectors.toSet())));
+        map.setMaterialIds((course.getMaterials().stream()
+                .map(Material::getId)
                 .collect(Collectors.toSet())));
         return map;
     }
