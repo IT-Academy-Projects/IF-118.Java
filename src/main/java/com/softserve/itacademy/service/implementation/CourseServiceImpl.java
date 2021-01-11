@@ -10,7 +10,6 @@ import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
 @Slf4j
 public class CourseServiceImpl implements CourseService {
@@ -29,6 +27,13 @@ public class CourseServiceImpl implements CourseService {
     private final GroupService groupService;
     private final UserService userService;
     private final CourseConverter courseConverter;
+
+    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter) {
+        this.courseRepository = courseRepository;
+        this.groupService = groupService;
+        this.userService = userService;
+        this.courseConverter = courseConverter;
+    }
 
     @Override
     public CourseResponse create(CourseRequest courseDto) {

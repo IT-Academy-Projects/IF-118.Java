@@ -1,9 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.service.MailSender;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +11,6 @@ public class MailSenderImpl implements MailSender {
 
     private JavaMailSender mailSender;
 
-    @Autowired
     public MailSenderImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }

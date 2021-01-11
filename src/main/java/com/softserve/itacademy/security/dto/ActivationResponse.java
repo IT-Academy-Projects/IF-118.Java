@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ActivationResponse {
 
     private String message;
-
     private boolean isActivated;
 
 }

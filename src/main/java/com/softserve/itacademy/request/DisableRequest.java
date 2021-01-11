@@ -1,7 +1,10 @@
 package com.softserve.itacademy.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
@@ -13,7 +16,6 @@ import javax.validation.constraints.NotBlank;
 public class DisableRequest {
 
     @NotBlank
-    @JsonProperty("disabled")
     private boolean disabled;
 
 }
