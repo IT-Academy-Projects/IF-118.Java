@@ -2,9 +2,11 @@ package com.softserve.itacademy.security.ownauth;
 
 
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountLockedException;
 
 @Slf4j
 @Component
@@ -36,14 +37,14 @@ public class OwnAuthProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new BadCredentialsException("No user with such email"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new BadCredentialsException("Account not found"));
 
         if(user.getDisabled()) {
-            throw new AccountLockedException("Account is disabled");
+            throw new BadCredentialsException("Account is disabled");
         }
 
         if(!user.getActivated()) {
-            throw new AccountLockedException("Account is not activated");
+            throw new BadCredentialsException("Account is not activated");
         }
 
         log.debug("Using OwnAuthProvider");
@@ -51,7 +52,7 @@ public class OwnAuthProvider implements AuthenticationProvider {
         if (passwordEncoder.matches(password, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
         } else {
-            throw new BadCredentialsException("Password is not correct");
+            throw new BadCredentialsException("Wrong email or password");
         }
 
     }

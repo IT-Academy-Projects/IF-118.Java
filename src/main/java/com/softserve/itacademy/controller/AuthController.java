@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
@@ -8,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,20 +45,52 @@ public class AuthController {
     }
 
     @GetMapping("/login-error")
-    public ResponseEntity<String> loginError(HttpServletRequest request) {
+    public ResponseEntity<BasicExceptionResponse> loginError(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        String errorMessage = null;
+        BasicExceptionResponse dto = null;
 
         if (session != null) {
             AuthenticationException ex = (AuthenticationException) session
                     .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
             if (ex != null) {
-                errorMessage = ex.getMessage();
+                dto = BasicExceptionResponse.builder()
+                        .message(ex.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(ex.getClass().getSimpleName())
+                        .build();
             }
         }
 
-        return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<BasicExceptionResponse> handleValidationException(MethodArgumentNotValidException ex) {
+
+        ObjectError error = ex.getAllErrors().get(0);
+
+        String message = ex.getFieldError().getField() + " " + error.getDefaultMessage();
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(message)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(ex.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<BasicExceptionResponse> handleAuthException(AuthenticationException ex) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(ex.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
 }
