@@ -1,6 +1,5 @@
 package com.softserve.itacademy.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +19,7 @@ public class CourseResponse {
     private String name;
     private Integer ownerId;
     private Set<Integer> groupIds;
+    private Set<Integer> materialIds;
     private Boolean disabled;
 
 }

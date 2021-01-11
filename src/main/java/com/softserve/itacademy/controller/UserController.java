@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserFullTinyProjection> findUserNameAndIdByUserId(@AuthenticationPrincipal User user) {
+    public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
