@@ -1,8 +1,9 @@
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
 showGroupInfo();
+showGroupStudents();
 function showGroupInfo() {
     $('#table-content').html('');
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
     $.ajax(`/api/v1/groups/${id}`).then(group => {
         $('#table-head').html(`
          <th scope="col">Id</th>
@@ -16,5 +17,16 @@ function showGroupInfo() {
                 <td>${group.ownerId}</td>
             </tr>
         `)
+    });
+
+}
+
+function showGroupStudents(){
+    $.ajax(`/api/v1/users/group/${id}`).then(data => {
+        data.forEach((student) => {
+            $('#students').append(`
+            ${student.name} | 
+        `);
+        })
     });
 }

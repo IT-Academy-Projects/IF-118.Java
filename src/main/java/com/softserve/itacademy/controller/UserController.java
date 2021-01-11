@@ -59,4 +59,9 @@ public class UserController {
         }
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
+
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
+        return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);
+    }
 }
