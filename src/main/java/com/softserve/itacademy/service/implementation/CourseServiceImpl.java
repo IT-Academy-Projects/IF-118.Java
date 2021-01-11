@@ -10,17 +10,17 @@ import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
+@Slf4j
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
@@ -28,36 +28,48 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
     private final CourseConverter courseConverter;
 
+    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter) {
+        this.courseRepository = courseRepository;
+        this.groupService = groupService;
+        this.userService = userService;
+        this.courseConverter = courseConverter;
+    }
+
     @Override
     public CourseResponse create(CourseRequest courseDto) {
-        userService.findById(courseDto.getOwnerId());   //check if ownerId is valid
-        Set<Group> groups = Optional.ofNullable(courseDto.getGroupIds())    //check if groupIds is null
-                .orElse(Collections.emptySet()).stream()    //set an empty set if groupIds is null
-                .map(groupService::getById)
-                .collect(Collectors.toSet());
-
-        Course course = courseConverter.of(courseDto, groups);
-        return courseConverter.of(courseRepository.save(course));
+        log.info("Creating course {}", courseDto);
+        userService.findById(courseDto.getOwnerId());
+        Set<Group> groups = new HashSet<>();
+        Set<Integer> groupIds = courseDto.getGroupIds();
+        if (groupIds != null) {
+            groups = groupIds.stream()
+                    .map(groupService::findById)
+                    .collect(Collectors.toSet());
+        }
+        Course course = courseConverter.convertToCourse(courseDto, groups);
+        Course savedCourse = courseRepository.save(course);
+        log.info("Created course {}", savedCourse);
+        return courseConverter.convertToResponse(savedCourse);
     }
 
     @Override
     public List<CourseResponse> findAll() {
+        log.info("Searching for courses...");
         return courseRepository.findAll().stream()
-                .map(courseConverter::of)
+                .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
-        return Optional.ofNullable(courseRepository.findByOwner(id))
-                .orElse(Collections.emptyList()).stream()
-                .map(courseConverter::of)
+        log.info("Searching courses for user {}", id);
+        List<Course> coursesByOwner = courseRepository.findByOwner(id);
+        if (coursesByOwner == null) {
+            return Collections.emptyList();
+        }
+        return coursesByOwner.stream()
+                .map(courseConverter::convertToResponse)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void delete(Integer id) {
-        courseRepository.delete(getById(id));
     }
 
     @Override
@@ -69,7 +81,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.of(getById(id));
+        return courseConverter.convertToResponse(getById(id));
     }
 
     @Override

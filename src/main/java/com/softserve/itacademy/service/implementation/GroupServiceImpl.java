@@ -3,20 +3,18 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
-import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
 public class GroupServiceImpl implements GroupService {
 
@@ -24,12 +22,18 @@ public class GroupServiceImpl implements GroupService {
     private final GroupConverter groupConverter;
     private final UserService userService;
 
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService) {
+        this.groupRepository = groupRepository;
+        this.groupConverter = groupConverter;
+        this.userService = userService;
+    }
+
     @Override
     public GroupResponse create(GroupRequest groupRequest){
         User owner = userService.getById(groupRequest.getOwnerId());
 
         if (owner.getDisabled()) {
-            throw new DisabledObjectException();
+            throw new DisabledObjectException("Object disabled");
         }
 
         Group newGroup = groupConverter.of(groupRequest);
@@ -48,11 +52,6 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findByOwnerId(id).stream()
                 .map(groupConverter::of)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void delete(Integer id) {
-        groupRepository.delete(getById(id));
     }
 
     @Override

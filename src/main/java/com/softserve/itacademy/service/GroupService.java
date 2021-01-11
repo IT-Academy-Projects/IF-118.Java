@@ -9,7 +9,6 @@ import java.util.List;
 public interface GroupService {
     GroupResponse create(GroupRequest groupRequest);
     List<GroupResponse> findAll();
-    void delete(Integer id);
     void updateDisabled(Integer id, boolean disabled);
     GroupResponse findById(Integer id);
     Group getById(Integer id);

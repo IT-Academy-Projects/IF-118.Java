@@ -1,11 +1,11 @@
 package com.softserve.itacademy.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.CascadeType;
@@ -24,6 +24,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Builder
 @Table(name = "courses")
@@ -39,20 +40,9 @@ public class Course extends BasicEntity {
     private Boolean disabled;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Material> materials;
 
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", ownerId=" + ownerId +
-//                ", groups=" + groups +
-                //", users=" + users +
-                ", materials=" + materials +
-                '}';
-    }
 }
