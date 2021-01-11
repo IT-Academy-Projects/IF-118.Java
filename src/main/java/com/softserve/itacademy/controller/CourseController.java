@@ -37,6 +37,11 @@ public class CourseController {
         return new ResponseEntity<>(courseService.create(courseRequest), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseResponse> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(courseService.readById(id), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal User currentUser) {
         return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);

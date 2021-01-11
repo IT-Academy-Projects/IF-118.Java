@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -17,4 +19,8 @@ public class GroupResponse {
     private String name;
     private Integer ownerId;
     private Boolean disabled;
+
+    private Set<CourseResponse> courses;
+
+    private Set<UserResponse> users;
 }
