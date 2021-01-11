@@ -44,8 +44,8 @@ public class CourseServiceTest {
     @Test
     public void create_whenValidData_thenCreateCourse() {
         when(courseRepository.save(any(Course.class))).thenReturn(generateCourse());
-        when(courseConverter.convertToCourse(any(), any())).thenReturn(generateCourse());
-        when(courseConverter.convertToResponse(any(Course.class))).thenReturn(generateCourseResponse());
+        when(courseConverter.of(any(), any())).thenReturn(generateCourse());
+        when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
 
         CourseResponse courseDto = courseServiceImpl.create(generateCourseDto());
         assertEquals("NewCourse", courseDto.getName());

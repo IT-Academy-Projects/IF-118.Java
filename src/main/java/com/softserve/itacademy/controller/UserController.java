@@ -1,5 +1,7 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.projection.IdNameTupleProjection;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.UserResponse;
@@ -29,14 +31,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.findById(id), OK);
+    @GetMapping("/me")
+    public ResponseEntity<UserFullTinyProjection> findUserNameAndIdByUserId(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<IdNameTupleProjection> findUserNameAndIdByUserId(@PathVariable Integer id) {
+        return new ResponseEntity<>(userService.findUserNameById(id), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/disabled")
