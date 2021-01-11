@@ -1,6 +1,7 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int updateDisabled(Integer id, boolean disabled);
 
     Optional<UserFullTinyProjection> findProjectedById(Integer id);
+    Optional<IdNameTupleProjection> findUserProjectedById(Integer id);
+
 }
