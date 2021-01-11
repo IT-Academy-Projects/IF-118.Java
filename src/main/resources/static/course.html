@@ -7,26 +7,28 @@
 
     <!-- Bootstrap, jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/course.css">
     <script>
-        $(function(){
-            $(".header").load("header.html");
+        $(function () {
+            $(".navbar").load("navbar.html");
         });
     </script>
 
 </head>
 
 <body>
+<div id="navbar"></div>
 <div class="wrapper">
-    <div class="header"></div>
     <div class="content" id="course-content">
         <div class="course-title" id="course-name"></div>
         <div class="info">
             <div class="owner">Teacher: <span id="teacher-name"></span></div>
-            <div class="course-description">Description: <span id="description-value">This course for was created for learning Java Core. This course for was created for learning Java Core.</span></div>
+            <div class="course-description">Description: <span id="description-value">This course for was created for learning Java Core. This course for was created for learning Java Core.</span>
+            </div>
         </div>
         <h3>Materials</h3>
         <div class="materials" id="materials">
