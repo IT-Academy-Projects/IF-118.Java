@@ -44,11 +44,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void delete(Integer id) {
-        groupRepository.delete(getById(id));
-    }
-
-    @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (groupRepository.updateDisabled(id, disabled) == 0) {
             throw new NotFoundException();

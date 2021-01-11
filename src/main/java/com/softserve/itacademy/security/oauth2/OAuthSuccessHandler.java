@@ -41,7 +41,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String email = (String) attributes.get("email");
 
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
-        Authentication token = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), user.getAuthorities());
+        Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
 

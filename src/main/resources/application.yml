@@ -31,9 +31,3 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     debug: true
-
-errors:
-  exceptions:
-    NOT_FOUND:
-      message: "Such entity not found"
-
