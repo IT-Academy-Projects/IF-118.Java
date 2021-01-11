@@ -22,6 +22,8 @@
         <org.hibernate.validator.version>7.0.0.Final</org.hibernate.validator.version>
         <jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
         <javax.validation.validation-api.version>2.0.1.Final</javax.validation.validation-api.version>
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <modelmapper.version>2.3.9</modelmapper.version>
     </properties>
 
     <dependencies>
@@ -58,7 +60,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox-boot-starter.version}</version>
         </dependency>
 
         <!-- DATASOURCE -->
@@ -86,7 +88,6 @@
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -101,7 +102,7 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>2.3.9</version>
+            <version>${modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

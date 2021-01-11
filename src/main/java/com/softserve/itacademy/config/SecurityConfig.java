@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers("/", "/registration", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
-                .anyRequest().authenticated()//.anyRequest().hasAuthority("application.read")
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable() //TODO: Implement CSRF
 //                .exceptionHandling().authenticationEntryPoint()

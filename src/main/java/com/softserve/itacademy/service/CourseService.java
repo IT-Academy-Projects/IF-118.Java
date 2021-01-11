@@ -13,6 +13,5 @@ public interface CourseService {
     List<CourseResponse> findAll();
     List<CourseResponse> findByOwner(Integer id);
     Course getById(Integer id);
-    void delete(Integer id);
     void updateDisabled(Integer id, boolean disabled);
 }

@@ -68,12 +68,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void delete(Integer id) {
-        log.info("Deleting course {}", id);
-        courseRepository.delete(getById(id));
-    }
-
-    @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (courseRepository.updateDisabled(id, disabled) == 0) {
             throw new NotFoundException();
