@@ -7,7 +7,6 @@ import java.util.Set;
 public interface UserTinyProjection extends IdNameTupleProjection {
 
     String getEmail();
-    Boolean getDisabled();
     Set<RoleProjection> getRoles();
 
 }

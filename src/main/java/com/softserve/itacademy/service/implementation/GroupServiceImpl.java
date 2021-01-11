@@ -67,7 +67,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     //TODO make private
-    public Group getById(Integer id) {
+    private Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 

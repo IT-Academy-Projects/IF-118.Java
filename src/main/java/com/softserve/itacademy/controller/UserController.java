@@ -30,9 +30,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserFullTinyProjection> findById(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.findById(id), OK);
+    @GetMapping("/me")
+    public ResponseEntity<UserFullTinyProjection> findById(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
     @GetMapping
