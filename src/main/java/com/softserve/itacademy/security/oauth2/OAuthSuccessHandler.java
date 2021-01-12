@@ -44,9 +44,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         SecurityContextHolder.getContext().setAuthentication(token);
 
-        String redirectionUrl = UriComponentsBuilder.fromUriString("/")
-                .build().toUriString();
-        getRedirectStrategy().sendRedirect(request, response, "/");
+        getRedirectStrategy().sendRedirect(request, response, "/user");
     }
 
 }

@@ -63,8 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable() //TODO: Implement CSRF
                 .oauth2Login()
                     .loginPage("/login").permitAll()
-                        .loginProcessingUrl("/api/v1/login")
-                        .defaultSuccessUrl("/user")
                         .failureUrl("/api/v1/login-error")
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService)
