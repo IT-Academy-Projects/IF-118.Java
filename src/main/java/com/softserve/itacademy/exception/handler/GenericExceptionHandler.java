@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class GenericExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(NotFoundException exception) {
+    public ResponseEntity<BasicExceptionResponse> handleNotFoundException(NotFoundException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(exception.getMessage())
@@ -35,7 +35,7 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler(DisabledObjectException.class)
-    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(DisabledObjectException exception) {
+    public ResponseEntity<BasicExceptionResponse> handleDisabledObjectException(DisabledObjectException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(exception.getMessage())
