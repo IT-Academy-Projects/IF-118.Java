@@ -1,7 +1,7 @@
 $( document ).ready(init())
 
 function init() {
-    getCurrentUser().then(ans => {
+    isAuthenticated().then(ans => {
         initButtons(ans)
     })
 }
@@ -16,6 +16,6 @@ function initButtons(ans) {
     }
 }
 
-function getCurrentUser() {
+function isAuthenticated() {
     return $.get("/api/v1/users/is-authenticated")
 }
