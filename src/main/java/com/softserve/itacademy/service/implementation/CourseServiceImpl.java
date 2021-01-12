@@ -29,8 +29,7 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
     private final CourseConverter courseConverter;
 
-    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter,
-                             GroupRepository groupRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, GroupRepository groupRepository, UserService userService, CourseConverter courseConverter) {
         this.courseRepository = courseRepository;
         this.groupRepository = groupRepository;
         this.userService = userService;

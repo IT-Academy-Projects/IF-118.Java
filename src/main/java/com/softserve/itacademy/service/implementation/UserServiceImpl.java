@@ -57,5 +57,12 @@ public class UserServiceImpl implements UserService {
         if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException();
     }
 
+    @Override
+    public List<UserResponse> findByGroupId(Integer id) {
+        return userRepository.findByGroupId(id).stream()
+                .map(userConverter::of)
+                .collect(Collectors.toList());
+    }
+
 
 }
