@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/course.css">
     <script>
         $(function () {
-            $(".navbar").load("navbar.html");
+            $("#navbar").load("navbar.html");
         });
     </script>
 
@@ -34,10 +34,21 @@
         <div class="materials" id="materials">
 
         </div>
+        <div id="create-course" style="display: none">
+            <form>
+                <div class="form-course">
+                    <label for="name">Course Name:</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name">
+                </div>
+                <button type="button" class="my-btn btn btn-outline-dark show" onclick="createCourse();">Create
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 </body>
 
 <script src="js/course.js"></script>
+<script src="js/create-course.js"></script>
 
 </html>
