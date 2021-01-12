@@ -4,6 +4,9 @@ import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.CourseResponse;
+import com.softserve.itacademy.security.perms.CourseCreatePermission;
+import com.softserve.itacademy.security.perms.CourseDeletePermission;
+import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    @CourseCreatePermission
     @PostMapping
     public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest courseRequest,
                                                  @AuthenticationPrincipal User currentUser) {
@@ -37,16 +41,19 @@ public class CourseController {
         return new ResponseEntity<>(courseService.create(courseRequest), HttpStatus.CREATED);
     }
 
+    @CourseReadPermission
     @GetMapping("/{id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(courseService.readById(id), HttpStatus.OK);
     }
 
+    @CourseReadPermission
     @GetMapping
     public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal User currentUser) {
         return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);
     }
 
+    @CourseDeletePermission
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disabledRequest) {
         courseService.updateDisabled(id, disabledRequest.isDisabled());
