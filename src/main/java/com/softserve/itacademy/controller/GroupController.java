@@ -58,5 +58,4 @@ public class GroupController {
         groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
-
 }

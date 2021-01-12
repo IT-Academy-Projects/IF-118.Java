@@ -70,6 +70,4 @@ public class GroupServiceImpl implements GroupService {
     private Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }
-
-
 }

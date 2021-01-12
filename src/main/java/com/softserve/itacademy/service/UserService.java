@@ -23,4 +23,6 @@ public interface UserService {
     User getById(Integer id);
 
     void updateProfileInfo(Integer id, String name, String email);
+
+    List<UserResponse> findByGroupId(Integer id);
 }
