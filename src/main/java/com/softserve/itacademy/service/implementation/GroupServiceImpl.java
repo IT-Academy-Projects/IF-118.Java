@@ -29,7 +29,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupResponse create(GroupRequest groupRequest){
+    public GroupResponse create(GroupRequest groupRequest) {
         User owner = userService.getById(groupRequest.getOwnerId());
 
         if (owner.getDisabled()) {
@@ -52,6 +52,13 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findByOwnerId(id).stream()
                 .map(groupConverter::of)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateGroup(Integer groupId, GroupRequest groupRequest) {
+        Group group = groupRepository.findByIdAndOwnerId(groupId, groupRequest.getOwnerId())
+                .orElseThrow(NotFoundException::new);
+        group.setName(groupRequest.getName());
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
@@ -19,4 +20,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     int updateDisabled(Integer id, boolean disabled);
 
     List<Group> findByOwnerId(Integer id);
+
+    Optional<Group> findByIdAndOwnerId(Integer groupId, Integer ownerId);
 }
