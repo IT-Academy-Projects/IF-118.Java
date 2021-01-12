@@ -1,6 +1,7 @@
 package com.softserve.itacademy.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,16 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "invitation")
-public class Invitation extends BasicEntity{
+public class Invitation{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Integer id;
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private String email;
