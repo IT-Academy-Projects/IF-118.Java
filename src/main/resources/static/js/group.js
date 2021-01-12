@@ -6,7 +6,10 @@ function showGroupInfo() {
     $('#table-content').html('');
     $.ajax(`/api/v1/groups/${id}`).then(group => {
         $('#group-name').text(group.name);
-        $('#owner').text(group.ownerId);
+
+        $.get(`/api/v1/users/${group.ownerId}`).then(user => {
+            $('#owner').text(user.name);
+        })
         group.users.forEach(user => {
             $('#students').append(user.name + ' | ');
         });
