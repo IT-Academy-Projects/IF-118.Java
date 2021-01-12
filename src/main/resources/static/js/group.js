@@ -14,7 +14,7 @@ function showGroupInfo() {
             $('#students').append(user.name + ' | ');
         });
         group.courses.forEach((course) => {
-            $('#courses').append(course.name + ' | ');
+            $('#courses').append(`<span><a href="/course?id=${course.id}">`+ course.name +`</a> | </span>`);
         });
     });
 }
