@@ -43,6 +43,6 @@ public class Course extends BasicEntity {
     private Set<Group> groups = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Material> materials;
+    private Set<Material> materials;
 
 }

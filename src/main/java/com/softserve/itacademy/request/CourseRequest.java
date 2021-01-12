@@ -18,5 +18,6 @@ public class CourseRequest {
     @NotBlank
     private Integer ownerId;
     private Set<Integer> groupIds;
+    private Set<Integer> materialIds;
 
 }

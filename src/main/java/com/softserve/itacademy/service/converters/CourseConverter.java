@@ -29,10 +29,11 @@ public class CourseConverter {
         return map;
     }
 
-    public Course of(CourseRequest courseDto, Set<Group> groups) {
+    public Course of(CourseRequest courseDto, Set<Group> groups, Set<Material> materials) {
         Course map = mapper.map(courseDto, Course.class);
         map.setDisabled(false);
         map.setGroups(groups);
+        map.setMaterials(materials);
         return map;
     }
 }
