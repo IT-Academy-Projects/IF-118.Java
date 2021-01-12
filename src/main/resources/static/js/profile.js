@@ -1,6 +1,6 @@
 let user
 
-$.ajax(`api/users/${localStorage.getItem("userId")}`).done(data => {
+$.ajax(`api/v1/users/me`).done(data => {
     user = data
     init()
 })
@@ -32,11 +32,10 @@ function saveChanges() {
     obj.email = $('#profile-email').attr('contenteditable', false).text()
     if (obj.name !== user.name || obj.email !== user.email) {
         $.ajax({
-            url: `/api/users/${user.id}/profile?` + $.param(obj),
+            url: `/api/v1/users/${user.id}/profile?` + $.param(obj),
             type: 'PATCH'
         })
     }
-    console.log(`/api/users/${user.id}/profile?` + $.param(obj))
 }
 
 function cancel() {
