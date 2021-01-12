@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/course.css">
+    <script src="js/group.js"></script>
+    <script>
+        $(function () {
+            $("#navbar").load("navbar.html");
+        });
+    </script>
+</head>
+
+<body>
+<div id="navbar"></div>
+<div class="wrapper">
+    <div class="header"></div>
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="info">
+                <div class="course-title" id="group-name"></div>
+                <div class="owner">Owner: <span id="owner"></span></div>
+            </div>
+            <h3>List of students:</h3>
+            <div id="students"></div>
+            <h3>Courses of this group:</h3>
+            <div id="courses"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

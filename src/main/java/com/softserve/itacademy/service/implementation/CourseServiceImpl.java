@@ -2,20 +2,20 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
-import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,27 +28,36 @@ public class CourseServiceImpl implements CourseService {
     private final GroupRepository groupRepository;
     private final UserService userService;
     private final CourseConverter courseConverter;
+    private final MaterialRepository materialRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository, GroupService groupService, UserService userService, CourseConverter courseConverter,
-                             GroupRepository groupRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, GroupRepository groupRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository) {
         this.courseRepository = courseRepository;
         this.groupRepository = groupRepository;
         this.userService = userService;
         this.courseConverter = courseConverter;
+        this.materialRepository = materialRepository;
     }
 
     @Override
-    public CourseResponse create(CourseRequest courseDto) {
-        log.info("Creating course {}", courseDto);
-        userService.findById(courseDto.getOwnerId());
-        Set<Group> groups = new HashSet<>();
-        Set<Integer> groupIds = courseDto.getGroupIds();
+    public CourseResponse create(CourseRequest courseRequest) {
+        log.info("Creating course {}", courseRequest);
+        userService.findById(courseRequest.getOwnerId());
+        Set<Group> groups = Collections.emptySet();
+        Set<Integer> groupIds = courseRequest.getGroupIds();
         if (groupIds != null) {
             groups = groupIds.stream()
                     .map(id -> groupRepository.findById(id).get())
                     .collect(Collectors.toSet());
         }
-        Course course = courseConverter.of(courseDto, groups);
+        Set<Material> materials = Collections.emptySet();
+        Set<Integer> materialIds = courseRequest.getMaterialIds();
+        if (materialIds != null) {
+            materials = materialIds.stream()
+                    .map(id -> materialRepository.findById(id).get())
+                    .collect(Collectors.toSet());
+        }
+
+        Course course = courseConverter.of(courseRequest, groups, materials);
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
         return courseConverter.of(savedCourse);

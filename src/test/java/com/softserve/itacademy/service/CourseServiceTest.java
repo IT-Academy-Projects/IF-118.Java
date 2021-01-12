@@ -44,7 +44,7 @@ public class CourseServiceTest {
     @Test
     public void create_whenValidData_thenCreateCourse() {
         when(courseRepository.save(any(Course.class))).thenReturn(generateCourse());
-        when(courseConverter.of(any(), any())).thenReturn(generateCourse());
+        when(courseConverter.of(any(), any(), any())).thenReturn(generateCourse());
         when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
 
         CourseResponse courseDto = courseServiceImpl.create(generateCourseDto());
@@ -89,7 +89,7 @@ public class CourseServiceTest {
                 .ownerId(1)
                 .disabled(false)
                 .groups(Collections.emptySet())
-                .materials(Collections.emptyList())
+                .materials(Collections.emptySet())
                 .build();
     }
 }

@@ -5,6 +5,8 @@ import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.UserResponse;
+import com.softserve.itacademy.security.perms.UserDeletePermission;
+import com.softserve.itacademy.security.perms.UserUpdatePermission;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +48,7 @@ public class UserController {
         return new ResponseEntity<>(userService.findUserNameById(id), HttpStatus.OK);
     }
 
+    @UserDeletePermission
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
         userService.updateDisabled(id, disableRequest.isDisabled());
@@ -65,5 +68,10 @@ public class UserController {
             return new ResponseEntity<>(false, OK);
         }
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
+        return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);
     }
 }

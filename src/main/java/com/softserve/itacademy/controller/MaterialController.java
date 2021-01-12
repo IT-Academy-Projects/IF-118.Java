@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
+import com.softserve.itacademy.security.perms.CourseCreatePermission;
+import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.service.MaterialService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +35,7 @@ public class MaterialController {
         this.objectMapper = objectMapper;
     }
 
+    @CourseCreatePermission
     @PostMapping
     public ResponseEntity<MaterialResponse> create(@RequestPart(value = "material") String data,
                                                    @RequestPart(value = "file") MultipartFile file) throws JsonProcessingException {
@@ -40,11 +43,13 @@ public class MaterialController {
         return new ResponseEntity<>(materialService.create(materialRequest, file), HttpStatus.CREATED);
     }
 
+    @CourseReadPermission
     @GetMapping("/{id}")
     public ResponseEntity<MaterialResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(materialService.findById(id), HttpStatus.OK);
     }
 
+    @CourseReadPermission
     @GetMapping("/{id}/file")
     public ResponseEntity<byte[]> downloadById(@PathVariable Integer id) {
         DownloadFileResponse downloadFileResponse = materialService.downloadById(id);

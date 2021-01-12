@@ -8,9 +8,15 @@ import java.util.List;
 
 public interface GroupService {
     GroupResponse create(GroupRequest groupRequest);
+
     List<GroupResponse> findAll();
+
     void updateDisabled(Integer id, boolean disabled);
+
     GroupResponse findById(Integer id);
-//    Group getById(Integer id);
+
+    //    Group getById(Integer id);
     List<GroupResponse> findByOwner(Integer id);
+
+    void updateGroup(Integer groupId, GroupRequest groupRequest);
 }
