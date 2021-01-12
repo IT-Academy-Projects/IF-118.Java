@@ -7,9 +7,6 @@ function createCourse() {
         url: `/api/v1/courses`,
         data: JSON.stringify(courseRequest),
         contentType: "application/json; charset=utf-8",
-        success: function() {
-            showCourses();
-        }
     });
 }
 
