@@ -1,23 +1,33 @@
 version: "3"
 services:
-  mysqldb:
+  softclass-mysql-server:
     image: mysql
     networks:
-      - project-mysql
+      - softclass-app-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=postgres
       - MYSQL_DATABASE=db
       - MYSQL_ROOT_HOST=%
 
-  project:
-    image: project
+  softclass-application:
+    image: softclass-application
     ports:
       - "8080:8080"
     networks:
-      - project-mysql
+      - softclass-app-mysql
     depends_on:
-      - mysqldb
-    entrypoint: ["./wait-for-it.sh", "mysqldb:3306", "--", "java","-jar","app.jar"]
+      - softclass-mysql-server
+    environment:
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_PROTOCOL=${MAIL_PROTOCOL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - S3_ACCESSKEY=${S3_ACCESSKEY}
+      - S3_SECRETKEY=${S3_SECRETKEY}
+      - OAUTH2_GOOGLE_ID=${OAUTH2_GOOGLE_ID}
+      - OAUTH2_GOOGLE_SECRET=${OAUTH2_GOOGLE_SECRET}
+    entrypoint: ["./wait-for-it.sh", "softclass-mysql-server:3306", "-t", "20", "--", "java","-jar","app.jar"]
 
 networks:
-  project-mysql:
+  softclass-app-mysql:

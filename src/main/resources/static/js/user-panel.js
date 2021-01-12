@@ -35,8 +35,8 @@ function showGroups(groups) {
         getRequest(`/api/v1/users/${group.ownerId}`).then(owner => {
             $('#group-table-content').append(`
             <tr>
-                <td>${group.name}</td>
-                <th>${owner.name}</th>
+                <td><a href="/group?id=${group.id}">${group.name}</a></td>
+                <td>${owner.name}</td>
             </tr>
         `);
         })
