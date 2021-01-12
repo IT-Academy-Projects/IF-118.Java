@@ -7,10 +7,7 @@ function handleRegister() {
 
 
     if (email === '' || password === '' || passwordRepeat === '' || name === '') {
-        $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        $('#name').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+        makeRed();
         showError("Fields cannot be empty")
     } else if (password !== passwordRepeat) {
         $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
@@ -42,10 +39,8 @@ function registerRequestJson(data) {
         },
 
         error: function (request, textStatus, errorThrown) {
-            console.log(request)
-            showError(request.responseJSON.error)
-            $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-            $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+            showError(request.responseJSON.message)
+            makeRed();
         }
     });
 }
@@ -54,4 +49,11 @@ function showError(text) {
     let label = $("#error-label");
     label.text(text);
     label.show();
+}
+
+function makeRed() {
+    $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+    $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+    $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+    $('#name').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
 }
