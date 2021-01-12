@@ -64,33 +64,4 @@ public class AuthController {
 
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<BasicExceptionResponse> handleValidationException(MethodArgumentNotValidException ex) {
-
-        ObjectError error = ex.getAllErrors().get(0);
-
-        String message = ex.getFieldError().getField() + " " + error.getDefaultMessage();
-
-        BasicExceptionResponse dto = BasicExceptionResponse.builder()
-                .message(message)
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(ex.getClass().getSimpleName())
-                .build();
-
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<BasicExceptionResponse> handleAuthException(AuthenticationException ex) {
-
-        BasicExceptionResponse dto = BasicExceptionResponse.builder()
-                .message(ex.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(ex.getClass().getSimpleName())
-                .build();
-
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
-    }
-
 }

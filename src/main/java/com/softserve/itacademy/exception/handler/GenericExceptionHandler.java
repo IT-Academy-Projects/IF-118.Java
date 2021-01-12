@@ -4,13 +4,17 @@ import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.request.ErrorRequest;
+import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.GONE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -19,26 +23,78 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class GenericExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> handleAccessDeniedException(NotFoundException exception) {
-        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
-        return new ResponseEntity<>(errorRequest, NOT_FOUND);
+    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(NotFoundException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DisabledObjectException.class)
-    public ResponseEntity<ErrorRequest> handleAccessDeniedException(DisabledObjectException exception) {
-        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
-        return new ResponseEntity<>(errorRequest, GONE);
+    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(DisabledObjectException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.GONE.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.GONE);
     }
 
     @ExceptionHandler(FileHasNoExtensionException.class)
-    public ResponseEntity<ErrorRequest> handleFileHasNoExtensionException(FileHasNoExtensionException exception) {
-        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
-        return new ResponseEntity<>(errorRequest, BAD_REQUEST);
+    public ResponseEntity<BasicExceptionResponse> handleFileHasNoExtensionException(FileHasNoExtensionException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(FileProcessingException.class)
-    public ResponseEntity<ErrorRequest> handleFileProcessingException(FileProcessingException exception) {
-        ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
-        return new ResponseEntity<>(errorRequest, BAD_REQUEST);
+    public ResponseEntity<BasicExceptionResponse> handleFileProcessingException(FileProcessingException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<BasicExceptionResponse> handleValidationException(MethodArgumentNotValidException exception) {
+
+        ObjectError error = exception.getAllErrors().get(0);
+
+        String message = exception.getFieldError().getField() + " " + error.getDefaultMessage();
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(message)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<BasicExceptionResponse> handleAuthException(AuthenticationException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 }
