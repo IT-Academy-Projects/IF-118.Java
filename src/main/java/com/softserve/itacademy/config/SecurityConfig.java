@@ -61,9 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable() //TODO: Implement CSRF
-//                .exceptionHandling().authenticationEntryPoint()
                 .oauth2Login()
                     .loginPage("/login").permitAll()
+                        .loginProcessingUrl("/api/v1/login")
+                        .defaultSuccessUrl("/user")
+                        .failureUrl("/api/v1/login-error")
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService)
                 .and()

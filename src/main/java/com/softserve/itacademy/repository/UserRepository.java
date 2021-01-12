@@ -2,6 +2,8 @@ package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.response.UserResponse;
+import com.softserve.itacademy.projection.IdNameTupleProjection;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,8 +36,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
 
+    Optional<UserFullTinyProjection> findProjectedById(Integer id);
+    Optional<IdNameTupleProjection> findUserProjectedById(Integer id);
+
     @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id" , nativeQuery = true)
     List<User> findByGroupId(Integer id);
-  
+
 }
 

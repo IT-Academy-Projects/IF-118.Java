@@ -44,4 +44,9 @@ public class ViewController {
         return "group.html";
     }
 
+    @GetMapping(path = "/course", produces = MediaType.TEXT_HTML_VALUE)
+    public String courseView() {
+        return "course.html";
+    }
+
 }

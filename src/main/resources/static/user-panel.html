@@ -7,28 +7,44 @@
 
     <!-- Bootstrap, jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/user-panel.css">
     <script src="js/user-panel.js"></script>
     <script>
-        $(function(){
-            $(".header").load("header.html");
+        $(function () {
+            $("#navbar").load("navbar.html");
         });
     </script>
 </head>
 
 <body>
+<div id="navbar"></div>
 <div class="wrapper">
-    <div class="header"></div>
     <div class="content-wrapper">
-        <div class="menu-panel">
-            <a role="button" class="my-btn btn btn-outline-dark" href="#">Courses</a>
-            <a role="button" class="my-btn btn btn-outline-dark" href="#">Groups</a>
+        <div class="user-info">
+            <div>Name: <span id="user-name"></span></div>
+            <div>Email: <span id="user-email"></span></div>
         </div>
-        <div class="content">
-
+        <div class="course-list">
+            <h1>Courses</h1>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr id="course-table-head"></tr>
+                </thead>
+                <tbody id="course-table-content"></tbody>
+            </table>
+        </div>
+        <div class="group-list">
+            <h1>Groups</h1>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr id="group-table-head"></tr>
+                </thead>
+                <tbody id="group-table-content"></tbody>
+            </table>
         </div>
     </div>
 </div>

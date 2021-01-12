@@ -41,5 +41,4 @@ public class GenericExceptionHandler {
         ErrorRequest errorRequest = new ErrorRequest(exception.getMessage());
         return new ResponseEntity<>(errorRequest, BAD_REQUEST);
     }
-
 }

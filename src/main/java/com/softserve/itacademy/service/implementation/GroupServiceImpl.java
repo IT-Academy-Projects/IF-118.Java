@@ -48,6 +48,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<GroupResponse> findByOwner(Integer id) {
+        return groupRepository.findByOwnerId(id).stream()
+                .map(groupConverter::of)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (groupRepository.updateDisabled(id, disabled) == 0) {
             throw new NotFoundException();
@@ -59,7 +66,8 @@ public class GroupServiceImpl implements GroupService {
         return groupConverter.of(getById(id));
     }
 
-    public Group getById(Integer id) {
+    //TODO make private
+    private Group getById(Integer id) {
         return groupRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 }
