@@ -5,6 +5,7 @@ import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.security.perms.GroupCreatePermission;
+import com.softserve.itacademy.security.perms.GroupUpdatePermission;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,13 @@ public class GroupController {
         return new ResponseEntity<>(groupService.findByOwner(id), HttpStatus.OK);
     }
 
+    @GroupUpdatePermission
+    @PatchMapping("/{groupId}")
+    public ResponseEntity<Void> update(@AuthenticationPrincipal User user, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
+        groupRequest.setOwnerId(user.getId());
+        groupService.updateGroup(groupId, groupRequest);
+        return new ResponseEntity<>(OK);
+    }
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> delete(@PathVariable Integer id) {
 //        groupService.delete(id);
@@ -58,5 +66,6 @@ public class GroupController {
         groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
+
 
 }
