@@ -18,7 +18,7 @@ function showCourses(courses) {
             $('#course-table-content').append(`
             <tr>
                 <td><a href="/course?id=${course.id}">${course.name}</a></td>
-                <th>${owner.name}</th>
+                <td>${owner.name}</td>
             </tr>
         `);
         })
