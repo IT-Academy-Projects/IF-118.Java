@@ -1,7 +1,6 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -8,8 +8,6 @@ import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findByGroupId(Integer id) {
         return userRepository.findByGroupId(id).stream()
-                .map(userConverter::convertToDto)
+                .map(userConverter::of)
                 .collect(Collectors.toList());
     }
 

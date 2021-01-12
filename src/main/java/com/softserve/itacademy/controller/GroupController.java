@@ -58,10 +58,4 @@ public class GroupController {
         groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<GroupResponse> findById(@PathVariable Integer id) {
-        return new ResponseEntity<>(groupService.findById(id), HttpStatus.OK);
-    }
-
 }
