@@ -29,19 +29,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final MailSender mailSender;
 
-    private final InvitationRepository invitationRepository;
 
-    private final InvitationService invitationService;
 
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
-                                   PasswordEncoder passwordEncoder, MailSender mailSender,
-                                   InvitationRepository invitationRepository, InvitationService invitationService) {
+                                   PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
-        this.invitationRepository = invitationRepository;
-        this.invitationService = invitationService;
     }
 
     @Transactional
@@ -63,10 +58,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
         addUser(user);
-
-        if (isInvited(dto.getEmail())) {
-            invitationService.setUserId(userRepository.findByEmail(dto.getEmail()).get().getId());
-        }
 
         sendMessage(user);
 
@@ -98,14 +89,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public ActivationResponse activateUser(String code) {
-        User user = userRepository.findByActivationCode(code).orElseThrow(NotFoundException::new);
+        User user = userRepository.findByActivationCode(code)
+                .orElseThrow(() -> new NotFoundException("User with such activation code was not found"));
         user.setActivated(true);
         userRepository.save(user);
         return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
-    }
-
-    private boolean isInvited(String email) {
-        return invitationRepository.existsByEmail(email);
     }
 
 }

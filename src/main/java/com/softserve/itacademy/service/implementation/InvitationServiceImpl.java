@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
@@ -10,6 +11,8 @@ import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -28,40 +31,35 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
+        Invitation invitation = invitationConverter.of(invitationRequest);
         if (userRepository.existsByEmail(invitationRequest.getEmail())) {
-            sendInvitationMail(invitationConverter.of(invitationRequest));
+            sendInvitationMail(invitation);
         } else {
-            sendRegistrationMail(invitationConverter.of(invitationRequest));
+            throw new NotFoundException("user with such email was not found");
         }
-        return invitationConverter.of(invitationRepository.save(invitationConverter.of(invitationRequest)));
+        return invitationConverter.of(invitationRepository.save(invitation));
     }
 
     @Override
-    public InvitationResponse approve(Integer id) {
-        return invitationConverter.of(invitationRepository.update(id));
-    }
-
-    @Override
-    public InvitationResponse setUserId(Integer id) {
-        return invitationConverter.of(invitationRepository.setUserId(id));
+    public void approve(Integer id) {
+        Optional<Invitation> byId = invitationRepository.findById(id);
+        if (byId.get().getExpirationDate().isAfter(byId.get().getCreatedAt())) {
+            invitationRepository.update(id);
+        }
     }
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.getOne(invitation.getUser().getId());
         mailSender.send(user.getEmail(), "SoftClass invitation",
-                getInviteMessage(invitation) + " " + invitation.getLink() + user.getId() + "/invite");
-    }
-
-    private void sendRegistrationMail(Invitation invitation) {
-        mailSender.send(invitation.getEmail(), "SoftClass invitation",
-                getInviteMessage(invitation) + " http://localhost:8080/registration");
-
+                getInviteMessage(invitation));
     }
 
     private String getInviteMessage(Invitation invitation) {
+        String courseOrGroup = invitation.getGroup() != null ? "group?id=" : "course?id=";
+        Integer id = courseOrGroup.equals("group?id=") ? invitation.getGroup().getId() : invitation.getCourse().getId();
+        String link = invitation.getLink() + courseOrGroup + id;
         String inviteTo = invitation.getGroup() != null ? invitation.getGroup().getName() : invitation.getCourse().getName();
-        return String.format("You are invited to %s", inviteTo);
+        return String.format("You are invited to %s %s", inviteTo, link);
     }
-
 }
 

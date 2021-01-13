@@ -1,6 +1,5 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.InvitationService;
@@ -29,6 +28,7 @@ public class InvitationController {
 
     @GetMapping("/approve/{id}")
     public ResponseEntity<InvitationResponse> approveInvitation(@PathVariable Integer id) {
-        return new ResponseEntity<>(invitationService.approve(id), HttpStatus.OK);
+        invitationService.approve(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

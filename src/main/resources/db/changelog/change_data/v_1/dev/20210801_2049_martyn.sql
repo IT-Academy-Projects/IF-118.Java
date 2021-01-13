@@ -2,7 +2,7 @@
 -- changeSet Martyn:change_data-1.0.0 endDelimiter:; splitStatements:true
 
 CREATE TABLE IF NOT EXISTS `invitation` (
-    `id` INT NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `created_at` DATETIME NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `expiration_date` DATETIME NOT NULL,
