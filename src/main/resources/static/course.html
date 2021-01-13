@@ -6,12 +6,18 @@
     <meta name="description" content="Study and learn with SoftClass">
 
     <!-- Bootstrap, jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/course.css">
+
     <script>
         $(function () {
             $("#navbar").load("navbar.html");
@@ -29,15 +35,46 @@
             <div class="owner">Teacher: <span id="teacher-name"></span></div>
             <div class="course-description">Description: <span id="description-value">This course for was created for learning Java Core. This course for was created for learning Java Core.</span>
             </div>
+            <div>
+                <button id="invite-to-course-button" type="button" class="btn btn-outline-success btn-sm"
+                        data-toggle="modal" data-target="#invite-to-course-modal">Invite student
+                </button>
+            </div>
         </div>
         <h3>Materials</h3>
         <div class="materials" id="materials">
+        </div>
+        <!-- Modal -->
+        <div id="invite-to-course-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Invite student to group</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="text" class="form-control" id="email" placeholder="Type student email...">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-success show" onclick="inviteToCourse();">
+                            Invite
+                        </button>
+                        <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
 
+            </div>
         </div>
     </div>
 </div>
 </body>
 
 <script src="js/course.js"></script>
+<script src="js/invitation.js"></script>
 
 </html>
