@@ -1,5 +1,3 @@
-showCourseCreateForm();
-
 function createCourse() {
     const courseRequest = {name: $('#name').val()};
     $.ajax({
@@ -7,13 +5,10 @@ function createCourse() {
         url: `/api/v1/courses`,
         data: JSON.stringify(courseRequest),
         contentType: "application/json; charset=utf-8",
-    });
-}
-
-function showCourseCreateForm() {
-    $.ajax(`/api/v1/users/current`).then(data => {
-        if (data){
-            $('#create-course').show();
+        success: function () {
+            $( "#course-table-content" ).html(``);
+            showTeacherCourses();
+            $("#close").click();
         }
     });
 }

@@ -6,6 +6,7 @@ function init() {
         let role = user.roles.find(role => role.name === "TEACHER");
         if (role === undefined) {
             showStudentCourses(user.courses);
+            $('#create-course-button, #create-group-button').hide();
         } else {
             showTeacherCourses();
         }
@@ -38,10 +39,9 @@ function showTeacherCourses() {
     $.get(`/api/v1/courses`).then(courses => {
         courses.forEach(course => {
             $('#course-table-content').append(`
-                <tr>
-                    <td><a href="/course?id=${course.id}">${course.name}</a></td>
-                    <td>`+$('#user-name').val()+`</td>
-                </tr>
+            <tr>
+                <td><a href="/course?id=${course.id}">${course.name}</a></td>
+            </tr>
             `)
         })
     });
