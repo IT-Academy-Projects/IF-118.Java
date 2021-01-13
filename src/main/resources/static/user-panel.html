@@ -6,18 +6,19 @@
     <meta name="description" content="Study and learn with SoftClass">
 
     <!-- Bootstrap, jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/user-panel.css">
-    <script src="js/user-panel.js"></script>
-    <script>
-        $(function () {
-            $("#navbar").load("navbar.html");
-        });
-    </script>
+
 </head>
 
 <body>
@@ -28,26 +29,83 @@
             <div>Name: <span id="user-name"></span></div>
             <div>Email: <span id="user-email"></span></div>
         </div>
-        <div class="course-list">
-            <h1>Courses</h1>
-            <table class="table">
-                <thead class="thead-dark">
-                <tr id="course-table-head"></tr>
-                </thead>
-                <tbody id="course-table-content"></tbody>
-            </table>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <p class="h2">Courses</p>
+                </div>
+                <div class="col-sm">
+                    <button id="create-course-button" type="button" class="btn btn-outline-success btn-sm"
+                            data-toggle="modal" data-target="#create-course-modal">+
+                    </button>
+                </div>
+                <div class="col-sm">
+                    <p class="h2">Groups</p>
+                </div>
+                <div class="col-sm">
+                    <button id="create-group-button" type="button" class="btn btn-outline-success btn-sm"
+                            data-toggle="modal" data-target="#create-group-modal">+
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr id="course-table-head"></tr>
+                        </thead>
+                        <tbody id="course-table-content"></tbody>
+                    </table>
+                </div>
+                <div class="col-sm">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr id="group-table-head"></tr>
+                        </thead>
+                        <tbody id="group-table-content"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
-        <div class="group-list">
-            <h1>Groups</h1>
-            <table class="table">
-                <thead class="thead-dark">
-                <tr id="group-table-head"></tr>
-                </thead>
-                <tbody id="group-table-content"></tbody>
-            </table>
+
+        <!-- Modal -->
+        <div id="create-course-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create course</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Course Name:</label>
+                                <input type="text" class="form-control" id="name" placeholder="Type name of course...">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-success show" onclick="createCourse();">
+                            Create
+                        </button>
+                        <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
+
+<script src="js/user-panel.js"></script>
+<script src="js/create-course.js"></script>
+<script>
+    $(function () {
+        $("#navbar").load("navbar.html");
+    });
+</script>
+
 </body>
 
 </html>
