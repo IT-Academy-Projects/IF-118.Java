@@ -13,10 +13,16 @@
     <!-- Custom -->
     <link rel="stylesheet" href="css/registration.css">
     <script src="js/registration.js"></script>
+    <script>
+        $(function () {
+            $("#navbar").load("navbar.html");
+        });
+    </script>
 
 </head>
 
 <body>
+<div id="navbar"></div>
 <div class="container login-container">
     <div class="col-md-12col-md-offset-4">
         <div>
@@ -53,8 +59,11 @@
                     <option value="Teacher">Teacher</option>
                 </select>
 
-                <input type="button" class="btn btn-primary" name="register" id="register" value="Register"
+                <input type="button" class="btn btn-dark" name="register" id="register" value="Register"
                        onclick="handleRegister()" style="margin-top: 10px">
+
+                    <p style="display: inline"><a href="/oauth2/authorize/google"><img
+                            src="http://pngimg.com/uploads/google/google_PNG19635.png" style="height:60px"></a></p>
             </form>
         </div>
     </div>

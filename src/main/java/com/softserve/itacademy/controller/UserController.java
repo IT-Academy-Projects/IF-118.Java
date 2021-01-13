@@ -1,12 +1,13 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.response.IsAuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
-import com.softserve.itacademy.security.perms.UserUpdatePermission;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,22 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/is-authenticated")
+    public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal User user) {
+        if(user == null) {
+            return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(false).build(), OK);
+        }
+
+        return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(true).userId(user.getId()).build(), OK);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
+
+        if(user==null) {
+            throw new NotFoundException();
+        }
+
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 

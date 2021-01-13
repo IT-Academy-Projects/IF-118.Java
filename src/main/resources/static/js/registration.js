@@ -1,10 +1,9 @@
 function handleRegister() {
-    let email = $("#email").val();
+   let email = $("#email").val();
     let password = $("#password").val();
     let passwordRepeat = $("#passwordRepeat").val();
     let name = $("#name").val();
     let pickedRole = $("#pickedRole").val();
-
 
     if (email === '' || password === '' || passwordRepeat === '' || name === '') {
         makeRed();
@@ -21,7 +20,6 @@ function handleRegister() {
         });
     }
 }
-
 
 function registerRequestJson(data) {
     return $.ajax({

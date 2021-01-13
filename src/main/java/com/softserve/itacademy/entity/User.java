@@ -66,13 +66,21 @@ public class User extends BasicEntity {
 
     @Transient
     public Set<GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
+        Set<GrantedAuthority> authorities = this.roles.stream()
                 .map(Role::getAuthorities)
                 .flatMap(Set::stream)
                 .map(authority -> {
                     return new SimpleGrantedAuthority(authority.getName());
                 })
                 .collect(Collectors.toSet());
+
+        authorities.addAll(this.roles.stream()
+                .map(role -> {
+                    return new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase());
+                })
+                .collect(Collectors.toSet()));
+
+        return authorities;
     }
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
