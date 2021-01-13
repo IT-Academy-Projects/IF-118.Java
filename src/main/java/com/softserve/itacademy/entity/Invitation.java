@@ -36,6 +36,9 @@ public class Invitation{
     @Column(nullable = false)
     private String link;
 
+    @Column(nullable = false, unique = true)
+    private String code;
+
     @ManyToOne
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_invitation"))
     private User user;

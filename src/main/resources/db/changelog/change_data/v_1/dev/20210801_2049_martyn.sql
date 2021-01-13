@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `invitation` (
     `user_id` INT DEFAULT NULL,
     `course_id` INT DEFAULT NULL,
     `group_id` INT DEFAULT NULL,
+    `code` VARCHAR(255) NOT NULL UNIQUE,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_user_invitation` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
     CONSTRAINT `fk_course_invitation` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),

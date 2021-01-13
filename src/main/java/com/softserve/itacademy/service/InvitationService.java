@@ -6,5 +6,5 @@ import com.softserve.itacademy.response.InvitationResponse;
 public interface InvitationService {
 
     InvitationResponse sendInvitation(InvitationRequest invitationRequest);
-    void approve (Integer id);
+    void approve (String email, String code);
 }

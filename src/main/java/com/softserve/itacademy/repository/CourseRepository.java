@@ -19,5 +19,4 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query(value = "select * from courses where owner_id=:id", nativeQuery = true)
     List<Course> findByOwner(Integer id);
-
 }

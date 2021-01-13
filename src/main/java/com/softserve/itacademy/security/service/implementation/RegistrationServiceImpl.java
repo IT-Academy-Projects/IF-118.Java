@@ -29,8 +29,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final MailSender mailSender;
 
-
-
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
                                    PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.roleService = roleService;
@@ -43,7 +41,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public SuccessRegistrationResponse registerUser(RegistrationRequest dto) {
 
-
         if (!(dto.getPickedRole().equals("STUDENT") || dto.getPickedRole().equals("TEACHER"))) {
             throw new BadCredentialsException("You can't pick such role");
         }
@@ -55,7 +52,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .role(roleService.findByName("USER"))
                 .role(roleService.findByName(dto.getPickedRole()))
                 .activationCode(UUID.randomUUID().toString()).build();
-
 
         addUser(user);
 
@@ -86,7 +82,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-
     @Override
     public ActivationResponse activateUser(String code) {
         User user = userRepository.findByActivationCode(code)
@@ -95,7 +90,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
         return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
     }
-
 }
+
 
 
