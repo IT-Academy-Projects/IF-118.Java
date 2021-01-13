@@ -44,7 +44,7 @@ public class ViewController {
         return "admin-panel.html";
     }
 
-    @UserRolePermission
+//    @UserRolePermission
     @GetMapping(path = "/user", produces = MediaType.TEXT_HTML_VALUE)
     public String userView() {
         return "user-panel.html";
