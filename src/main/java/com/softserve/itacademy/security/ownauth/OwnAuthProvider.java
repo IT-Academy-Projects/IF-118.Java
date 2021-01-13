@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.AccountLockedException;
+
 
 @Slf4j
 @Component
@@ -40,11 +42,11 @@ public class OwnAuthProvider implements AuthenticationProvider {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new BadCredentialsException("Account not found"));
 
         if(user.getDisabled()) {
-            throw new BadCredentialsException("Account is disabled");
+            throw new AccountLockedException("Account is disabled");
         }
 
         if(!user.getActivated()) {
-            throw new BadCredentialsException("Account is not activated");
+            throw new AccountLockedException("Account is not activated");
         }
 
         log.debug("User " + email + " trying to authorize");

@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/is-authenticated")
     public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal User user) {
-        if(user == null) {
+        if (user == null) {
             return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(false).build(), OK);
         }
 
@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
 
-        if(user==null) {
+        if (user == null) {
             throw new NotFoundException();
         }
 
@@ -79,7 +79,7 @@ public class UserController {
 
     @GetMapping("/current")
     public ResponseEntity<Boolean> checkIfTeacher(@AuthenticationPrincipal User currentUser) {
-        if(currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("TEACHER"))){
+        if (currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("TEACHER"))) {
             return new ResponseEntity<>(false, OK);
         }
         return new ResponseEntity<>(true, HttpStatus.OK);

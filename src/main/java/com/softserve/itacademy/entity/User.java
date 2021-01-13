@@ -53,6 +53,9 @@ public class User extends BasicEntity {
     private Boolean activated = false;
 
     @Column
+    private Boolean isPickedRole;
+
+    @Column
     private String activationCode;
 
     @Singular

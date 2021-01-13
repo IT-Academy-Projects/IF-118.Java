@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
-    @Query(value = "select * from role r where r.name = ?" , nativeQuery = true)
-    Optional<Role> findByName(String name);
+    @Query(value = "select * from role r where upper(r.name) = upper(?)" , nativeQuery = true)
+    Optional<Role> findByNameIgnoreCase(String name);
 
 }
