@@ -47,7 +47,7 @@ public class OwnAuthProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Account is not activated");
         }
 
-        log.debug("Using OwnAuthProvider");
+        log.debug("User " + email + " trying to authorize");
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());

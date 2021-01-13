@@ -1,16 +1,19 @@
-package com.softserve.itacademy.request;
+package com.softserve.itacademy.response;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorRequest {
+public class IsAuthenticatedResponse {
 
-    private String message;
-
+    Boolean exists;
+    Integer userId;
 }

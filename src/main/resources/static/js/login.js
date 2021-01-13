@@ -51,4 +51,3 @@ function showError(text) {
     $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
     $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
 }
-
