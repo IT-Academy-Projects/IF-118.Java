@@ -62,14 +62,6 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
-    @GetMapping("/current")
-    public ResponseEntity<Boolean> checkIfTeacher(@AuthenticationPrincipal User currentUser) {
-        if(currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("TEACHER"))){
-            return new ResponseEntity<>(false, OK);
-        }
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
-
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);
