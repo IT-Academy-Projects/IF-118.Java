@@ -14,6 +14,12 @@ function initPage() {
 }
 
 function getCourse(id) {
+    getRequest(`api/v1/users/me`).then(user => {
+        if (user.roles.find(role => role.name === "STUDENT")) {
+            $('#invite-to-course-button').hide();
+        }
+    });
+
     getRequest(`/api/v1/courses/${id}`).then(course => {
 
         $('#course-name').text(course.name);
