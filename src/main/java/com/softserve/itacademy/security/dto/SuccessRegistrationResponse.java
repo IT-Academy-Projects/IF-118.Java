@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 public class SuccessRegistrationResponse {
 
-    private Integer id;
     private String name;
     private String email;
 

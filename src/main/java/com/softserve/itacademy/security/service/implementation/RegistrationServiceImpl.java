@@ -59,13 +59,17 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .role(roleService.findByNameIgnoreCase("USER"))
                 .role(roleService.findByNameIgnoreCase(dto.getPickedRole()))
                 .isPickedRole(true)
-                .activationCode(UUID.randomUUID().toString()).build();
+                .activationCode(UUID.randomUUID().toString())
+                .build();
 
         addUser(user);
 
         sendMessage(user);
 
-        return SuccessRegistrationResponse.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
+        return SuccessRegistrationResponse.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
     @Override
@@ -73,7 +77,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         User user = userRepository.findByActivationCode(code).orElseThrow(NotFoundException::new);
         user.setActivated(true);
         userRepository.save(user);
-        return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
+        return ActivationResponse.builder()
+                .isActivated(true)
+                .message("Successfully activated")
+                .build();
     }
 
     @Override
@@ -99,7 +106,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                             user.getAuthorities())
             );
 
-            return RolePickResponse.builder().email(user.getEmail()).pickedRole(pickedRole.getName()).build();
+            return RolePickResponse.builder()
+                    .email(user.getEmail())
+                    .pickedRole(pickedRole.getName())
+                    .build();
         }
         throw new RoleAlreadyPickedException("This account already picked a role");
     }
