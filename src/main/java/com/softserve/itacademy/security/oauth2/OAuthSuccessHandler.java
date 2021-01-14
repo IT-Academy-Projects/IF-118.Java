@@ -43,8 +43,12 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
+        if(!user.getIsPickedRole()) {
+            getRedirectStrategy().sendRedirect(request, response, "/role-pick");
+        } else {
+            getRedirectStrategy().sendRedirect(request, response, "/user");
+        }
 
-        getRedirectStrategy().sendRedirect(request, response, "/user");
     }
 
 }

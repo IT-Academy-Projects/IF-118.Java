@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pick a role</title>
+    <meta name="description" content="Study and learn with SoftClass">
+
+    <!-- Bootstrap, jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom -->
+    <link rel="stylesheet" href="css/role-pick.css">
+    <script src="js/role-pick.js"></script>
+    <script>
+        $(function () {
+            $("#navbar").load("navbar.html");
+        });
+    </script>
+
+</head>
+
+<body>
+<div id="navbar"></div>
+<div class="container login-container">
+    <div class="col-md-12 col-md-offset-4">
+        <div>
+
+            <h1 class="display-3">Pick a role</h1>
+
+            <div class="alert" id="alert" style="display: none"></div>
+
+            <form action="/api/v1/role-pick" method="patch" id="login-form">
+
+                <label for="pickedRole">Choose account type:</label>
+                <select name="pickedRole" id="pickedRole" class="form-control">
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                </select>
+
+                <input type="button" class="btn btn-dark" name="submit" id="submit" value="Submit"
+                       onclick="handleRolePick()" style="margin-top: 10px">
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

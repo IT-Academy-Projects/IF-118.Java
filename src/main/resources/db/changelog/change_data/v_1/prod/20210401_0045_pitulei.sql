@@ -1,5 +1,5 @@
-  -- liquibase formatted sql
-  -- changeSet Pitulei:fields_for_email_confirmation endDelimiter:; splitStatements:false
+-- liquibase formatted sql
+-- changeSet Pitulei:fields_for_email_confirmation endDelimiter:; splitStatements:false
 
   -- USERS
    ALTER TABLE users
