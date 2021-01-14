@@ -11,9 +11,7 @@ import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.implementation.RegistrationServiceImpl;
-import org.aspectj.lang.annotation.Before;
-import org.hibernate.annotations.NotFound;
-import org.junit.jupiter.api.BeforeAll;
+import com.softserve.itacademy.tools.security.WithMockOwnStudent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -129,7 +125,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    @WithMockUser // Not completely right thing to do, cuz we're using own auth principal.
+    @WithMockOwnStudent
     void pickRoleSuccessTeacher() {
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
