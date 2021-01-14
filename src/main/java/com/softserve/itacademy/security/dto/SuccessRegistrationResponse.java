@@ -11,5 +11,6 @@ public class SuccessRegistrationResponse {
 
     private String name;
     private String email;
+    private String role;
 
 }

@@ -58,7 +58,7 @@ public class User extends BasicEntity {
     @Column
     private String activationCode;
 
-    @Singular
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
