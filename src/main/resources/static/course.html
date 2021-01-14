@@ -22,6 +22,7 @@
             $("#navbar").load("navbar.html");
         });
     </script>
+    <script src="js/course.js"></script>
 
 </head>
 
@@ -33,6 +34,11 @@
         <div class="info">
             <div class="owner">Teacher: <span id="teacher-name"></span></div>
             <div class="course-description">Description: <span id="description-value"></span>
+                <div class="edit-course-description-block" id="edit-course-description-block">
+                    <button id="edit-course-description" type="button" class="btn btn-outline-success btn-sm"
+                            data-toggle="modal" data-target="#edit-description-modal">Edit
+                    </button>
+                </div>
             </div>
         </div>
         <div class="material-title">
@@ -48,7 +54,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal for materials -->
     <div id="create-material-modal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -61,22 +67,56 @@
                         <div class="form-group">
                             <div class="material-input">
                                 <label for="name">Name:</label>
-                                <input type="text" class="form-control" id="name" placeholder="Name" onchange="checkInputsValue()">
+                                <input type="text" class="form-control" id="name" placeholder="Name"
+                                       onchange="checkInputsValue()">
                             </div>
                             <div class="material-input">
                                 <label for="description">Description:</label>
-                                <input type="text" class="form-control" id="description" placeholder="Description" onchange="checkInputsValue()">
+                                <input type="text" class="form-control" id="description" placeholder="Description"
+                                       onchange="checkInputsValue()">
                             </div>
                             <div class="material-input">
                                 <label for="file">File:</label>
-                                <input type="file" class="form-control" id="file" lang="en" onchange="checkInputsValue()">
+                                <input type="file" class="form-control" id="file" lang="en"
+                                       onchange="checkInputsValue()">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button id="submit-create-btn" type="button" class="btn btn-outline-success show" disabled onclick="createMaterial()">Create</button>
-                    <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    <button id="submit-create-material-btn" type="button" class="btn btn-outline-success show" disabled
+                            onclick="createMaterial()">Create
+                    </button>
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal for description -->
+    <div id="edit-description-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit description</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="material-input">
+                                <label for="description-textarea">Description:</label>
+                                <textarea id="description-textarea" class="form-control" onchange=" checkTextArea()" placeholder="Write smth about this course"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="submit-edit-desc-btn" type="button" class="btn btn-outline-success show" disabled
+                            onclick="editCourseDescription()">Edit
+                    </button>
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
@@ -84,7 +124,5 @@
     </div>
 </div>
 </body>
-
-<script src="js/course.js"></script>
 
 </html>

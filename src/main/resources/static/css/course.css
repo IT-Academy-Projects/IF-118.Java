@@ -10,6 +10,13 @@
     padding: 36px;
 }
 
+.course-description {
+    display: flex;
+}
+.edit-course-description-block {
+    margin-left: 10px;
+}
+
 .course-title {
     font-size: 36px;
     font-weight: bold;

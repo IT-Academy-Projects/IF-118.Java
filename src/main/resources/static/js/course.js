@@ -30,6 +30,7 @@ function getCourse(id, user) {
         } else {
             canEdit = false;
             $('#add-material-btn').hide();
+            $('#edit-course-description-block').hide();
         }
 
         $('#course-name').text(course.name);
@@ -97,11 +98,27 @@ function createMaterial() {
     });
 }
 
+function editCourseDescription() {
+    let newDescription = $('#description-textarea').val();
+    let data = {description: newDescription};
+    patchRequest(`/api/v1/courses/${courseId}/description`, data).then(res => {
+        $('#description-value').text(newDescription);
+    })
+}
+
+function checkTextArea() {
+    if ($('#description-textarea').val().length > 0 ) {
+        $('#submit-edit-desc-btn').removeAttr('disabled');
+    } else {
+        $('#submit-edit-desc-btn').attr('disabled', true);
+    }
+}
+
 function checkInputsValue() {
     if ($('#name').val().length > 0 && $('#description').val().length > 0 && $('#file').val().length > 0) {
-        $('#submit-create-btn').removeAttr('disabled');
+        $('#submit-create-material-btn').removeAttr('disabled');
     } else {
-        $('#submit-create-btn').attr('disabled', true);
+        $('#submit-create-material-btn').attr('disabled', true);
     }
 }
 
@@ -134,4 +151,13 @@ function postRequest(url, data) {
         contentType: false,
         enctype: 'multipart/form-data'
     });
+}
+
+function patchRequest(url, data) {
+    return $.ajax({
+        url: url,
+        type: 'PATCH',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8'
+    })
 }

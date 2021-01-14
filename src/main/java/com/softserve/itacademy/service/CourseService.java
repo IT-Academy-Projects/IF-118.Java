@@ -14,4 +14,5 @@ public interface CourseService {
     List<CourseResponse> findByOwner(Integer id);
     Course getById(Integer id);
     void updateDisabled(Integer id, boolean disabled);
+    void updateDescription(Integer id, String description);
 }
