@@ -96,7 +96,7 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler({OperationNotAllowedException.class})
-    public ResponseEntity<BasicExceptionResponse> handleAuthException(OperationNotAllowedException exception) {
+    public ResponseEntity<BasicExceptionResponse> handleOperationNotAllowedException(OperationNotAllowedException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(exception.getMessage())
