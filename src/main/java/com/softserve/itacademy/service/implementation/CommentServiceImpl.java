@@ -75,6 +75,22 @@ public class CommentServiceImpl implements CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<CommentResponse> findByMaterial(Integer id) {
+        log.info("Searching for comments of material {}", id);
+        List<Comment> comments = commentRepository.findByMaterialId(id);
+        if (comments == null) {
+            log.info("No comments for material {}", id);
+            return Collections.emptyList();
+        }
+        log.info("Comments: {}", comments);
+        List<CommentResponse> commentResponses = comments.stream()
+                .map(commentConverter::of)
+                .collect(Collectors.toList());
+        log.info("Comment responses: {}", commentResponses);
+        return commentResponses;
+    }
+
     private Comment getById(Integer id) {
         return commentRepository.findById(id).orElseThrow(NotFoundException::new);
     }

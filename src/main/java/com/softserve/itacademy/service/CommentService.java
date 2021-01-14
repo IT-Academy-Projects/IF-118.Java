@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.entity.Comment;
 import com.softserve.itacademy.request.CommentRequest;
 import com.softserve.itacademy.response.CommentResponse;
 
@@ -16,5 +15,7 @@ public interface CommentService {
     List<CommentResponse> findAll();
 
     List<CommentResponse> findByOwner(Integer id);
+
+    List<CommentResponse> findByMaterial(Integer id);
 
 }

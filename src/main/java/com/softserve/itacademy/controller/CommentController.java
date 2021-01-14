@@ -33,13 +33,13 @@ public class CommentController {
         return new ResponseEntity<>(commentService.create(commentRequest), HttpStatus.CREATED);
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<List<CommentResponse>> readComments(@PathVariable Integer id) {
-        return new ResponseEntity<>(commentService.findByOwner(id), HttpStatus.OK);
+    @GetMapping("/material/{id}")
+    public ResponseEntity<List<CommentResponse>> readByMaterialId(@PathVariable Integer id) {
+        return new ResponseEntity<>(commentService.findByMaterial(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentResponse> findById(@PathVariable Integer id) {
+    public ResponseEntity<CommentResponse> readById(@PathVariable Integer id) {
         return new ResponseEntity<>(commentService.readById(id), HttpStatus.OK);
     }
 }

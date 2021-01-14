@@ -39,9 +39,21 @@ function getMaterials(materialIds) {
                     <div class="material-name">${material.name}</div>
                     <div class="material-description">${material.description}</div>
                     <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                    <div><a onclick="toggleComments(${materialId});">Comments</a></div>
+                    <div id="material-${materialId}-comments" style="display: none">
+                        <section>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-5 col-md-6 col-12 pb-4" id="material-${materialId}-comments-body">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             `);
         });
+        loadComments(materialId);
     });
 }
 
