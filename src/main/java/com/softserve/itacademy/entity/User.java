@@ -56,9 +56,12 @@ public class User extends BasicEntity {
     private Boolean activated = false;
 
     @Column
+    private Boolean isPickedRole;
+
+    @Column
     private String activationCode;
 
-    @Singular
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",

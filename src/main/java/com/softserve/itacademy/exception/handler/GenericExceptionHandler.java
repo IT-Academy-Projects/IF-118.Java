@@ -4,6 +4,7 @@ import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,16 +14,12 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.xml.sax.helpers.DefaultHandler;
-
-import static org.springframework.http.HttpStatus.GONE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
 public class GenericExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<BasicExceptionResponse> handleNotFoundException(NotFoundException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
@@ -34,7 +31,7 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DisabledObjectException.class)
+    @ExceptionHandler({DisabledObjectException.class})
     public ResponseEntity<BasicExceptionResponse> handleDisabledObjectException(DisabledObjectException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
@@ -46,7 +43,7 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.GONE);
     }
 
-    @ExceptionHandler(FileHasNoExtensionException.class)
+    @ExceptionHandler({FileHasNoExtensionException.class})
     public ResponseEntity<BasicExceptionResponse> handleFileHasNoExtensionException(FileHasNoExtensionException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
@@ -58,7 +55,7 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(FileProcessingException.class)
+    @ExceptionHandler({FileProcessingException.class})
     public ResponseEntity<BasicExceptionResponse> handleFileProcessingException(FileProcessingException exception) {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
@@ -96,5 +93,17 @@ public class GenericExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({OperationNotAllowedException.class})
+    public ResponseEntity<BasicExceptionResponse> handleOperationNotAllowedException(OperationNotAllowedException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.METHOD_NOT_ALLOWED.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

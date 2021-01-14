@@ -1,18 +1,25 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
+import com.softserve.itacademy.security.dto.RolePickRequest;
+import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
+import com.softserve.itacademy.service.RoleService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,9 +47,20 @@ public class AuthController {
         return new ResponseEntity<>(registrationService.registerUser(dto), HttpStatus.CREATED);
     }
 
+    @PatchMapping("/role-pick")
+    public ResponseEntity<RolePickResponse> rolePick(
+            @Valid @RequestBody RolePickRequest dto,
+            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(registrationService.pickRole(user.getId(), dto), HttpStatus.OK);
+    }
+
     @GetMapping("/activation/{code}")
     public ResponseEntity<ActivationResponse> activation(@PathVariable String code) {
-        return new ResponseEntity<>(registrationService.activateUser(code), HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/login"));
+
+        return new ResponseEntity<>(registrationService.activateUser(code), headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/login-error")

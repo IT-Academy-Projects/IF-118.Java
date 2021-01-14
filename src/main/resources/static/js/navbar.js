@@ -11,7 +11,7 @@ function initButtons(ans) {
         $('#register-button').show();
         $('#login-button').show();
     } else {
-        $('#profile-button').show();
+        $('#panel-button').show();
         $('#logout-button').show();
     }
 }
