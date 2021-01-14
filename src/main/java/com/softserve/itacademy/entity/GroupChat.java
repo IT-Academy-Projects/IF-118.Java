@@ -20,15 +20,12 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
-public class GroupChatRoom extends BasicEntity {
+public class GroupChat extends BasicEntity {
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "group_id", referencedColumnName = "id")
-//    private Group group;
-
-    @OneToOne(mappedBy = "groupChatRoom", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
-    @OneToMany(mappedBy = "groupChatRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "groupChat", cascade = CascadeType.ALL)
     private List<ChatMessage> messages;
 }

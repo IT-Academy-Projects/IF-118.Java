@@ -3,7 +3,7 @@
 -- changeSet Pitulei:tables_for_chat endDelimiter:; splitStatements:true
 
 -- GroupChatRoom
-CREATE TABLE if not exists `group_chat_room`(
+CREATE TABLE if not exists `group_chat`(
     `id`        INT AUTO_INCREMENT PRIMARY KEY,
     `created_at` datetime NOT NULL,
     `updated_at` datetime DEFAULT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE if not exists `chat_message`(
     `group_chat_id` int         DEFAULT NULL,
     `user_id`       int         DEFAULT NULL,
     CONSTRAINT `fk_message_group_chat`
-        FOREIGN KEY (`group_chat_id`) REFERENCES group_chat_room (`id`),
+        FOREIGN KEY (`group_chat_id`) REFERENCES group_chat (`id`),
     CONSTRAINT `fk_user_message`
         FOREIGN KEY (`user_id`) REFERENCES users (`id`)
 );

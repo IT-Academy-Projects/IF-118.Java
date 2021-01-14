@@ -70,4 +70,9 @@ public class ViewController {
         return "course.html";
     }
 
+    @GetMapping(path = "/chat", produces = MediaType.TEXT_HTML_VALUE)
+    public String chatView() {
+        return "group-chat.html";
+    }
+
 }

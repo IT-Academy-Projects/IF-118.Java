@@ -55,11 +55,7 @@ public class Group extends BasicEntity {
     )
     private Set<Course> courses = new HashSet<>();
 
-//    @OneToOne(mappedBy = "group")
-//    private GroupChatRoom groupChatRoom;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_group_group_chat"))
-    private GroupChatRoom groupChatRoom;
+    @OneToOne(mappedBy = "group")
+    private GroupChat groupChat;
 
 }
