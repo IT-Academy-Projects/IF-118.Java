@@ -12,9 +12,11 @@
 
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/course.css">
+    <link rel="stylesheet" href="css/comments.css">
     <script>
         $(function () {
             $("#navbar").load("navbar.html");
+            $("#comments").load("comments.html");
         });
     </script>
 
@@ -31,13 +33,13 @@
             </div>
         </div>
         <h3>Materials</h3>
-        <div class="materials" id="materials">
-
-        </div>
+        <div class="materials" id="materials"></div>
+        <div id="comments"></div>
     </div>
 </div>
 </body>
 
 <script src="js/course.js"></script>
+<script src="js/comments.js"></script>
 
 </html>

@@ -17,5 +17,4 @@ public interface CommentService {
 
     List<CommentResponse> findByOwner(Integer id);
 
-    Comment getById(Integer id);
 }

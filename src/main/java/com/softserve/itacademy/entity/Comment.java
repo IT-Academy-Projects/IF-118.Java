@@ -31,6 +31,9 @@ public class Comment extends BasicEntity{
     @Column(nullable = false)
     private Boolean isPrivate;
 
+    @Column(nullable = false)
+    private Boolean disabled;
+
     @ManyToOne
     @JoinColumn(name = "material_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_material_comment"))
     private Material material;

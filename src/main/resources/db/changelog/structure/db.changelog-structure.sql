@@ -67,6 +67,7 @@ CREATE TABLE if not exists `comments`
     `updated_at`  datetime NOT NULL,
     `message`     varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
     `is_private`  tinyint(1)                                              DEFAULT NULL,
+    `disabled`    tinyint(1)                                              DEFAULT NULL,
     `material_id` int                                                     DEFAULT NULL,
     `owner_id`    int                                                     DEFAULT NULL,
     PRIMARY KEY (`id`),

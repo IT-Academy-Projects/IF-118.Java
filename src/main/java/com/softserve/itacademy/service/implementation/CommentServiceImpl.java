@@ -3,7 +3,7 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Comment;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.projection.UserFullTinyProjection;
+import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CommentRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.repository.UserRepository;
@@ -14,7 +14,10 @@ import com.softserve.itacademy.service.converters.CommentConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,15 +39,16 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse create(CommentRequest commentRequest) {
         log.info("Creating comment {}", commentRequest);
         Material material = materialRepository.findById(commentRequest.getMaterialId()).get();
-        UserFullTinyProjection owner = userRepository.findProjectedById(commentRequest.getOwnerId()).get();
-
+        User owner = userRepository.findById(commentRequest.getOwnerId()).get();
         Comment comment = commentConverter.of(commentRequest, material, owner);
-        return null;
+        Comment saved = commentRepository.save(comment);
+        return commentConverter.of(saved);
     }
 
     @Override
     public CommentResponse readById(Integer id) {
-        return null;
+        log.info("Searching for comment {}", id);
+        return commentConverter.of(getById(id));
     }
 
     @Override
@@ -59,11 +63,19 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponse> findByOwner(Integer id) {
-        return null;
+        log.info("Searching for comments of user {}", id);
+        List<Comment> comments = commentRepository.findByOwnerId(id);
+        if (comments == null) {
+            log.info("No comments for user {}", id);
+            return Collections.emptyList();
+        }
+        log.info("Comments: {}", comments);
+        return comments.stream()
+                .map(commentConverter::of)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Comment getById(Integer id) {
-        return null;
+    private Comment getById(Integer id) {
+        return commentRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 }
