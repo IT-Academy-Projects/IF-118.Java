@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -50,22 +51,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public SuccessRegistrationResponse registerUser(RegistrationRequest dto) {
 
-        checkPickedRole(dto.getPickedRole());
-
         User user = User.builder()
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .role(roleService.findByNameIgnoreCase("USER"))
-                .role(roleService.findByNameIgnoreCase(dto.getPickedRole()))
-                .isPickedRole(true)
-                .activationCode(UUID.randomUUID().toString()).build();
+                .isPickedRole(false)
+                .activationCode(UUID.randomUUID().toString())
+                .build();
 
+
+        setPickedRole(dto.getPickedRole(), user);
         addUser(user);
+        sendActivationMessage(user);
 
-        sendMessage(user);
-
-        return SuccessRegistrationResponse.builder().email(user.getEmail()).name(user.getName()).id(user.getId()).build();
+        return SuccessRegistrationResponse.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(dto.getPickedRole())
+                .build();
     }
 
     @Override
@@ -73,23 +76,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         User user = userRepository.findByActivationCode(code).orElseThrow(NotFoundException::new);
         user.setActivated(true);
         userRepository.save(user);
-        return ActivationResponse.builder().isActivated(true).message("Successfully activated").build();
+        return ActivationResponse.builder()
+                .isActivated(true)
+                .message("Successfully activated")
+                .build();
     }
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
 
-        checkPickedRole(request.getPickedRole());
-
         if (!user.getIsPickedRole()) {
-            Role userRole = roleService.findByNameIgnoreCase("USER");
-            Role pickedRole = roleService.findByNameIgnoreCase(request.getPickedRole());
 
-            user.addRole(userRole);
-            user.addRole(pickedRole);
-            user.setIsPickedRole(true);
-
+            setPickedRole(request.getPickedRole(), user);
             userRepository.save(user);
 
             SecurityContextHolder.getContext().setAuthentication(
@@ -99,17 +98,26 @@ public class RegistrationServiceImpl implements RegistrationService {
                             user.getAuthorities())
             );
 
-            return RolePickResponse.builder().email(user.getEmail()).pickedRole(pickedRole.getName()).build();
+            return RolePickResponse.builder()
+                    .email(user.getEmail())
+                    .pickedRole(request.getPickedRole())
+                    .build();
         }
         throw new RoleAlreadyPickedException("This account already picked a role");
     }
 
+    private void setPickedRole(String role, User user) {
 
-
-    private void checkPickedRole(String name) {
-        if (!(name.equalsIgnoreCase("STUDENT") || name.equalsIgnoreCase("TEACHER"))) {
+        if (!(role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("TEACHER"))) {
             throw new BadCredentialsException("Role not allowed");
         }
+
+        Role userRole = roleService.findByNameIgnoreCase("USER");
+        Role pickedRole = roleService.findByNameIgnoreCase(role);
+
+        user.addRole(userRole);
+        user.addRole(pickedRole);
+        user.setIsPickedRole(true);
     }
 
     private void addUser(User user) {
@@ -121,7 +129,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
     }
 
-    private void sendMessage(User user) {
+    private void sendActivationMessage(User user) {
         if (!user.getEmail().isBlank()) {
             String message = String.format(
                     "Hello, %s! \n" + "Your activation link: http://localhost:8080/api/v1/activation/%s",

@@ -1,6 +1,7 @@
 package com.softserve.itacademy.security.dto;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Pattern;
 
 @Setter
 @Getter
+@Builder
 public class RegistrationRequest {
 
     @NotBlank

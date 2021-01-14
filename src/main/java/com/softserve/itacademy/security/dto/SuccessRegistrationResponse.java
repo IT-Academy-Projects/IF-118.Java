@@ -7,10 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class SuccessRegistrationResponse {
 
-    private Integer id;
     private String name;
     private String email;
+    private String role;
 
 }
