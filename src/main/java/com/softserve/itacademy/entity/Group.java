@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,5 +54,12 @@ public class Group extends BasicEntity {
             inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__courses__groups__course_id"))}
     )
     private Set<Course> courses = new HashSet<>();
+
+//    @OneToOne(mappedBy = "group")
+//    private GroupChatRoom groupChatRoom;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_group_group_chat"))
+    private GroupChatRoom groupChatRoom;
 
 }
