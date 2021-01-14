@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Integer> {
 
@@ -15,9 +17,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     @Query(value = "update invitation set approved = true where user_id = ?1", nativeQuery = true)
     int update(Integer id);
 
-    Invitation findByEmail(String email);
-
-    Invitation findByCode(String code);
+    Optional<Invitation> findByCode(String code);
 
     @Transactional
     @Modifying

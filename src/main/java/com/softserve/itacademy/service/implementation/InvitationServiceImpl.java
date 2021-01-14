@@ -2,9 +2,8 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.InvitationServiceException;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
@@ -14,7 +13,7 @@ import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -44,17 +43,30 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public void approve(String email, String code) {
-        Invitation invitation = invitationRepository.findByCode(code);
-        if (invitation.getGroup() != null) {
-            invitationRepository.update(invitation.getUser().getId());
-            invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
+    public InvitationResponse approve(String email, String code) {
+        Invitation invitation = invitationRepository.findByCode(code)
+                .orElseThrow(() -> new InvitationServiceException("No such invitation"));
+        if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
+            if (invitation.getGroup() != null && !invitation.getApproved()
+                    && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
+                invitationRepository.update(invitation.getUser().getId());
+                invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
+                return invitationConverter.of(invitationRepository.findByCode(code).get());
+            }
+            else {
+                invitationRepository.update(invitation.getUser().getId());
+                invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
+                return invitationConverter.of(invitationRepository.findByCode(code).get());
+            }
         }
         else {
-            invitationRepository.update(invitation.getUser().getId());
-            invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
+            return InvitationResponse.builder()
+                    .code("Already approved")
+                    .build();
         }
+
     }
+
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.getOne(invitation.getUser().getId());

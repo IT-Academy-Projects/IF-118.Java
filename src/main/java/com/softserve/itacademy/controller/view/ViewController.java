@@ -3,8 +3,6 @@ package com.softserve.itacademy.controller.view;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +42,7 @@ public class ViewController {
         return "admin-panel.html";
     }
 
-//    @UserRolePermission
+    @UserRolePermission
     @GetMapping(path = "/user", produces = MediaType.TEXT_HTML_VALUE)
     public String userView() {
         return "user-panel.html";
