@@ -13,11 +13,8 @@ import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,7 +55,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .isPickedRole(false)
                 .activationCode(UUID.randomUUID().toString())
                 .build();
-
 
         setPickedRole(dto.getPickedRole(), user);
         addUser(user);
@@ -140,7 +136,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             mailSender.send(user.getEmail(), "SoftClass activation", message);
         }
     }
-
 }
 
 

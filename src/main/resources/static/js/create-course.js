@@ -1,5 +1,5 @@
 function createCourse() {
-    const courseRequest = {name: $('#name').val()};
+    const courseRequest = {name: $('#courseName').val()};
     $.ajax({
         type: "POST",
         url: `/api/v1/courses`,
@@ -8,7 +8,7 @@ function createCourse() {
         success: function () {
             $( "#course-table-content" ).html(``);
             showTeacherCourses();
-            $("#close").click();
+            $("#close-course-modal").click();
         }
     });
 }

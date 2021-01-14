@@ -6,11 +6,12 @@ function init() {
         let role = user.roles.find(role => role.name === "TEACHER");
         if (role === undefined) {
             showStudentCourses(user.courses);
+            showStudentGroups(user.groups);
             $('#create-course-button, #create-group-button').hide();
         } else {
             showTeacherCourses();
+            showTeacherGroups();
         }
-        showGroups(user.groups);
     })
 }
 
@@ -47,7 +48,7 @@ function showTeacherCourses() {
     });
 }
 
-function showGroups(groups) {
+function showStudentGroups(groups) {
     $('#group-table-head').html(`
          <th scope="col">Name</th>
          <th scope="col">Teacher</th>
@@ -62,12 +63,27 @@ function showGroups(groups) {
         `);
         })
     });
+}
 
+function showTeacherGroups() {
+    $('#group-table-head').html(`
+         <th scope="col">Name</th>
+    `);
+    $.get(`/api/v1/groups/owner/`+$('#user-id').text()).then(groups => {
+        groups.forEach(group => {
+            $('#group-table-content').append(`
+            <tr>
+                <td><a href="/group?id=${group.id}">${group.name}</a></td>
+            </tr>
+            `)
+        })
+    });
 }
 
 function showUser(user) {
     $('#user-name').text(user.name);
     $('#user-email').text(user.email);
+    $('#user-id').text(user.id);
 }
 
 function getRequest(url) {
