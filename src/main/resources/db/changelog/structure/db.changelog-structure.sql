@@ -9,6 +9,7 @@ CREATE TABLE if not exists `courses`(
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `owner_id`   int                                  DEFAULT NULL,
     `disabled`   boolean                              DEFAULT false,
+    `description` varchar(510) COLLATE utf8_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`id`)
 );
 
