@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +44,6 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         SecurityContextHolder.getContext().setAuthentication(token);
 
         getRedirectStrategy().sendRedirect(request, response, "/user");
-    }
 
+    }
 }

@@ -17,13 +17,20 @@ import java.util.UUID;
 @Component
 public class InvitationConverter {
 
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final CourseRepository courseRepository;
 
     public InvitationResponse of(Invitation invitation) {
-        return modelMapper.map(invitation, InvitationResponse.class);
+        String courseOrGroup = invitation.getGroup() == null ? "course" : "group";
+        Integer id = courseOrGroup.equals("course") ? invitation.getCourse().getId() : invitation.getGroup().getId();
+        return InvitationResponse.builder()
+                .courseOrGroup(courseOrGroup)
+                .courseOrGroupId(id)
+                .link(invitation.getLink())
+                .code(invitation.getCode())
+                .build();
+
     }
 
     public Invitation of(InvitationRequest request) {

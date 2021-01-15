@@ -14,6 +14,8 @@ import com.softserve.itacademy.service.converters.InvitationConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -43,28 +45,55 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public InvitationResponse approve(String email, String code) {
+    public InvitationResponse approveByLink(String email, String code) {
         Invitation invitation = invitationRepository.findByCode(code)
                 .orElseThrow(() -> new InvitationServiceException("No such invitation"));
-        if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
-            if (invitation.getGroup() != null && !invitation.getApproved()
-                    && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
-                invitationRepository.update(invitation.getUser().getId());
-                invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
-                return invitationConverter.of(invitationRepository.findByCode(code).get());
-            }
-            else {
-                invitationRepository.update(invitation.getUser().getId());
-                invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
-                return invitationConverter.of(invitationRepository.findByCode(code).get());
-            }
-        }
-        else {
-            return InvitationResponse.builder()
-                    .code("Already approved")
-                    .build();
-        }
+        return approveCourseOrGroup(invitation);
+    }
 
+    @Override
+    public void delete(Integer id) {
+        invitationRepository.delete(getById(id));
+    }
+
+    @Override
+    public void approveById(Integer id) {
+        InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
+        invitationRepository.approve(id, invitationResponse.getCode());
+    }
+
+    @Override
+    public List<InvitationResponse> findAllByEmail(String email) {
+        return invitationRepository.findAllByEmail(email).stream()
+                .filter(invitation -> !invitation.getApproved())
+                .map(invitationConverter::of)
+                .collect(Collectors.toList());
+    }
+
+    private InvitationResponse approveCourseOrGroup(Invitation invitation) {
+        if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
+            if (invitation.getGroup() != null && canBeApproved(invitation)) {
+                approve(invitation);
+                invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
+                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+            } else {
+                approve(invitation);
+                invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
+                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+            }
+        }
+        return InvitationResponse.builder()
+                .approved(false)
+                .build();
+    }
+
+    private boolean canBeApproved(Invitation invitation) {
+        return !invitation.getApproved()
+                && invitation.getExpirationDate().isAfter(LocalDateTime.now());
+    }
+
+    private void approve(Invitation invitation) {
+        invitationRepository.approve(invitation.getUser().getId(), invitation.getCode());
     }
 
 
@@ -80,9 +109,13 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private String getLink(Invitation invitation) {
-        String courseOrGroup = invitation.getGroup() != null ? "group?id=" : "course?id=";
-        Integer id = courseOrGroup.equals("group?id=") ? invitation.getGroup().getId() : invitation.getCourse().getId();
+//        String courseOrGroup = invitation.getGroup() != null ? "group?id=" : "course?id=";
+//        Integer id = courseOrGroup.equals("group?id=") ? invitation.getGroup().getId() : invitation.getCourse().getId();
         return invitation.getLink() + invitation.getEmail() + "/" + invitation.getCode();
+    }
+
+    private Invitation getById(Integer id) {
+        return invitationRepository.findById(id).orElseThrow(() -> new NotFoundException("Invitation with such id was not found"));
     }
 }
 

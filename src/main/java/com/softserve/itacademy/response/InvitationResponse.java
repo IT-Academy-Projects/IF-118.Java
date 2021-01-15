@@ -14,5 +14,8 @@ import lombok.Setter;
 public class InvitationResponse {
 
     private Boolean approved;
+    private String courseOrGroup;
+    private String link;
+    private Integer courseOrGroupId;
     private String code;
 }

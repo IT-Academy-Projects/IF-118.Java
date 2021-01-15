@@ -8,14 +8,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "update invitation set approved = true where user_id = ?1", nativeQuery = true)
-    int update(Integer id);
+    @Query(value = "update invitation set approved = true where user_id = ?1 and code = ?2", nativeQuery = true)
+    int approve(Integer id, String code);
 
     Optional<Invitation> findByCode(String code);
 
@@ -28,4 +29,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     @Modifying
     @Query(value = "insert into users_courses (user_id, course_id) VALUE (?1, ?2)", nativeQuery = true)
     void courseApprove(Integer userId, Integer courseId);
+
+    List<Invitation> findAllByEmail(String email);
 }
