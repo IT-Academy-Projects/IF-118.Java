@@ -17,7 +17,7 @@ public class ViewController {
 
     @GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String homeView() {
-        return "home.html";
+        return "redirect:user";
     }
 
     @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
@@ -36,6 +36,11 @@ public class ViewController {
         } else {
             return "redirect:user";
         }
+    }
+
+    @GetMapping(path = "/role-pick", produces = MediaType.TEXT_HTML_VALUE)
+    public String rolePickView() {
+            return "role-pick.html";
     }
 
     @AdminRolePermission

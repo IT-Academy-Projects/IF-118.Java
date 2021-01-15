@@ -48,4 +48,9 @@ public class AmazonS3ClientService {
         S3Object s3object = s3client.getObject(bucketName, fileReference);
         return s3object.getObjectContent().readAllBytes();
     }
+
+    public void delete(String bucketName, String fileReference) {
+        s3client.deleteObject(bucketName, fileReference);
+    }
+
 }

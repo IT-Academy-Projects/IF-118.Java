@@ -13,14 +13,13 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseResponse {
-
+public class CommentResponse {
     private Integer id;
-    private String name;
+    private String created_at;
+    private String updated_at;
+    private String message;
     private Integer ownerId;
-    private Set<Integer> groupIds;
-    private Set<Integer> materialIds;
+    private Integer materialId;
+    private Boolean isPrivate;
     private Boolean disabled;
-    private String description;
-
 }

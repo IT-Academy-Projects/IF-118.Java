@@ -91,6 +91,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void updateDescription(Integer id, String description) {
+        if (courseRepository.updateDescription(id, description) == 0) {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
     public CourseResponse readById(Integer id) {
         return courseConverter.of(getById(id));
     }
