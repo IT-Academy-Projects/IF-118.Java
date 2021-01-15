@@ -77,7 +77,7 @@ public class MaterialServiceImpl implements MaterialService {
     public void delete(Integer id, Integer currentUserId) {
         Material material = getById(id);
         if (!material.getOwnerId().equals(currentUserId)) { throw new OperationNotAllowedException("You are not owner of this course"); }
-        amazonS3ClientService.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
+        s3Utils.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
         materialRepository.delete(material);
     }
 

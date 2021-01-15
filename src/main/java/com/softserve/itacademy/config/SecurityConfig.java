@@ -22,7 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final OidcUserService oidcUserService;
@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/registration", "/api/v1/registration", "/api/v1/activation/*", "/activation", "/oauth2/**").permitAll()
                 .antMatchers("/api/v1/users/is-authenticated", "/navbar.html").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable() //TODO: Implement CSRF
                 .oauth2Login()
