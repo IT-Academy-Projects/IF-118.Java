@@ -4,7 +4,6 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
-import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
@@ -16,12 +15,6 @@ import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.UUID;
-
-import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
-import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -57,7 +50,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .ownerId(materialRequest.getOwnerId())
                 .description(materialRequest.getDescription())
                 .course(course)
-                .fileReference(saveFile(file))
+                .fileReference(amazonS3ClientService.saveFile(file))
                 .build();
         material = materialRepository.save(material);
 
@@ -71,7 +64,7 @@ public class MaterialServiceImpl implements MaterialService {
         if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
         String extension = split[split.length - 1];
         return DownloadFileResponse.builder()
-                .file(downloadFile(material.getFileReference()))
+                .file(amazonS3ClientService.downloadFile(material.getFileReference()))
                 .fileName(material.getName() + "." + extension)
                 .build();
     }
@@ -79,29 +72,6 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Material getById(Integer id) {
         return materialRepository.findById(id).orElseThrow(NotFoundException::new);
-    }
-
-    private String saveFile(MultipartFile file) {
-        String[] split = file.getOriginalFilename().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
-        String extension = split[split.length - 1];
-        String fileReference = UUID.randomUUID().toString().toLowerCase() + "." + extension;
-        try {
-            amazonS3ClientService.upload(BUCKET_NAME,  MATERIALS_FOLDER + "/" + fileReference, file.getInputStream());
-        } catch (IOException e) {
-            throw new FileProcessingException("Cannot write file");
-        }
-        return fileReference;
-    }
-
-    private byte[] downloadFile(String fileReference) {
-        byte[] bytes = new byte[0];
-        try {
-            bytes = amazonS3ClientService.download(BUCKET_NAME, MATERIALS_FOLDER + "/" + fileReference);
-        } catch (IOException e) {
-            throw new FileProcessingException("Cannot read file");
-        }
-        return bytes;
     }
 
 }

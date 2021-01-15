@@ -7,15 +7,15 @@ import lombok.Setter;
 
 import java.util.Set;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class MaterialResponse {
+public class AssignmentResponse {
 
     private Integer id;
     private String name;
     private String description;
-    private Integer courseId;
-    Set<AssignmentResponse> assignments;
+    private Integer materialId;
+    Set<AssignmentAnswersResponse> assignmentAnswers;
 }
