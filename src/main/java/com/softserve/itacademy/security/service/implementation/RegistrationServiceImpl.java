@@ -13,6 +13,7 @@ import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import com.softserve.itacademy.security.service.RegistrationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,9 @@ import java.util.UUID;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
+
+    @Value("${application.address}")
+    private String address;
 
     private final RoleService roleService;
 
@@ -125,8 +129,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void sendActivationMessage(User user) {
         if (!user.getEmail().isBlank()) {
             String message = String.format(
-                    "Hello, %s! \n" + "Your activation link: http://localhost:8080/api/v1/activation/%s",
+                    "Hello, %s! \n" + "Your activation link: %s/api/v1/activation/%s",
                     user.getName(),
+                    address,
                     user.getActivationCode()
             );
 
