@@ -35,4 +35,8 @@ public class S3Utils {
         }
         return fileReference;
     }
+
+    public void delete(String bucketName, String fileReference) {
+        amazonS3ClientService.delete(bucketName, fileReference);
+    }
 }

@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
 //    }
 
     private Comment getById(Integer id) {
-        return commentRepository.findById(id).orElseThrow(NotFoundException::new);
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment was not found"));
     }
 
     private List<CommentResponse> collectComments(List<Comment> comments) {

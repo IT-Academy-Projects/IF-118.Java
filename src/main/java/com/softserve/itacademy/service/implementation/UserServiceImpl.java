@@ -26,12 +26,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullTinyProjection findById(Integer id) {
-        return userRepository.findProjectedById(id).orElseThrow(NotFoundException::new);
+        return userRepository.findProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
     }
 
     @Override
     public IdNameTupleProjection findUserNameById(Integer id) {
-        return userRepository.findUserProjectedById(id).orElseThrow(NotFoundException::new);
+        return userRepository.findUserProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
     }
 
     @Override
@@ -43,18 +43,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
         if (userRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("User with such id was not found");
         }
     }
 
     @Override
     public User getById(Integer id) {
-        return userRepository.findById(id).orElseThrow(NotFoundException::new);
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with such id was not found"));
     }
 
     @Override
     public void updateProfileInfo(Integer id, String name, String email) {
-        if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException();
+        if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException("User with such id was not found");
     }
 
     @Override

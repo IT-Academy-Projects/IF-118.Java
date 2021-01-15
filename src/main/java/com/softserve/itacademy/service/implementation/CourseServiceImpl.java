@@ -86,14 +86,14 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (courseRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Course with such id was not found");
         }
     }
 
     @Override
     public void updateDescription(Integer id, String description) {
         if (courseRepository.updateDescription(id, description) == 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Course was not found");
         }
     }
 
@@ -108,7 +108,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public Course getById(Integer id) {
-        return courseRepository.findById(id).orElseThrow(NotFoundException::new);
+        return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course with such id was not found"));
     }
 
 }

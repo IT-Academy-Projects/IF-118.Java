@@ -33,7 +33,7 @@ public class GroupServiceImpl implements GroupService {
         User owner = userService.getById(groupRequest.getOwnerId());
 
         if (owner.getDisabled()) {
-            throw new DisabledObjectException("Object disabled");
+            throw new DisabledObjectException("Group is disabled");
         }
 
         Group newGroup = groupConverter.of(groupRequest);
@@ -57,14 +57,14 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void updateGroup(Integer groupId, GroupRequest groupRequest) {
         Group group = groupRepository.findByIdAndOwnerId(groupId, groupRequest.getOwnerId())
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("Group with such id was not found"));
         group.setName(groupRequest.getName());
     }
 
     @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (groupRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Group with such id is not found");
         }
     }
 
@@ -73,8 +73,8 @@ public class GroupServiceImpl implements GroupService {
         return groupConverter.of(getById(id));
     }
 
-    //TODO make private
     private Group getById(Integer id) {
-        return groupRepository.findById(id).orElseThrow(NotFoundException::new);
+        return groupRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Group with such id was not found"));
     }
 }

@@ -33,4 +33,6 @@ spring:
     debug: true
 
 application:
-  address: ${APP_ADRESS}
+  address: ${APP_ADDRESS}
+
+

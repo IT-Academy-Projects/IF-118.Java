@@ -47,7 +47,9 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public MaterialResponse create(MaterialRequest materialRequest, MultipartFile file) {
         Course course = courseService.getById(materialRequest.getCourseId());
-        if (course.getDisabled()) { throw new DisabledObjectException("Object disabled"); }
+        if (course.getDisabled()) {
+            throw new DisabledObjectException("Object disabled");
+        }
 
         Material material = Material.builder()
                 .name(materialRequest.getName())
@@ -65,7 +67,9 @@ public class MaterialServiceImpl implements MaterialService {
     public DownloadFileResponse downloadById(Integer id) {
         Material material = getById(id);
         String[] split = material.getFileReference().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
+        if (split.length < 1) {
+            throw new FileHasNoExtensionException("Wrong file format");
+        }
         String extension = split[split.length - 1];
         return DownloadFileResponse.builder()
                 .file(s3Utils.downloadFile(material.getFileReference(), BUCKET_NAME, MATERIALS_FOLDER))
@@ -76,14 +80,16 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void delete(Integer id, Integer currentUserId) {
         Material material = getById(id);
-        if (!material.getOwnerId().equals(currentUserId)) { throw new OperationNotAllowedException("You are not owner of this course"); }
-        amazonS3ClientService.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
+        if (!material.getOwnerId().equals(currentUserId)) {
+            throw new OperationNotAllowedException("You are not owner of this course");
+        }
+        s3Utils.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
         materialRepository.delete(material);
     }
 
     @Override
     public Material getById(Integer id) {
-        return materialRepository.findById(id).orElseThrow(NotFoundException::new);
+        return materialRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Material with such id was not found"));
     }
-
 }
