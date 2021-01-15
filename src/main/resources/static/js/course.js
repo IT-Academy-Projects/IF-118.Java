@@ -63,11 +63,16 @@ function getMaterials(materialIds) {
                             </div>`;
             }
             $('#materials').append(`
-                <div class="material">
+                <div class="material-info">
                     <div class="material-name">${material.name}</div>
                     <div class="material-description">${material.description}</div>
                     <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
-                    <div><a onclick="toggleComments(${materialId});">Comments</a></div>
+                    <div>
+                        <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${materialId});">View comments</button>
+                        <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
+                            data-toggle="modal" data-target="#create-comment-modal" onclick="setMaterialId(${materialId})">Write comment
+                        </button> 
+                    </div>
                     <div id="material-${materialId}-comments" style="display: none">
                         <section>
                             <div class="container">
@@ -77,14 +82,9 @@ function getMaterials(materialIds) {
                                 </div>
                             </div>
                         </section>
-                    </div>
-                    <div class="material-info">
-                        <div class="material-name">${material.name}</div>
-                        <div class="material-description">${material.description}</div>
-                        <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
-                    </div>
-                    ${deleteBtn}
+                    </div>   
                 </div>
+                ${deleteBtn}
             `);
         });
         loadComments(materialId);

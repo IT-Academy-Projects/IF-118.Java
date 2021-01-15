@@ -27,6 +27,7 @@ public class CommentConverter {
         Comment comment = mapper.map(commentRequest, Comment.class);
         comment.setMaterial(material);
         comment.setOwner(owner);
+        comment.setDisabled(false);
         return comment;
     }
 }

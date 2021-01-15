@@ -15,5 +15,4 @@ public class CommentRequest {
     private Integer ownerId;
     private Integer materialId;
     private Boolean isPrivate;
-    private Boolean disabled;
 }
