@@ -9,14 +9,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/course.css">
-    <script>
-        $(function () {
-            $("#navbar").load("navbar.html");
-        });
-    </script>
+    <link rel="stylesheet" href="css/comments.css">
+    <script src="js/course.js"></script>
 
 </head>
 
@@ -27,17 +29,106 @@
         <div class="course-title" id="course-name"></div>
         <div class="info">
             <div class="owner">Teacher: <span id="teacher-name"></span></div>
-            <div class="course-description">Description: <span id="description-value">This course for was created for learning Java Core. This course for was created for learning Java Core.</span>
+            <div class="course-description">Description: <span id="description-value"></span>
+                <div class="edit-course-description-block" id="edit-course-description-block">
+                    <button id="edit-course-description" type="button" class="btn btn-outline-success btn-sm"
+                            data-toggle="modal" data-target="#edit-description-modal">Edit
+                    </button>
+                </div>
             </div>
         </div>
-        <h3>Materials</h3>
+        <div class="material-title">
+            <h3>Materials</h3>
+            <div class="col-sm" id="add-material-btn">
+                <button id="create-material-button" type="button" class="btn btn-outline-success btn-sm"
+                        data-toggle="modal" data-target="#create-material-modal">+
+                </button>
+            </div>
+        </div>
+
         <div class="materials" id="materials">
+        </div>
+    </div>
+
+    <!-- Modal for materials -->
+    <div id="create-material-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create material</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="material-input">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name"
+                                       onchange="checkInputsValue()">
+                            </div>
+                            <div class="material-input">
+                                <label for="description">Description:</label>
+                                <input type="text" class="form-control" id="description" placeholder="Description"
+                                       onchange="checkInputsValue()">
+                            </div>
+                            <div class="material-input">
+                                <label for="file">File:</label>
+                                <input type="file" class="form-control" id="file" lang="en"
+                                       onchange="checkInputsValue()">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="submit-create-material-btn" type="button" class="btn btn-outline-success show" disabled
+                            onclick="createMaterial()">Create
+                    </button>
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
 
         </div>
     </div>
+
+    <!-- Modal for description -->
+    <div id="edit-description-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit description</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="material-input">
+                                <label for="description-textarea">Description:</label>
+                                <textarea id="description-textarea" class="form-control" onchange=" checkTextArea()" placeholder="Write smth about this course"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="submit-edit-desc-btn" type="button" class="btn btn-outline-success show" disabled
+                            onclick="editCourseDescription()">Edit
+                    </button>
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for comment -->
+    <div id="create-comment-modal" class="modal fade" role="dialog"></div>
 </div>
 </body>
 
 <script src="js/course.js"></script>
+<script src="js/comments.js"></script>
+<script>
+    $(function () {
+        $("#navbar").load("navbar.html");
+        $("#create-comment-modal").load("add-comment-modal.html");
+    });
+</script>
 
 </html>

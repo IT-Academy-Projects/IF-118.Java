@@ -3,12 +3,11 @@ package com.softserve.itacademy.controller.view;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -17,12 +16,14 @@ public class ViewController {
 
     @GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String homeView() {
-        return "home.html";
+        return "redirect:user";
     }
 
     @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
-    public String loginView(Principal principal) {
+    public String loginView(HttpServletRequest request, Principal principal) {
         if (principal == null) {
+            String referrer = request.getHeader("Referer");
+            request.getSession().setAttribute("url_prior_login", referrer);
             return "login.html";
         } else {
             return "redirect:user";
@@ -36,6 +37,11 @@ public class ViewController {
         } else {
             return "redirect:user";
         }
+    }
+
+    @GetMapping(path = "/role-pick", produces = MediaType.TEXT_HTML_VALUE)
+    public String rolePickView() {
+            return "role-pick.html";
     }
 
     @AdminRolePermission

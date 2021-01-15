@@ -39,12 +39,16 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Map<String, Object> attributes = oidcUser.getAttributes();
         String email = (String) attributes.get("email");
 
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("user was not found"));
         Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
+        if(!user.getIsPickedRole()) {
+            getRedirectStrategy().sendRedirect(request, response, "/role-pick");
+        } else {
+            getRedirectStrategy().sendRedirect(request, response, "/user");
+        }
 
-        getRedirectStrategy().sendRedirect(request, response, "/user");
     }
 
 }

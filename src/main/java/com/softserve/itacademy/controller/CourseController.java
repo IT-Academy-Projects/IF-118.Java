@@ -2,11 +2,13 @@ package com.softserve.itacademy.controller;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
+import com.softserve.itacademy.request.DescriptionRequest;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
+import com.softserve.itacademy.security.perms.CourseUpdatePermission;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +59,13 @@ public class CourseController {
     @PatchMapping("/{id}/disabled")
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disabledRequest) {
         courseService.updateDisabled(id, disabledRequest.isDisabled());
+        return new ResponseEntity<>(OK);
+    }
+
+    @CourseUpdatePermission
+    @PatchMapping("/{id}/description")
+    public ResponseEntity<Void> updateDescription(@PathVariable Integer id, @RequestBody DescriptionRequest descriptionRequest) {
+        courseService.updateDescription(id, descriptionRequest.getDescription());
         return new ResponseEntity<>(OK);
     }
 

@@ -42,6 +42,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id", nativeQuery = true)
     List<User> findByGroupId(Integer id);
 
+    boolean existsByEmail(String email);
+
 }
 
 

@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/is-authenticated")
     public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal User user) {
-        if(user == null) {
+        if (user == null) {
             return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(false).build(), OK);
         }
 
@@ -46,8 +46,8 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
 
-        if(user==null) {
-            throw new NotFoundException();
+        if (user == null) {
+            throw new NotFoundException("user was not found");
         }
 
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
@@ -76,15 +76,7 @@ public class UserController {
         userService.updateProfileInfo(id, name, email);
         return new ResponseEntity<>(OK);
     }
-
-    @GetMapping("/current")
-    public ResponseEntity<Boolean> checkIfTeacher(@AuthenticationPrincipal User currentUser) {
-        if(currentUser.getRoles().stream().noneMatch(role -> role.getName().equals("TEACHER"))){
-            return new ResponseEntity<>(false, OK);
-        }
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
-
+  
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);

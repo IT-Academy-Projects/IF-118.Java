@@ -12,5 +12,6 @@ public interface MaterialService {
     MaterialResponse create(MaterialRequest materialRequest, MultipartFile file);
     Material getById(Integer id);
     DownloadFileResponse downloadById(Integer id);
+    void delete(Integer id, Integer currentUserId);
 
 }

@@ -31,3 +31,8 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     debug: true
+
+application:
+  address: ${APP_ADDRESS}
+
+

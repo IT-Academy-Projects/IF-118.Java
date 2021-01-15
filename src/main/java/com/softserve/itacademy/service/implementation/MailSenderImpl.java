@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailSenderImpl implements MailSender {
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     public MailSenderImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
