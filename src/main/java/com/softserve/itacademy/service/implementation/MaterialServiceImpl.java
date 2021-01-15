@@ -6,6 +6,7 @@ import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
@@ -77,6 +78,14 @@ public class MaterialServiceImpl implements MaterialService {
                 .file(downloadFile(material.getFileReference()))
                 .fileName(material.getName() + "." + extension)
                 .build();
+    }
+
+    @Override
+    public void delete(Integer id, Integer currentUserId) {
+        Material material = getById(id);
+        if (!material.getOwnerId().equals(currentUserId)) { throw new OperationNotAllowedException("You are not owner of this course"); }
+        amazonS3ClientService.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
+        materialRepository.delete(material);
     }
 
     @Override

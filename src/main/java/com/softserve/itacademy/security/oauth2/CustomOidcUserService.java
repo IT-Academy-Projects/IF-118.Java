@@ -41,16 +41,10 @@ public class CustomOidcUserService extends OidcUserService {
     }
 
     private void updateUser(String email, String name) {
-        User user = userRepository.findByEmail(email).orElse(new User());
+        User user = userRepository.findByEmail(email).orElse(new User().setIsPickedRole(false).setActivated(true));
+
         user.setEmail(email);
         user.setName(name);
-        user.setActivated(true);
-
-        if(user.getAuthorities().isEmpty()) {
-            user.addRole(roleService.findByName("USER"));
-            user.addRole(roleService.findByName("STUDENT")); //TODO: Add ability to pick a role with google sign up
-        }
-
 
         userRepository.save(user);
     }

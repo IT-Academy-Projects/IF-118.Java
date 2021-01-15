@@ -21,5 +21,6 @@ public class CourseResponse {
     private Set<Integer> groupIds;
     private Set<Integer> materialIds;
     private Boolean disabled;
+    private String description;
 
 }

@@ -19,4 +19,10 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query(value = "select * from courses where owner_id=:id", nativeQuery = true)
     List<Course> findByOwner(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update courses set courses.description = :description where courses.id = :id", nativeQuery = true)
+    int updateDescription(Integer id, String description);
+
 }

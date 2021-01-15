@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,12 +39,16 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Map<String, Object> attributes = oidcUser.getAttributes();
         String email = (String) attributes.get("email");
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User with such email was not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
         Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
-
-        getRedirectStrategy().sendRedirect(request, response, "/user");
+        if(!user.getIsPickedRole()) {
+            getRedirectStrategy().sendRedirect(request, response, "/role-pick");
+        } else {
+            getRedirectStrategy().sendRedirect(request, response, "/user");
+        }
 
     }
+
 }
