@@ -67,6 +67,7 @@ function getMaterials(materialIds) {
                     <div class="material-name">${material.name}</div>
                     <div class="material-description">${material.description}</div>
                     <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                    ${deleteBtn}
                     <div>
                         <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${materialId});">View comments</button>
                         <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
@@ -82,9 +83,9 @@ function getMaterials(materialIds) {
                                 </div>
                             </div>
                         </section>
-                    </div>   
+                    </div>
+                    </br>
                 </div>
-                ${deleteBtn}
             `);
         });
         loadComments(materialId);

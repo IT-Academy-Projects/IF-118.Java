@@ -12,11 +12,12 @@ import com.softserve.itacademy.response.CommentResponse;
 import com.softserve.itacademy.service.CommentService;
 import com.softserve.itacademy.service.converters.CommentConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,9 +71,7 @@ public class CommentServiceImpl implements CommentService {
             return Collections.emptyList();
         }
         log.info("Comments: {}", comments);
-        return comments.stream()
-                .map(commentConverter::of)
-                .collect(Collectors.toList());
+        return collectComments(comments);
     }
 
     @Override
@@ -84,14 +83,32 @@ public class CommentServiceImpl implements CommentService {
             return Collections.emptyList();
         }
         log.info("Comments: {}", comments);
-        List<CommentResponse> commentResponses = comments.stream()
-                .map(commentConverter::of)
-                .collect(Collectors.toList());
-        log.info("Comment responses: {}", commentResponses);
-        return commentResponses;
+        return collectComments(comments);
     }
+
+//    public List<CommentResponse> findByMaterial(Integer id, User currentUser) {
+//        log.info("Searching for comments of material {}", id);
+//        List<Comment> comments;
+//        if (currentUser.getAuthorities().stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("comment.readAllPrivate"))) {
+//            comments = commentRepository.findByMaterialIdStudentPrivate(id, currentUser.getId());
+//        } else {
+//            comments = commentRepository.findByMaterialIdPrivate(id);
+//        }
+//        if (comments == null) {
+//            log.info("No comments for material {}", id);
+//            return Collections.emptyList();
+//        }
+//        log.info("Comments: {}", comments);
+//        return collectComments(comments);
+//    }
 
     private Comment getById(Integer id) {
         return commentRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
+    private List<CommentResponse> collectComments(List<Comment> comments) {
+        return comments.stream()
+                .map(commentConverter::of)
+                .collect(Collectors.toList());
     }
 }
