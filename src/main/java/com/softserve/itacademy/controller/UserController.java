@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
 
         if (user == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("user was not found");
         }
 
         return new ResponseEntity<>(userService.findById(user.getId()), OK);

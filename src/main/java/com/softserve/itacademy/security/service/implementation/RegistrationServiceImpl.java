@@ -70,7 +70,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public ActivationResponse activateUser(String code) {
-        User user = userRepository.findByActivationCode(code).orElseThrow(NotFoundException::new);
+        User user = userRepository.findByActivationCode(code).orElseThrow(() -> new NotFoundException("user was not found"));
         user.setActivated(true);
         userRepository.save(user);
         return ActivationResponse.builder()
@@ -81,7 +81,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user was not found"));
 
         if (!user.getIsPickedRole()) {
 

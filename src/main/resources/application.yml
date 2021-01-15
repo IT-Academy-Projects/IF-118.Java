@@ -34,3 +34,5 @@ spring:
 
 application:
   address: ${APP_ADDRESS}
+
+

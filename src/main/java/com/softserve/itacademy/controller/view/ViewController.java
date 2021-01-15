@@ -3,12 +3,11 @@ package com.softserve.itacademy.controller.view;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -21,8 +20,10 @@ public class ViewController {
     }
 
     @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
-    public String loginView(Principal principal) {
+    public String loginView(HttpServletRequest request, Principal principal) {
         if (principal == null) {
+            String referrer = request.getHeader("Referer");
+            request.getSession().setAttribute("url_prior_login", referrer);
             return "login.html";
         } else {
             return "redirect:user";
@@ -68,6 +69,11 @@ public class ViewController {
     @GetMapping(path = "/course", produces = MediaType.TEXT_HTML_VALUE)
     public String courseView() {
         return "course.html";
+    }
+
+    @GetMapping(path = "/invite", produces = MediaType.TEXT_HTML_VALUE)
+    public String inviteView() {
+        return "invitation.html";
     }
 
 }
