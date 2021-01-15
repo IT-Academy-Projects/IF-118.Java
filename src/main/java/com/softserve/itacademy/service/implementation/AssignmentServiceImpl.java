@@ -9,21 +9,18 @@ import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.service.AssignmentService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
-import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
     MaterialService materialService;
-    AmazonS3ClientService amazonS3ClientService;
     AssignmentRepository assignmentRepository;
     AssignmentConverter assignmentConverter;
 
-    public AssignmentServiceImpl(MaterialService materialService, AmazonS3ClientService amazonS3ClientService,
+    public AssignmentServiceImpl(MaterialService materialService,
                                  AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter) {
         this.materialService = materialService;
-        this.amazonS3ClientService = amazonS3ClientService;
         this.assignmentRepository = assignmentRepository;
         this.assignmentConverter = assignmentConverter;
     }

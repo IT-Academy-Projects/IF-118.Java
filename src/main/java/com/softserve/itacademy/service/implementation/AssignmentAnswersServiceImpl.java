@@ -13,9 +13,12 @@ import com.softserve.itacademy.service.AssignmentAnswersService;
 import com.softserve.itacademy.service.AssignmentService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
-import com.softserve.itacademy.service.s3.AmazonS3ClientService;
+import com.softserve.itacademy.service.s3.S3Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
+import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
 
 @Service
 public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
@@ -23,18 +26,18 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     AssignmentService assignmentService;
     AssignmentAnswersRepository assignmentAnswersRepository;
     AssignmentAnswersConverter assignmentAnswersConverter;
-    AmazonS3ClientService amazonS3ClientService;
+    S3Utils s3Utils;
     UserService userService;
 
     public AssignmentAnswersServiceImpl(AssignmentService assignmentService,
                                         AssignmentAnswersRepository assignmentAnswersRepository,
                                         AssignmentAnswersConverter assignmentAnswersConverter,
-                                        AmazonS3ClientService amazonS3ClientService,
+                                        S3Utils s3Utils,
                                         UserService userService) {
         this.assignmentService = assignmentService;
         this.assignmentAnswersRepository = assignmentAnswersRepository;
         this.assignmentAnswersConverter = assignmentAnswersConverter;
-        this.amazonS3ClientService = amazonS3ClientService;
+        this.s3Utils = s3Utils;
         this.userService = userService;
     }
 
@@ -52,7 +55,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         AssignmentAnswers assignmentAnswers = AssignmentAnswers.builder()
                 .ownerId(assignmentAnswersRequest.getOwnerId())
                 .assignment(assignment)
-                .fileReference(amazonS3ClientService.saveFile(file))
+                .fileReference(s3Utils.saveFile(file, BUCKET_NAME, MATERIALS_FOLDER))
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
         return assignmentAnswersConverter.of(assignmentAnswers);
@@ -63,9 +66,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         AssignmentAnswers assignmentAnswers = getById(id);
         String[] split = assignmentAnswers.getFileReference().split("\\.");
         if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
-        String extension = split[split.length - 1];
         return DownloadFileResponse.builder()
-                .file(amazonS3ClientService.downloadFile(assignmentAnswers.getFileReference()))
+                .file(s3Utils.downloadFile(assignmentAnswers.getFileReference(), BUCKET_NAME, MATERIALS_FOLDER))
                 .fileName(assignmentAnswers.getFileReference())
                 .build();
     }
