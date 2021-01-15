@@ -14,11 +14,8 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-<<<<<<< HEAD
 import java.util.List;
-=======
 import java.util.Set;
->>>>>>> assignment
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,8 +39,8 @@ public class Material extends BasicEntity {
     private Course course;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-
-    private List<Comment> comments;
-
     private Set<Assignment> assignments;
+
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }

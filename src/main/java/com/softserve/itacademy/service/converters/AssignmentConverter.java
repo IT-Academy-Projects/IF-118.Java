@@ -18,9 +18,11 @@ public class AssignmentConverter {
 
     public AssignmentResponse of(Assignment assignment) {
         AssignmentResponse map = mapper.map(assignment, AssignmentResponse.class);
-        map.setAssignmentAnswers(assignment.getAssignmentAnswers().stream()
-                .map(assignmentAnswersConverter::of)
-                .collect(Collectors.toSet()));
+        if (assignment.getAssignmentAnswers() != null) {
+            map.setAssignmentAnswers(assignment.getAssignmentAnswers().stream()
+                    .map(assignmentAnswersConverter::of)
+                    .collect(Collectors.toSet()));
+        }
         return map;
     }
 

@@ -11,7 +11,11 @@ import java.util.UUID;
 @Component
 public class S3Utils {
 
-    AmazonS3ClientService amazonS3ClientService;
+    private final AmazonS3ClientService amazonS3ClientService;
+
+    public S3Utils(AmazonS3ClientService amazonS3ClientService) {
+        this.amazonS3ClientService = amazonS3ClientService;
+    }
 
     public byte[] downloadFile(String fileReference, String bucketName, String folderName) {
         byte[] bytes;
