@@ -44,7 +44,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Assignment getById(Integer id) {
-        return assignmentRepository.findById(id).orElseThrow(NotFoundException::new);
+        return assignmentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Assignment answer not found"));
     }
 
 }
