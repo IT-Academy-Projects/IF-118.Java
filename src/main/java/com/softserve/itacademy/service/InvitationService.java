@@ -16,4 +16,8 @@ public interface InvitationService {
     void delete(Integer id);
 
     void approveById(Integer id);
+
+    void deleteByExpirationDate();
+
+    List<InvitationResponse> findAll();
 }

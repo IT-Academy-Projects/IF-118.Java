@@ -31,4 +31,5 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     void courseApprove(Integer userId, Integer courseId);
 
     List<Invitation> findAllByEmail(String email);
+
 }

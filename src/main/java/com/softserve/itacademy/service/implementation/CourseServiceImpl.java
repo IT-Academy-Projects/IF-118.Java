@@ -93,7 +93,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void updateDescription(Integer id, String description) {
         if (courseRepository.updateDescription(id, description) == 0) {
-            throw new NotFoundException();
+            throw new NotFoundException("Course was not found");
         }
     }
 

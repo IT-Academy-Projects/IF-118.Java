@@ -70,6 +70,23 @@ public class InvitationServiceImpl implements InvitationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteByExpirationDate() {
+        List<Invitation> all = invitationRepository.findAll();
+        all.forEach(invitation -> {
+            if (invitation.getExpirationDate().isBefore(LocalDateTime.now())) {
+                invitationRepository.delete(invitation);
+            }
+        });
+    }
+
+    @Override
+    public List<InvitationResponse> findAll() {
+        return invitationRepository.findAll().stream()
+                .map(invitationConverter::of)
+                .collect(Collectors.toList());
+    }
+
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
         if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
             if (invitation.getGroup() != null && canBeApproved(invitation)) {
