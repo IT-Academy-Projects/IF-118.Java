@@ -39,7 +39,7 @@ public class InvitationConverter {
                 .expirationDate(LocalDateTime.now().plusDays(7))
                 .email(request.getEmail())
                 .approved(false)
-                .link("http://localhost:8080/api/v1/invitation/approve/")
+                .link("http://localhost:8080" + "/api/v1/invitation/approve/")
                 .code(UUID.randomUUID().toString())
                 .user(userRepository.findByEmail(request.getEmail()).orElse(null))
                 .group(groupRepository.findById(request.getGroupId()).orElse(null))
