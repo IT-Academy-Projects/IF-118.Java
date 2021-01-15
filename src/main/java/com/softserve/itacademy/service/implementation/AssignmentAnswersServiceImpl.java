@@ -17,6 +17,7 @@ import com.softserve.itacademy.service.s3.S3Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
 
@@ -55,7 +56,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         AssignmentAnswers assignmentAnswers = AssignmentAnswers.builder()
                 .ownerId(assignmentAnswersRequest.getOwnerId())
                 .assignment(assignment)
-                .fileReference(s3Utils.saveFile(file, BUCKET_NAME, MATERIALS_FOLDER))
+                .fileReference(s3Utils.saveFile(file, BUCKET_NAME, ASSIGNMENTS_FOLDER))
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
         return assignmentAnswersConverter.of(assignmentAnswers);
@@ -67,7 +68,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         String[] split = assignmentAnswers.getFileReference().split("\\.");
         if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
         return DownloadFileResponse.builder()
-                .file(s3Utils.downloadFile(assignmentAnswers.getFileReference(), BUCKET_NAME, MATERIALS_FOLDER))
+                .file(s3Utils.downloadFile(assignmentAnswers.getFileReference(), BUCKET_NAME, ASSIGNMENTS_FOLDER))
                 .fileName(assignmentAnswers.getFileReference())
                 .build();
     }
