@@ -36,7 +36,7 @@ function getMaterials(materialIds) {
         getRequest(`/api/v1/materials/${materialId}`).then(material => {
             $('#materials').append(`
                 <div class="material">
-                    <div class="material-name">${material.name}</div>
+                    <div class="material-name"><a href="/material?id=${materialId}">${material.name}</a></div>
                     <div class="material-description">${material.description}</div>
                     <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
                 </div>

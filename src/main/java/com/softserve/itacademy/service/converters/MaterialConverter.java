@@ -17,9 +17,11 @@ public class MaterialConverter {
 
     public MaterialResponse of(Material material) {
         MaterialResponse map = mapper.map(material, MaterialResponse.class);
-        map.setAssignments(material.getAssignments().stream()
-                .map(assignmentConverter::of)
-                .collect(Collectors.toSet()));
+        if (material.getAssignments() != null) {
+            map.setAssignments(material.getAssignments().stream()
+                    .map(assignmentConverter::of)
+                    .collect(Collectors.toSet()));
+        }
         return map;
     }
 
