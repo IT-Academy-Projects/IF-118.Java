@@ -70,4 +70,8 @@ public class ViewController {
         return "course.html";
     }
 
+    @GetMapping(path = "/material", produces = MediaType.TEXT_HTML_VALUE)
+    public String materialView() {
+        return "material.html";
+    }
 }
