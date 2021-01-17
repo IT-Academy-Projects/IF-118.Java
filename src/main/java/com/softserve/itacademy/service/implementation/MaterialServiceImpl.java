@@ -66,6 +66,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public DownloadFileResponse downloadById(Integer id) {
         Material material = getById(id);
+//    TODO I've already seen this code. Avoid code duplicates
         String[] split = material.getFileReference().split("\\.");
         if (split.length < 1) {
             throw new FileHasNoExtensionException("Wrong file format");

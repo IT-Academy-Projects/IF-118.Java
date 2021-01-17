@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 @RestController
 @RequestMapping("/api/v1/assignment-answers")
 public class AssignmentAnswersController {
-
+// TODO make it private final everywhere
     AssignmentAnswersService assignmentAnswersService;
     ObjectMapper objectMapper;
 
@@ -41,8 +41,10 @@ public class AssignmentAnswersController {
     @StudentRolePermission
     @PostMapping
     public ResponseEntity<AssignmentAnswersResponse> create(@RequestPart(value = "file") MultipartFile file,
+//                                                            TODO don't pass this via request params. Pass it via request body
                                                             @RequestPart(value = "assignmentAnswer") String data,
                                                             @AuthenticationPrincipal User user) throws JsonProcessingException {
+//        TODO dont use explicit conversion. Let spring and jackson do it implicitly
         AssignmentAnswersRequest assignmentAnswersRequest = objectMapper.readValue(data, AssignmentAnswersRequest.class);
         assignmentAnswersRequest.setOwnerId(user.getId());
         return new ResponseEntity<>(assignmentAnswersService.create(file, assignmentAnswersRequest), HttpStatus.CREATED);

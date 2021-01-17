@@ -28,6 +28,7 @@ public class Assignment extends BasicEntity {
     @Column(name = "name")
     private String name;
 
+//    TODO you don't need this explicit mapping even Column annotation
     @Column(name = "description")
     private String description;
 

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class BasicExceptionResponse {
-
+//TODO wrong formatting
         @Builder.Default()
         private LocalDateTime timestamp = LocalDateTime.now();
 

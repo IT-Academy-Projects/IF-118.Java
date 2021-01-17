@@ -35,6 +35,7 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
         Invitation invitation = invitationConverter.of(invitationRequest);
+//        TODO you are calling DB to check user exists and within sendInvitationMail method getting users profile again. Avoid this multiple calls.
         if (userRepository.existsByEmail(invitationRequest.getEmail())) {
             sendInvitationMail(invitation);
             invitation.setLink(getLink(invitation));
@@ -72,7 +73,8 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void deleteByExpirationDate() {
-        List<Invitation> all = invitationRepository.findAll();
+//        TODO this is totally wrong. Use single query to delete records. delete from where date < nov() ....
+         List<Invitation> all = invitationRepository.findAll();
         all.forEach(invitation -> {
             if (invitation.getExpirationDate().isBefore(LocalDateTime.now())) {
                 invitationRepository.delete(invitation);

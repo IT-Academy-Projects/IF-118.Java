@@ -38,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponse create(CommentRequest commentRequest) {
+//        TODO this is wasting of the resources to log the whole comment request
         log.info("Creating comment {}", commentRequest);
         Material material = materialRepository.findById(commentRequest.getMaterialId()).get();
         User owner = userRepository.findById(commentRequest.getOwnerId()).get();
@@ -70,6 +71,7 @@ public class CommentServiceImpl implements CommentService {
             log.info("No comments for user {}", id);
             return Collections.emptyList();
         }
+//        TODO this log message doesn't make sense as well
         log.info("Comments: {}", comments);
         return collectComments(comments);
     }

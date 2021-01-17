@@ -51,6 +51,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public AssignmentAnswersResponse create(MultipartFile file, AssignmentAnswersRequest assignmentAnswersRequest) {
         Assignment assignment = assignmentService.getById(assignmentAnswersRequest.getAssignmentId());
         if (userService.getById(assignmentAnswersRequest.getOwnerId()).getDisabled()) {
+//            TODO if you decided to specify exception message so include some debug info there. "Assignment can not be attached to disabled user id 123"
             throw new DisabledObjectException("User disabled");
         }
         AssignmentAnswers assignmentAnswers = AssignmentAnswers.builder()
@@ -66,7 +67,10 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public DownloadFileResponse downloadById(Integer id) {
         AssignmentAnswers assignmentAnswers = getById(id);
         String[] split = assignmentAnswers.getFileReference().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
+//TODO do you really need extension. What if I need to upload file without it?
+        if (split.length < 1) {
+            throw new FileHasNoExtensionException("Wrong file format");
+        }
         return DownloadFileResponse.builder()
                 .file(s3Utils.downloadFile(assignmentAnswers.getFileReference(), BUCKET_NAME, ASSIGNMENTS_FOLDER))
                 .fileName(assignmentAnswers.getFileReference())

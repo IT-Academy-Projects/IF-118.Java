@@ -45,6 +45,7 @@ public class CourseServiceImpl implements CourseService {
         Set<Group> groups = Collections.emptySet();
         Set<Integer> groupIds = courseRequest.getGroupIds();
         if (groupIds != null) {
+//            TODO try to avoid calling DB in loop. Instead select groups by id "IN". Call DB once to get all needed data
             groups = groupIds.stream()
                     .map(id -> groupRepository.findById(id).get())
                     .collect(Collectors.toSet());
@@ -52,6 +53,7 @@ public class CourseServiceImpl implements CourseService {
         Set<Material> materials = Collections.emptySet();
         Set<Integer> materialIds = courseRequest.getMaterialIds();
         if (materialIds != null) {
+//            TODO the same
             materials = materialIds.stream()
                     .map(id -> materialRepository.findById(id).get())
                     .collect(Collectors.toSet());
@@ -65,6 +67,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findAll() {
+//        TODO useless log message
         log.info("Searching for courses...");
         return courseRepository.findAll().stream()
                 .map(courseConverter::of)

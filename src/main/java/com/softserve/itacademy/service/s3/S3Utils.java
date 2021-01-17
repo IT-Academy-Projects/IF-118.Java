@@ -28,6 +28,7 @@ public class S3Utils {
     }
 
     public String saveFile(MultipartFile file, String bucketName, String folderName) {
+//        TODO the same ...
         String[] split = file.getOriginalFilename().split("\\.");
         if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
         String extension = split[split.length - 1];

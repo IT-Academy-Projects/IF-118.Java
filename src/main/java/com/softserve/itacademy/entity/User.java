@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//todo Use lombok @Data
 @Getter
 @Setter
 @Builder
