@@ -1,0 +1,11 @@
+.invitation-info{
+    margin: 10px auto;
+    padding: 0 20px;
+    width: 25%;
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+
+.btn{
+    display:inline-block;
+}
