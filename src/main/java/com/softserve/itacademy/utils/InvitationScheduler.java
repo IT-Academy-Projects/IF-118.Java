@@ -14,7 +14,7 @@ public class InvitationScheduler {
 
     private final InvitationService invitationService;
 
-    @Scheduled(cron = "0 12 18 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     public void deleteByExpirationDate() {
         int sizeBefore = invitationService.findAll().size();
         log.info("Scheduler start:");

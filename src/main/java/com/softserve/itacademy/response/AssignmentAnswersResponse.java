@@ -5,18 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class MaterialResponse {
+public class AssignmentAnswersResponse {
 
     private Integer id;
-    private String name;
-    private String description;
-    private Integer courseId;
+    private Integer assignmentId;
     private Integer ownerId;
-    Set<AssignmentResponse> assignments;
 }

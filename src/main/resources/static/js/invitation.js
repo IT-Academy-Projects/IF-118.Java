@@ -4,7 +4,6 @@ let courseOrGroup;
 let courseOrGroupName;
 let teacher;
 
-
 function inviteToCourse() {
   let course_id = parseInt(window.location.toString().split("id=")[1])
   let body = {
