@@ -38,12 +38,8 @@ public class InvitationServiceImpl implements InvitationService {
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
         log.info("sending invitation on email");
         Invitation invitation = invitationConverter.of(invitationRequest);
-        if (userRepository.existsByEmail(invitationRequest.getEmail())) {
             sendInvitationMail(invitation);
             invitation.setLink(getLink(invitation));
-        } else {
-            throw new NotFoundException("user with such email was not found");
-        }
         return invitationConverter.of(invitationRepository.save(invitation));
     }
 
@@ -117,7 +113,8 @@ public class InvitationServiceImpl implements InvitationService {
 
 
     private void sendInvitationMail(Invitation invitation) {
-        User user = userRepository.getOne(invitation.getUser().getId());
+        User user = userRepository.findById(invitation.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
         mailSender.send(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
