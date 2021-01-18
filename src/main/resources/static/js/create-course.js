@@ -1,5 +1,12 @@
 function createCourse() {
-    const courseRequest = {name: $('#courseName').val()};
+    let checkedIds = []
+    $( "#groups input:checked" ).each(function(){checkedIds.push($(this).val());});
+
+    const courseRequest = {
+        name: $('#courseName').val(),
+        groupIds: checkedIds,
+        description: $("#courseDescription").val()
+    };
     $.ajax({
         type: "POST",
         url: `/api/v1/courses`,

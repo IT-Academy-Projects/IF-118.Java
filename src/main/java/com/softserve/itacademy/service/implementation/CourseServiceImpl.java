@@ -58,6 +58,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         Course course = courseConverter.of(courseRequest, groups, materials);
+        groups.forEach(group -> group.getCourses().add(course));
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
         return courseConverter.of(savedCourse);
