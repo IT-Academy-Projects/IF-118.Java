@@ -9,6 +9,8 @@ import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -68,6 +70,7 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
+    @MessageExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<BasicExceptionResponse> handleValidationException(MethodArgumentNotValidException exception) {
 
         ObjectError error = exception.getAllErrors().get(0);
@@ -105,5 +108,18 @@ public class GenericExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(dto, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    @MessageExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(AccessDeniedException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.FORBIDDEN.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 }

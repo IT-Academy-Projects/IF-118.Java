@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +28,7 @@ public class ChatMessage extends BasicEntity {
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_message"))
     private User user;
 
+    @Size(max=255)
     private String content;
     private MessageStatus status;
 

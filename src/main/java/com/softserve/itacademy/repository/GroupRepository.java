@@ -1,7 +1,7 @@
 package com.softserve.itacademy.repository;
 
-import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.projection.GroupFullTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +22,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     List<Group> findByOwnerId(Integer id);
 
     Optional<Group> findByIdAndOwnerId(Integer groupId, Integer ownerId);
+
+    Optional<GroupFullTinyProjection> findProjectedById(Integer id);
 }

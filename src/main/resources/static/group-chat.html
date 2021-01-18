@@ -7,13 +7,10 @@
 
     <!-- Bootstrap, jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Custom -->
     <link rel="stylesheet" href="css/group-chat.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="js/group-chat.js"></script>
     <script>
         $(function () {
@@ -24,9 +21,20 @@
 </head>
 
 <body>
-<div id="navbar"></div>
 <div class="container">
-
+    <div id="message">SDasddas</div>
+    <form action="/login" method="post" id="login-form">
+        <div class="form-group">
+            <label for="chat-input">Email address</label>
+            <input type="text" class="form-control" id="chat-input" name="chat-input" autofocus autocomplete="off">
+        </div>
+        <input type="button" class="btn btn-dark" name="login" id="login" value="Login"
+               onclick="sendMessage()">
+    </form>
 </div>
 </body>
 </html>
+
+
+
+
