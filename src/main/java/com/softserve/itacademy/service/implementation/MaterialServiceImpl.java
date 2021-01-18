@@ -66,11 +66,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public DownloadFileResponse downloadById(Integer id) {
         Material material = getById(id);
-        String[] split = material.getFileReference().split("\\.");
-        if (split.length < 1) {
-            throw new FileHasNoExtensionException("Wrong file format");
-        }
-        String extension = split[split.length - 1];
+        String extension = s3Utils.getFileExtension(material.getFileReference());
         return DownloadFileResponse.builder()
                 .file(s3Utils.downloadFile(material.getFileReference(), BUCKET_NAME, MATERIALS_FOLDER))
                 .fileName(material.getName() + "." + extension)

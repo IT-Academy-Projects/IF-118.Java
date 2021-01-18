@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -28,9 +29,7 @@ public class S3Utils {
     }
 
     public String saveFile(MultipartFile file, String bucketName, String folderName) {
-        String[] split = file.getOriginalFilename().split("\\.");
-        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
-        String extension = split[split.length - 1];
+        String extension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
         String fileReference = UUID.randomUUID().toString().toLowerCase() + "." + extension;
         try {
             amazonS3ClientService.upload(bucketName,  folderName + "/" + fileReference, file.getInputStream());
@@ -43,4 +42,11 @@ public class S3Utils {
     public void delete(String bucketName, String fileReference) {
         amazonS3ClientService.delete(bucketName, fileReference);
     }
+
+    public String getFileExtension(String filename) {
+        String[] split = filename.split("\\.");
+        if (split.length < 1) { throw new FileHasNoExtensionException("Wrong file format"); }
+        return split[split.length - 1];
+    }
+
 }
