@@ -139,3 +139,29 @@ CREATE TABLE if not exists `users_roles`
     CONSTRAINT `fk_roles_users_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
     CONSTRAINT `fk_users_roles_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
+
+-- changeSet Ivanyshyn:structure-1.1 endDelimiter:; splitStatements:true
+
+CREATE TABLE if not exists `assignment`(
+    `id`         int      NOT NULL AUTO_INCREMENT,
+    `created_at` datetime NOT NULL,
+    `updated_at` datetime                             DEFAULT NULL,
+    `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `description`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `material_id`  int                                  DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `fk_material_assignment` (`material_id`),
+    CONSTRAINT `fk_material_assignment` FOREIGN KEY (`material_id`) REFERENCES `material` (`id`)
+);
+
+CREATE TABLE if not exists `assignment_answers`(
+    `id`         int      NOT NULL AUTO_INCREMENT,
+    `created_at` datetime NOT NULL,
+    `updated_at` datetime                             DEFAULT NULL,
+    `owner_id`   int      NOT NULL,
+    `assignment_id`  int                                  DEFAULT NULL,
+    `file_reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `fk_assignment_assignment_answers` (`assignment_id`),
+    CONSTRAINT `fk_assignment_assignment_answers` FOREIGN KEY (`assignment_id`) REFERENCES `assignment` (`id`)
+);

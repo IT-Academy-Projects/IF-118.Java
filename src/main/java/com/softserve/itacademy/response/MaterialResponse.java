@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,9 +14,9 @@ import lombok.Setter;
 public class MaterialResponse {
 
     private Integer id;
-    private Integer ownerId;
     private String name;
-    private Integer courseId;
     private String description;
-
+    private Integer courseId;
+    private Integer ownerId;
+    Set<AssignmentResponse> assignments;
 }
