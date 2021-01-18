@@ -78,13 +78,8 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public void deleteByExpirationDate() {
-        List<Invitation> all = invitationRepository.findAll();
-        all.forEach(invitation -> {
-            if (invitation.getExpirationDate().isBefore(LocalDateTime.now())) {
-                invitationRepository.delete(invitation);
-            }
-        });
+    public int deleteByExpirationDate() {
+        return invitationRepository.deleteByExpirationDate();
     }
 
     @Override

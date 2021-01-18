@@ -14,12 +14,10 @@ public class InvitationScheduler {
 
     private final InvitationService invitationService;
 
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void deleteByExpirationDate() {
-        int sizeBefore = invitationService.findAll().size();
         log.info("Scheduler start:");
-        invitationService.deleteByExpirationDate();
-        log.info("Scheduler finished: " +
-                (sizeBefore - invitationService.findAll().size()) + " invitations have been deleted by expiration date");
+        int countOfDeleted = invitationService.deleteByExpirationDate();
+        log.info("Scheduler finished: " + countOfDeleted + " invitations have been deleted by expiration date");
     }
 }
