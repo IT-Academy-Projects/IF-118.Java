@@ -55,7 +55,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findAll() {
-        log.info("Searching for courses...");
         return courseRepository.findAll().stream()
                 .map(courseConverter::of)
                 .collect(Collectors.toList());

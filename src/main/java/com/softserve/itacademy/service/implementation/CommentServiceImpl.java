@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
             log.info("No comments for user {}", id);
             return Collections.emptyList();
         }
-        log.info("Comments: {}", comments);
+        log.info("{} comments for user {} found", comments.size(), id);
         return collectComments(comments);
     }
 
@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
             log.info("No comments for material {}", id);
             return Collections.emptyList();
         }
-        log.info("Comments: {}", comments);
+        log.info("{} comments for material {} found", comments.size(), id);
         return collectComments(comments);
     }
 
