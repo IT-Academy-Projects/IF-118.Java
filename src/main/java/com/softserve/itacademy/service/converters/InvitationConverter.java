@@ -33,6 +33,7 @@ public class InvitationConverter {
         String courseOrGroup = invitation.getGroup() == null ? "course" : "group";
         Integer id = courseOrGroup.equals("course") ? invitation.getCourse().getId() : invitation.getGroup().getId();
         return InvitationResponse.builder()
+                .id(invitation.getId())
                 .courseOrGroup(courseOrGroup)
                 .courseOrGroupId(id)
                 .link(invitation.getLink())

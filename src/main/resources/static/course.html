@@ -36,6 +36,11 @@
                 </div>
             </div>
         </div>
+        <div class="invitation">
+            <button id="invite-to-course-button" type="button" class="btn btn-outline-success btn-sm"
+                    data-toggle="modal" data-target="#invite-to-course-modal">Invite student
+            </button>
+        </div>
         <div class="material-title">
             <h3>Materials</h3>
             <div class="col-sm" id="add-material-btn">
@@ -116,6 +121,31 @@
             </div>
         </div>
     </div>
+    <!-- Modal for invitation -->
+    <div id="invite-to-course-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Invite student to group</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" class="form-control" id="email" placeholder="Type student email...">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success show" onclick="inviteToCourse();">
+                        Invite
+                    </button>
+                    <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal for comment -->
     <div id="create-comment-modal" class="modal fade" role="dialog"></div>
 </div>
@@ -123,6 +153,7 @@
 
 <script src="js/course.js"></script>
 <script src="js/comments.js"></script>
+<script src="js/invitation.js"></script>
 <script>
     $(function () {
         $("#navbar").load("navbar.html");
