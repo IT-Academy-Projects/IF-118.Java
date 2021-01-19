@@ -11,12 +11,14 @@ import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.InvitationConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class InvitationServiceImpl implements InvitationService {
     private final MailSender mailSender;
@@ -34,13 +36,10 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
+        log.info("sending invitation on email");
         Invitation invitation = invitationConverter.of(invitationRequest);
-        if (userRepository.existsByEmail(invitationRequest.getEmail())) {
             sendInvitationMail(invitation);
             invitation.setLink(getLink(invitation));
-        } else {
-            throw new NotFoundException("user with such email was not found");
-        }
         return invitationConverter.of(invitationRepository.save(invitation));
     }
 
@@ -48,22 +47,26 @@ public class InvitationServiceImpl implements InvitationService {
     public InvitationResponse approveByLink(String email, String code) {
         Invitation invitation = invitationRepository.findByCode(code)
                 .orElseThrow(() -> new InvitationServiceException("No such invitation"));
+        log.info("approving invitation");
         return approveCourseOrGroup(invitation);
     }
 
     @Override
     public void delete(Integer id) {
+        log.info("disapproving invitation");
         invitationRepository.delete(getById(id));
     }
 
     @Override
     public void approveById(Integer id) {
+        log.info("approving invitation");
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
     }
 
     @Override
     public List<InvitationResponse> findAllByEmail(String email) {
+        log.info("looking for all invitations of the user");
         return invitationRepository.findAllByEmail(email).stream()
                 .filter(invitation -> !invitation.getApproved())
                 .map(invitationConverter::of)
@@ -71,13 +74,8 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public void deleteByExpirationDate() {
-        List<Invitation> all = invitationRepository.findAll();
-        all.forEach(invitation -> {
-            if (invitation.getExpirationDate().isBefore(LocalDateTime.now())) {
-                invitationRepository.delete(invitation);
-            }
-        });
+    public int deleteByExpirationDate() {
+        return invitationRepository.deleteByExpirationDate();
     }
 
     @Override
@@ -115,7 +113,8 @@ public class InvitationServiceImpl implements InvitationService {
 
 
     private void sendInvitationMail(Invitation invitation) {
-        User user = userRepository.getOne(invitation.getUser().getId());
+        User user = userRepository.findById(invitation.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
         mailSender.send(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
