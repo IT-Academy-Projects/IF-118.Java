@@ -1,5 +1,3 @@
-let noCoursesText = '<div style="height: 70vh; display: flex; justify-content: center"><span style="font-size:36px; color: grey; align-self: center; margin-top: 10px">You haven`t active courses</span></div>';
-
 let currentUserId;
 
 init();
@@ -91,7 +89,10 @@ function showTeacherCourses() {
 }
 
 function showStudentGroups(groups) {
-    groups.forEach(group => {
+    if (groups.length < 1) {
+        showNoGroupsText();
+    } else {
+        groups.forEach(group => {
             $('#groups-wrapper').append(`
                 <div class="card custom-card">
                     <a class="custom-link" href="/group?id=${group.id}">
@@ -103,7 +104,8 @@ function showStudentGroups(groups) {
                     </div>
                 </div>
             `);
-    });
+        });
+    }
 }
 
 function showTeacherGroups() {
@@ -125,7 +127,13 @@ function showTeacherGroups() {
 }
 
 function showNoCoursesText() {
+    let noCoursesText = '<div style="height: 70vh; display: flex; justify-content: center"><span style="font-size:36px; color: grey; align-self: center; margin-top: 10px">You haven`t active courses</span></div>';
     $('#wrapper').html(noCoursesText);
+}
+
+function showNoGroupsText() {
+    let noGroupText = '<div style="height: 70vh; display: flex; justify-content: center"><span style="font-size:36px; color: grey; align-self: center; margin-top: 10px">You are not member of any group</span></div>';
+    $('#wrapper').html(noGroupText);
 }
 
 function getRequest(url) {
