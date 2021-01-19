@@ -43,6 +43,14 @@ function showTeacherCourses() {
             <tr>
                 <td><a href="/course?id=${course.id}">${course.name}</a></td>
             </tr>
+            `);
+            $('#courses').append(`
+                <div class="form-check">
+                    <input class="form-check-input" id="course-${course.id}" type="checkbox" value="${course.id}">
+                    <label class="form-check-label" for="course-${course.id}">
+                        ${course.name}
+                    </label>
+                </div>
             `)
         })
     });

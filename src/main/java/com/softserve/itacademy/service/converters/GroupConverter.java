@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.converters;
 
+import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -29,9 +31,10 @@ public class GroupConverter {
         return map;
     }
 
-    public Group of(GroupRequest groupRequest) {
+    public Group of(GroupRequest groupRequest, Set<Course> courses) {
         Group map = mapper.map(groupRequest, Group.class);
         map.setDisabled(false);
+        map.setCourses(courses);
         return map;
     }
 }

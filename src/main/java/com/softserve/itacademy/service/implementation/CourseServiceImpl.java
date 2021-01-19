@@ -42,13 +42,6 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponse create(CourseRequest courseRequest) {
         log.info("Creating course {}", courseRequest);
         userService.findById(courseRequest.getOwnerId());
-        Set<Group> groups = Collections.emptySet();
-        Set<Integer> groupIds = courseRequest.getGroupIds();
-        if (groupIds != null) {
-            groups = groupIds.stream()
-                    .map(id -> groupRepository.findById(id).get())
-                    .collect(Collectors.toSet());
-        }
         Set<Material> materials = Collections.emptySet();
         Set<Integer> materialIds = courseRequest.getMaterialIds();
         if (materialIds != null) {
@@ -57,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
                     .collect(Collectors.toSet());
         }
 
-        Course course = courseConverter.of(courseRequest, groups, materials);
+        Course course = courseConverter.of(courseRequest, materials);
         Course savedCourse = courseRepository.save(course);
         log.info("Created course {}", savedCourse);
         return courseConverter.of(savedCourse);

@@ -1,6 +1,5 @@
 package com.softserve.itacademy.repository;
 
-import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
