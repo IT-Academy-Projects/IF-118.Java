@@ -21,7 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -55,7 +59,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .isPickedRole(false)
                 .activationCode(UUID.randomUUID().toString())
                 .build();
-
 
         setPickedRole(dto.getPickedRole(), user);
         addUser(user);
@@ -138,5 +141,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             mailSender.send(user.getEmail(), "SoftClass activation", message);
         }
     }
-
 }
+
+
