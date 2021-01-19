@@ -25,10 +25,8 @@ import java.util.Set;
 @Entity
 public class Assignment extends BasicEntity {
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
     private String description;
 
     @ManyToOne

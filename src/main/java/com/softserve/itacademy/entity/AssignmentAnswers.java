@@ -22,10 +22,8 @@ import javax.persistence.Table;
 @Entity
 public class AssignmentAnswers extends BasicEntity {
 
-    @Column(name = "owner_id")
     private Integer ownerId;
 
-    @Column(name = "file_reference")
     private String fileReference;
 
     @ManyToOne

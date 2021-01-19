@@ -3,6 +3,7 @@ let noMaterialText = '<span style="font-size:36px; color: grey; align-self: cent
 
 let canEdit;
 let tempAssignmentId;
+let tempAnswerId;
 let currentUser;
 
 initPage();
@@ -86,10 +87,12 @@ function createAssignment() {
         description: $('#assignment-description').val(),
         materialId: materialId
     }
-    postRequest(`/api/v1/assignments`, data).then(res => {
+    postRequest(`/api/v1/assignments`, data).then(() => {
         $('#assignments').html('');
         $('#materials').html('');
-        getMaterial(materialId);
+        getMaterial(materialId).then(() => {
+            $('#create-assignment-modal').modal('hide');
+        });
     })
 }
 
@@ -99,16 +102,24 @@ function checkAnswerFile() {
     } else {
         $('#create-answer-btn').attr('disabled', true);
     }
+    if ($('#new-answer-file').val().length > 0) {
+        $('#update-answer-btn').removeAttr('disabled');
+    } else {
+        $('#update-answer-btn').attr('disabled', true);
+    }
 }
 
 function showMyAnswer(answer, assignmentId) {
     let answerReviewBody = "#answer-" + assignmentId+ "-review-body"
+    $(answerReviewBody).innerHTML = ''
     $(answerReviewBody).append(`
         <div style="display: flex">
               <span style="font-size: 36px">∟</span>
               <div class="comment mt-4 text-justify" style="font-size: 22px">
                   <span style="font-weight: bold" class="h3">${currentUser.name}</span><br>
                   <a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a>
+                  <button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success btn-sm"
+                        data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button>
                </div>
         </div>`);
 
@@ -149,6 +160,21 @@ function createAnswer() {
     formData.append('assignmentAnswer', JSON.stringify(data));
     postFileRequest(`/api/v1/assignment-answers`, formData).then(res => {
         showMyAnswer(res, tempAssignmentId);
+        $('#create-answer-modal').modal('hide');
+    })
+}
+
+function updateAnswer() {
+
+    let file = $('#new-answer-file').prop('files')[0];
+
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('answerId', tempAnswerId);
+    patchFileRequest(`/api/v1/assignment-answers`, formData).then(res => {
+        showMyAnswer(res, tempAssignmentId);
+        $('#update-answer-modal').modal('hide');
+        file = '';
     })
 }
 
@@ -177,6 +203,17 @@ function postFileRequest(url, data) {
     return $.ajax({
         url: url,
         type: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data'
+    });
+}
+
+function patchFileRequest(url, data) {
+    return $.ajax({
+        url: url,
+        type: 'PATCH',
         data: data,
         processData: false,
         contentType: false,

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/assignments")
 public class AssignmentController {
 
-    AssignmentService assignmentService;
+    private final AssignmentService assignmentService;
 
     public AssignmentController(AssignmentService assignmentService) {
         this.assignmentService = assignmentService;

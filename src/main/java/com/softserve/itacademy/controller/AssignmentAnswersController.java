@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,8 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/api/v1/assignment-answers")
 public class AssignmentAnswersController {
 
-    AssignmentAnswersService assignmentAnswersService;
-    ObjectMapper objectMapper;
+    private final AssignmentAnswersService assignmentAnswersService;
+    private final ObjectMapper objectMapper;
 
     public AssignmentAnswersController(AssignmentAnswersService assignmentAnswersService, ObjectMapper objectMapper) {
         this.assignmentAnswersService = assignmentAnswersService;
@@ -46,6 +47,14 @@ public class AssignmentAnswersController {
         AssignmentAnswersRequest assignmentAnswersRequest = objectMapper.readValue(data, AssignmentAnswersRequest.class);
         assignmentAnswersRequest.setOwnerId(user.getId());
         return new ResponseEntity<>(assignmentAnswersService.create(file, assignmentAnswersRequest), HttpStatus.CREATED);
+    }
+
+    @StudentRolePermission
+    @PatchMapping
+    public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
+                                                            @RequestPart(value = "answerId") String id) throws JsonProcessingException {
+        assignmentAnswersService.update(file, Integer.valueOf(id));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @UserRolePermission
