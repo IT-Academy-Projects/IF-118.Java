@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -70,7 +71,7 @@ public class ViewController {
         return "course.html";
     }
 
-    @GetMapping(path = "/chat", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
     public String chatView() {
         return "group-chat.html";
     }

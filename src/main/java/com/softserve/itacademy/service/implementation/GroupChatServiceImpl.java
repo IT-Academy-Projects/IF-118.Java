@@ -20,4 +20,11 @@ public class GroupChatServiceImpl implements GroupChatService {
         return groupChatRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
+    @Override
+    public GroupChat create() {
+        GroupChat chat = new GroupChat();
+        chat = groupChatRepository.save(chat);
+        return chat;
+    }
+
 }

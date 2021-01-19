@@ -1,5 +1,6 @@
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
+
 showGroupInfo();
 
 function showGroupInfo() {
@@ -17,4 +18,8 @@ function showGroupInfo() {
             $('#courses').append(`<span><a href="/course?id=${course.id}">`+ course.name +`</a> | </span>`);
         });
     });
+}
+
+function handleChatButton() {
+    window.location.replace(`/group-chat?id=${id}`);
 }

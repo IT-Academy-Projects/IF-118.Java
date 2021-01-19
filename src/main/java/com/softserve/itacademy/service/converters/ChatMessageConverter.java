@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.ChatMessage;
+import com.softserve.itacademy.projection.UserTinyProjection;
 import com.softserve.itacademy.response.ChatMessageResponse;
 import com.softserve.itacademy.response.CourseResponse;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,8 @@ public class ChatMessageConverter {
     private final ModelMapper mapper;
 
     public ChatMessageResponse of(ChatMessage chatMessage) {
-
-        return mapper.map(chatMessage, ChatMessageResponse.class);
+        ChatMessageResponse chatMessageResponse = mapper.map(chatMessage, ChatMessageResponse.class);
+        chatMessageResponse.setCreatedAt(chatMessage.getCreatedAt());
+        return chatMessageResponse;
     }
 }

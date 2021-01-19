@@ -28,8 +28,9 @@ public class ChatMessage extends BasicEntity {
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_message"))
     private User user;
 
-    @Size(max=255)
+    @Size(min = 1, max=255)
     private String content;
+
     private MessageStatus status;
 
     public enum MessageStatus {

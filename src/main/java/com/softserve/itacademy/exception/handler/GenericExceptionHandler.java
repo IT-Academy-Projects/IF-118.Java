@@ -70,7 +70,6 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    @MessageExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<BasicExceptionResponse> handleValidationException(MethodArgumentNotValidException exception) {
 
         ObjectError error = exception.getAllErrors().get(0);
@@ -79,6 +78,19 @@ public class GenericExceptionHandler {
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(message)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @MessageExceptionHandler({org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException.class})
+    public ResponseEntity<BasicExceptionResponse> handleSockedValidationException(
+            org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(exception.getClass().getSimpleName())
                 .build();
