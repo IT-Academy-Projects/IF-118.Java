@@ -1,10 +1,12 @@
 package com.softserve.itacademy.request;
 
+import com.softserve.itacademy.response.CourseResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 
 @Getter
@@ -14,6 +16,7 @@ public class GroupRequest {
 
     @NotBlank
     private String name;
+    private Set<Integer> courseIds;
 
     @NotBlank
     private Integer ownerId;

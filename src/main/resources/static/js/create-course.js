@@ -1,10 +1,6 @@
 function createCourse() {
-    let checkedIds = []
-    $( "#groups input:checked" ).each(function(){checkedIds.push($(this).val());});
-
-    const courseRequest = {
+        const courseRequest = {
         name: $('#courseName').val(),
-        groupIds: checkedIds,
         description: $("#courseDescription").val()
     };
     $.ajax({
