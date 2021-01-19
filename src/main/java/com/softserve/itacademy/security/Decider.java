@@ -21,6 +21,10 @@ public class Decider {
 
         GroupFullTinyProjection group = groupRepository.findProjectedById(groupId).orElseThrow(NotFoundException::new);
 
+        if(user.getId().equals(group.getOwnerId())) {
+            return true;
+        }
+
         for (var usr : group.getUsers()) {
             if(usr.getId().equals(user.getId())) {
                 return true;
