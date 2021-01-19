@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -72,8 +73,7 @@ public class ViewController {
     }
 
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
-    public String chatView() {
-        return "group-chat.html";
-    }
+    @PreAuthorize("@decider.checkIfGroupMember(authentication.principal, #id)")
+    public String chatView(@RequestParam int id) { return "group-chat.html"; }
 
 }
