@@ -13,6 +13,7 @@ import lombok.Setter;
 @Builder
 public class InvitationResponse {
 
+    private Integer id;
     private Boolean approved;
     private String courseOrGroup;
     private String link;

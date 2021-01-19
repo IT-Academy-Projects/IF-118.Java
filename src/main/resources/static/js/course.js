@@ -31,6 +31,7 @@ function getCourse(id, user) {
             canEdit = false;
             $('#add-material-btn').hide();
             $('#edit-course-description-block').hide();
+            $('.invitation').hide();
         }
 
         $('#course-name').text(course.name);

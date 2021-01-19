@@ -43,7 +43,7 @@ public class InvitationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{email}")
+    @GetMapping
     public ResponseEntity<List<InvitationResponse>> findAllByEmail(@AuthenticationPrincipal User user) {
         return new ResponseEntity<>(invitationService.findAllByEmail(user.getEmail()), HttpStatus.OK);
     }
