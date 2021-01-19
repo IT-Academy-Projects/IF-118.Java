@@ -11,13 +11,31 @@ button {
 .wrapper {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.content-wrapper {
-    padding: 24px;
+.cards-wrapper {
+    padding: 36px;
     height: 100%;
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-row-gap: 2vw;
+    grid-column-gap: 2vw;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.custom-card {
+    min-height: 280px;
+    width: 280px;
+    height: 100%;
+    border: solid #343a408f 1px;
+}
+
+
+a.custom-link,
+a.custom-link:hover {
+    color: inherit;
+    text-decoration: none;
 }
 
 .menu-panel {

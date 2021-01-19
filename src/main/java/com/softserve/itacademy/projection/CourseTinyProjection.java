@@ -4,5 +4,6 @@ public interface CourseTinyProjection extends IdNameTupleProjection {
 
     Integer getOwnerId();
     Boolean getDisabled();
+    String getDescription();
 
 }

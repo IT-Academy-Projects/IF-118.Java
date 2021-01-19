@@ -1,8 +1,9 @@
 function createCourse() {
-        const courseRequest = {
+    const courseRequest = {
         name: $('#courseName').val(),
         description: $("#courseDescription").val()
     };
+
     $.ajax({
         type: "POST",
         url: `/api/v1/courses`,
