@@ -46,9 +46,7 @@ public class GroupServiceImpl implements GroupService {
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
-            Set<Course> courses = courseIds.stream()
-                    .map(id -> courseRepository.findById(id).get())
-                    .collect(Collectors.toSet());
+            Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
             courses.forEach(course -> course.getGroups().add(newGroup));
         }

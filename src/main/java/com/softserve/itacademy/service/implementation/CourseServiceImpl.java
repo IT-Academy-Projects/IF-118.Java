@@ -43,9 +43,8 @@ public class CourseServiceImpl implements CourseService {
         Set<Material> materials = Collections.emptySet();
         Set<Integer> materialIds = courseRequest.getMaterialIds();
         if (materialIds != null) {
-            String query = materialIds.stream().map(Object::toString).collect(Collectors.joining(", "));
-            materials = materialRepository.findByIds(query);
-            log.info("Selected materials with ids {}", query);
+            materials = materialRepository.findByIds(materialIds);
+            log.info("Selected materials with ids {}", materialIds);
         }
 
         Course course = courseConverter.of(courseRequest, materials);

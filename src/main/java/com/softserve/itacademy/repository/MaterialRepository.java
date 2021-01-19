@@ -10,6 +10,6 @@ import java.util.Set;
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
 
-    @Query(value = "select * from material where ID IN (:query)", nativeQuery = true)
-    Set<Material> findByIds(String query);
+    @Query(value = "select * from material where id IN (:ids)", nativeQuery = true)
+    Set<Material> findByIds(Set<Integer> ids);
 }
