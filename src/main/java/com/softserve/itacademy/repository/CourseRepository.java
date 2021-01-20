@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
@@ -24,5 +25,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Transactional
     @Query(value = "update courses set courses.description = :description where courses.id = :id", nativeQuery = true)
     int updateDescription(Integer id, String description);
+
+    @Query(value = "select * from courses where id in (:ids)", nativeQuery = true)
+    Set<Course> findByIds (Set<Integer> ids);
 
 }
