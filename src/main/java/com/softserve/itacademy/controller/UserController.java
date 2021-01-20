@@ -76,7 +76,7 @@ public class UserController {
         userService.updateProfileInfo(id, name, email);
         return new ResponseEntity<>(OK);
     }
-  
+
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);

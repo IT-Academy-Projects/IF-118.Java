@@ -104,6 +104,35 @@
     </div>
 </div>
 
+<!-- Modal for updating answers -->
+<div id="update-answer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="answer-input">
+                            <label for="answer-file">File:</label>
+                            <input type="file" class="form-control" id="new-answer-file"  lang="en"
+                                   onchange="checkAnswerFile()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-answer-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="updateAnswer()">Update
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script src="js/material.js"></script>
 </html>

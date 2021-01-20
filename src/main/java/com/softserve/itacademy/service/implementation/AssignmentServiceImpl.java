@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
-    MaterialService materialService;
-    AssignmentRepository assignmentRepository;
-    AssignmentConverter assignmentConverter;
+    private final MaterialService materialService;
+    private final AssignmentRepository assignmentRepository;
+    private final AssignmentConverter assignmentConverter;
 
     public AssignmentServiceImpl(MaterialService materialService,
                                  AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter) {
@@ -45,7 +45,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment getById(Integer id) {
         return assignmentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Assignment answer not found"));
+                .orElseThrow(() -> new NotFoundException("Answer to assignment " + id + " not found"));
     }
 
 }

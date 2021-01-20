@@ -3,7 +3,6 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
-import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.repository.MaterialRepository;
