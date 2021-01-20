@@ -1,11 +1,8 @@
-.invitation-info{
-    margin: 10px auto;
-    padding: 0 20px;
-    width: 25%;
-    border: 2px solid gray;
-    border-radius: 10px;
+.invitations{
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,20rem);
+    justify-content: center;
 }
 
-.btn{
-    display:inline-block;
-}

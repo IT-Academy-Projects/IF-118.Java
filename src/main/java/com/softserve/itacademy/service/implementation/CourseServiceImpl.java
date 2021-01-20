@@ -25,14 +25,12 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
-    private final GroupRepository groupRepository;
     private final UserService userService;
     private final CourseConverter courseConverter;
     private final MaterialRepository materialRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository, GroupRepository groupRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository) {
         this.courseRepository = courseRepository;
-        this.groupRepository = groupRepository;
         this.userService = userService;
         this.courseConverter = courseConverter;
         this.materialRepository = materialRepository;
@@ -40,14 +38,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse create(CourseRequest courseRequest) {
-        log.info("Creating course {}", courseRequest);
+        log.info("Creating course from CourseRequest with name: {}, description: {}, ownerId: {}", courseRequest.getName(),courseRequest.getDescription(), courseRequest.getOwnerId());
         userService.findById(courseRequest.getOwnerId());
         Set<Material> materials = Collections.emptySet();
         Set<Integer> materialIds = courseRequest.getMaterialIds();
         if (materialIds != null) {
-            materials = materialIds.stream()
-                    .map(id -> materialRepository.findById(id).get())
-                    .collect(Collectors.toSet());
+            materials = materialRepository.findByIds(materialIds);
+            log.info("Selected materials with ids {}", materialIds);
         }
 
         Course course = courseConverter.of(courseRequest, materials);
@@ -58,7 +55,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseResponse> findAll() {
-        log.info("Searching for courses...");
         return courseRepository.findAll().stream()
                 .map(courseConverter::of)
                 .collect(Collectors.toList());

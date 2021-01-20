@@ -32,6 +32,7 @@ public class CourseConverter {
 
     public Course of(CourseRequest courseRequest, Set<Material> materials) {
         Course map = mapper.map(courseRequest, Course.class);
+        map.setId(null);
         map.setDisabled(false);
         map.setGroups(Collections.emptySet());
         map.setMaterials(materials);
