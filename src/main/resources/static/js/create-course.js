@@ -9,7 +9,8 @@ function createCourse() {
         data: JSON.stringify(courseRequest),
         contentType: "application/json; charset=utf-8",
         success: function () {
-            $( "#course-table-content" ).html(``);
+            $("#course-table-content").html(``);
+            $("#courses").html(``);
             showTeacherCourses();
             $("#close-course-modal").click();
         }
