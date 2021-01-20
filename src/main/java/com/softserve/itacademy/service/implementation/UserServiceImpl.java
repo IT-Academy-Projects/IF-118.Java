@@ -2,12 +2,14 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserConverter userConverter;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter) {
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -62,6 +66,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByGroupId(id).stream()
                 .map(userConverter::of)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void changePass(Integer id, String oldPass, String newPass) {
+
+        if (passwordEncoder.matches(oldPass, getById(id).getPassword())) {
+            userRepository.updatePass(id, passwordEncoder.encode(newPass));
+        }
+        else throw new OperationNotAllowedException("wrong current password");
     }
 
 

@@ -21,31 +21,130 @@
 </head>
 
 <body>
-<div id="navbar"></div>
-<div class="wrapper">
-    <div class="content-wrapper">
-        <h1>Profile</h1>
-        <div class="profile-card">
-            <table id="profile-table">
-                <tr>
-                    <td>Name</td>
-                    <td id="profile-name"></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td id="profile-email"></td>
-                </tr>
-            </table>
+<div class="container">
+    <div id="navbar"></div>
+    <div class="col">
+        <div class="row">
+            <div class="col mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="e-profile">
+                            <div class="row">
+                                <div class="col-12 col-sm-auto mb-3">
+                                    <div class="mx-auto" style="width: 140px;">
+                                        <div class="d-flex justify-content-center align-items-center rounded"
+                                             style="height: 140px; background-color: rgb(233, 236, 239);">
+                                            <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                        <div>Name: <span id="user-name"></span></div>
+                                        <div>Email: <span id="user-email"></span></div>
+
+                                        <div class="mt-2">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fa fa-fw fa-camera"></i>
+                                                <span>Change Photo</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
+                            </ul>
+
+                            <div class="tab-content pt-3">
+                                <div class="tab-pane active">
+                                    <form class="form" novalidate="">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label>Username</label>
+                                                            <input class="form-control" type="text" id="update-name"
+                                                                   placeholder="johnny.s">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input class="form-control" type="text" id="update-email"
+                                                                   placeholder="user@example.com">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col mb-3">
+                                                        <div class="form-group">
+                                                            <label>About</label>
+                                                            <textarea class="form-control" rows="5"
+                                                                      placeholder="My Bio"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="mb-2"><b>Change Password</b></div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label>Current Password</label>
+                                                            <input class="form-control" type="password" id="old-pass"
+                                                                   placeholder="••••••">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label>New Password</label>
+
+                                                            <input class="form-control" type="password" id="new-pass1"
+                                                                   placeholder="••••••">
+                                                            <small id="passwordHelp" class="form-text text-muted">
+                                                                passwords do not match</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label>Confirm <span
+                                                                    class="d-none d-xl-inline">Password</span></label>
+
+                                                            <input class="form-control" type="password" id="new-pass2"
+                                                                   placeholder="••••••"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col d-flex justify-content-end">
+                                                <button class="btn btn-primary" type="submit"
+                                                        onclick=saveChanges()>Save changes
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="profile-edit">
-            <button type="button" class="my-btn btn btn-outline-dark hide" onclick="editProfile()">Edit profile</button>
-        </div>
-        <div class="profile-edit-confirm">
-            <button type="button" class="my-btn btn btn-outline-dark show" onclick=saveChanges()>Save changes</button>
-            <button type="button" class="my-btn btn btn-outline-dark show" onclick=cancel()>Cancel</button>
-        </div>
+
     </div>
 </div>
 </body>
-
 </html>

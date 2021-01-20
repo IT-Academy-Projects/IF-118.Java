@@ -32,7 +32,7 @@ public class InvitationController {
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
-    @PatchMapping("/approve/{email}/{code}")
+    @GetMapping("/approve/{email}/{code}")
     public ResponseEntity<InvitationResponse> approveInvitation(@PathVariable String email, @PathVariable("code") String code) {
         return new ResponseEntity<>(invitationService.approveByLink(email, code), HttpStatus.OK);
     }
@@ -53,6 +53,4 @@ public class InvitationController {
         invitationService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }
