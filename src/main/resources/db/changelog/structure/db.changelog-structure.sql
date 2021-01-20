@@ -11,6 +11,7 @@ CREATE TABLE if not exists `courses`
     `owner_id`   int                                  DEFAULT NULL,
     `disabled`   boolean                              DEFAULT false,
     `description` varchar(510) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `avatar` blob                                 DEFAULT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -31,6 +32,7 @@ CREATE TABLE if not exists `student_groups`
     `name`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `owner_id`   int                                  DEFAULT NULL,
     `disabled`   boolean                              DEFAULT false,
+    `avatar` blob                                 DEFAULT NULL,
     PRIMARY KEY (`id`)
 );
 
