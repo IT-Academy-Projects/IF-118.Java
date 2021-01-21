@@ -37,6 +37,8 @@ public class Group extends BasicEntity {
     @Column(nullable = false)
     private Boolean disabled;
 
+    private byte[] avatar;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "groups_users",

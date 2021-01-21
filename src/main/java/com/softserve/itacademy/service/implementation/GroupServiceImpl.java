@@ -4,6 +4,7 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
@@ -13,7 +14,9 @@ import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupResponse create(GroupRequest groupRequest) {
+    public GroupResponse create(GroupRequest groupRequest, MultipartFile file) {
         User owner = userService.getById(groupRequest.getOwnerId());
 
         if (owner.getDisabled()) {
@@ -49,6 +52,13 @@ public class GroupServiceImpl implements GroupService {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
             courses.forEach(course -> course.getGroups().add(newGroup));
+        }
+        if (file != null) {
+            try {
+                newGroup.setAvatar(file.getBytes());
+            } catch (IOException e) {
+                throw new FileProcessingException("Cannot get bytes from avatar file for group");
+            }
         }
         return groupConverter.of(groupRepository.save(newGroup));
     }
@@ -64,6 +74,14 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.findByOwnerId(id).stream()
                 .map(groupConverter::of)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public byte[] getAvatarById(Integer id) {
+        if (!groupRepository.existsById(id)) { throw new NotFoundException("Course doesn't exist"); }
+        byte[] avatar = groupRepository.getAvatarById(id);
+        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
+        return avatar;
     }
 
     @Override

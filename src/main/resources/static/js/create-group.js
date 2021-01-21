@@ -5,13 +5,21 @@ function createGroup() {
         name: $('#groupName').val(),
         courseIds: checkedIds
     };
+    let file = $('#group-avatar').prop('files')[0];
+
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('group', JSON.stringify(groupRequest));
+
     $.ajax({
         type: "POST",
         url: `/api/v1/groups`,
-        data: JSON.stringify(groupRequest),
-        contentType: "application/json; charset=utf-8",
+        data: formData,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
         success: function() {
-            $( "#group-table-content" ).html(``);
+            $( "#groups-wrapper" ).html(``);
             showTeacherGroups();
             $("#close-group-modal").click();
         }
