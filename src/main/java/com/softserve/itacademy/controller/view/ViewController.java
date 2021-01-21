@@ -14,9 +14,8 @@ import java.security.Principal;
 @RequestMapping
 public class ViewController {
 
-    @GetMapping(path = {"/","/home"}, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String homeView() {
-//        return "redirect:user";
         return "home.html";
     }
 
