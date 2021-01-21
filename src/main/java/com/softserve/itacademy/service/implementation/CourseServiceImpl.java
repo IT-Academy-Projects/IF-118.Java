@@ -1,11 +1,10 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
@@ -14,7 +13,9 @@ import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponse create(CourseRequest courseRequest) {
+    public CourseResponse create(CourseRequest courseRequest, MultipartFile file) {
         log.info("Creating course from CourseRequest with name: {}, description: {}, ownerId: {}", courseRequest.getName(),courseRequest.getDescription(), courseRequest.getOwnerId());
         userService.findById(courseRequest.getOwnerId());
         Set<Material> materials = Collections.emptySet();
@@ -48,8 +49,16 @@ public class CourseServiceImpl implements CourseService {
         }
 
         Course course = courseConverter.of(courseRequest, materials);
+
+        if (file != null) {
+            try {
+                course.setAvatar(file.getBytes());
+            } catch (IOException e) {
+                throw new FileProcessingException("Cannot get bytes from avatar file for course");
+            }
+        }
+
         Course savedCourse = courseRepository.save(course);
-        log.info("Created course {}", savedCourse);
         return courseConverter.of(savedCourse);
     }
 
@@ -84,6 +93,14 @@ public class CourseServiceImpl implements CourseService {
         if (courseRepository.updateDescription(id, description) == 0) {
             throw new NotFoundException("Course was not found");
         }
+    }
+
+    @Override
+    public byte[] getAvatarById(Integer id) {
+        if (!courseRepository.existsById(id)) { throw new NotFoundException("Course doesn't exist"); }
+        byte[] avatar = courseRepository.getAvatarById(id);
+        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
+        return avatar;
     }
 
     @Override

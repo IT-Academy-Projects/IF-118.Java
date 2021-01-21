@@ -1,0 +1,44 @@
+.header-content {
+    background-image: url("../img/HomePageBg2.jpg");
+    background-color: gray;
+    height: 700px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.pad-top {
+    padding-top: 200px;
+}
+.advantages {
+    border-bottom: black 5px solid;
+    border-top: black 5px solid;
+}
+.becomeTeacher {
+    background-image: url("../img/board.jpg");
+    background-color: gray;
+    height: 600px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
+.footer {
+    padding: 40px 20px;
+    border-top: orange 1px solid;
+    border-bottom: orange 1px solid;
+}
+.copyright {
+    padding: 20px;
+    background-color: #5b5041;
+}
+.github {
+    width: 50px;
+    height: 50px;
+    background-image: url("../img/github-icon.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.github:hover {
+    background-image: url("../img/github-icon-hover.png");
+}

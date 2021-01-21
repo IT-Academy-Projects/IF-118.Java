@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
 
@@ -28,5 +29,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query(value = "select * from courses where id in (:ids)", nativeQuery = true)
     Set<Course> findByIds (Set<Integer> ids);
+
+    @Query(value = "select avatar from courses where id = :id", nativeQuery = true)
+    byte[] getAvatarById(Integer id);
 
 }

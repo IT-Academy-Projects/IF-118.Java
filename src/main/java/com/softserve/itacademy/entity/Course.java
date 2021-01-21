@@ -42,6 +42,8 @@ public class Course extends BasicEntity {
     @Column(nullable = false)
     private String description;
 
+    private byte[] avatar;
+
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 

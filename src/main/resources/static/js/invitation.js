@@ -1,8 +1,5 @@
-let noInvitationsText = '<span style="color: grey; margin-left: 42%; margin-top: 10px">There is no invitations yet.</span>';
+let noInvitationsText = '<span style="text-align: center;">No invitations yet.</span>';
 let invId;
-let courseOrGroup;
-let courseOrGroupName;
-let teacher;
 
 function inviteToCourse() {
   let course_id = parseInt(window.location.toString().split("id=")[1])
@@ -54,8 +51,8 @@ function getInvitations() {
     getRequest(`/api/v1/invitation`).then(invitations => {
         invitations.forEach(invitation => {
             invId = invitation.id;
-            courseOrGroup = invitation.courseOrGroup;
-
+            let courseOrGroup = invitation.courseOrGroup;
+            let courseOrGroupTeacher;
             let approveBtn = '';
             let deleteBtn = '';
 
@@ -63,27 +60,27 @@ function getInvitations() {
                             <button type="button" class="btn btn-outline-success show" onclick="approveInvitation(${invId})">Approve</button>
                           </div>`;
             deleteBtn = `<div class="delete-invitation btn">
-                            <button type="button" class="btn btn-outline-dark" onclick="deleteInvitation(${invId})">Delete</button>
+                            <button type="button" class="btn btn-outline-danger" onclick="deleteInvitation(${invId})">Delete</button>
                          </div>`;
 
             if( courseOrGroup == 'course'){
                 getRequest(`api/v1/courses/${invitation.courseOrGroupId}`).then(course => {
-                    courseOrGroupName = course.name;
-                    teacher = course.ownerId;
+                    let courseName = course.name;
+                    courseOrGroupTeacher = course.ownerId;
 
-                    getRequest(`/api/v1/users/${teacher}`).then(user => {
-                        teacher = user.name;
-                        showInvitation(courseOrGroup, courseOrGroupName, teacher, approveBtn, deleteBtn);
+                    getRequest(`/api/v1/users/${courseOrGroupTeacher}`).then(user => {
+                        courseOrGroupTeacher = user.name;
+                        showInvitation('Course', courseName, courseOrGroupTeacher, approveBtn, deleteBtn);
                     });
                 });
             } else{
                 getRequest(`api/v1/groups/${invitation.courseOrGroupId}`).then(group => {
-                    courseOrGroupName = group.name;
-                    teacher = group.ownerId;
+                    let groupName = group.name;
+                    courseOrGroupTeacher = group.ownerId;
 
-                    getRequest(`/api/v1/users/${teacher}`).then(user => {
-                        teacher = user.name;
-                        showInvitation(courseOrGroup, courseOrGroupName, teacher, approveBtn, deleteBtn);
+                    getRequest(`/api/v1/users/${courseOrGroupTeacher}`).then(user => {
+                        courseOrGroupTeacher = user.name;
+                        showInvitation('Group', groupName, courseOrGroupTeacher, approveBtn, deleteBtn);
                     });
                 });
             }
@@ -93,14 +90,17 @@ function getInvitations() {
 
 function showInvitation(courseOrGroup, courseOrGroupName, teacher, approveBtn, deleteBtn){
     $('#invitations').append(`
-        <div class="invitation-info">
-                <div class="invitation-name">You have an invitation to the ${courseOrGroup} ${courseOrGroupName}</div>
-                <div class="invitation-teacher">Teacher: ${teacher}</div>
-                <div class="btn">  
+        <div class="card text-white bg-dark mb-3" style=" margin-right: 15px;" >
+            <div class="card-header">Invitation to</div>
+            <div class="card-body">
+                <h5 class="card-title">${courseOrGroup} ${courseOrGroupName}</h5>
+                <p class="card-text">Teacher: ${teacher}</p>
+                <div class="btn" style="display: flex; justify-content: center;">
                     ${approveBtn}
                     ${deleteBtn}
                 </div>
-        </div>  
+            </div>
+        </div>
     `);
 }
 

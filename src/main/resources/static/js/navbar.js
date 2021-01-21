@@ -14,6 +14,8 @@ function initButtons(ans) {
         $('#invitation-button').show();
         $('#panel-button').show();
         $('#logout-button').show();
+        $('#courses-btn').show();
+        $('#groups-btn').show();
     }
 }
 

@@ -28,11 +28,13 @@ public class GroupConverter {
                 .filter(user -> !user.getId().equals(group.getOwnerId()))
                 .map(userConverter::of)
                 .collect(Collectors.toSet()));
+        map.setHasAvatar(group.getAvatar() != null);
         return map;
     }
 
     public Group of(GroupRequest groupRequest, Set<Course> courses) {
         Group map = mapper.map(groupRequest, Group.class);
+        map.setId(null);
         map.setDisabled(false);
         map.setCourses(courses);
         return map;
