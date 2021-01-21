@@ -1,6 +1,7 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,8 +20,11 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "update courses set courses.disabled = :disabled where courses.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
 
-    @Query(value = "select * from courses where owner_id=:id", nativeQuery = true)
-    List<Course> findByOwner(Integer id);
+    @Query(value = "select * from courses where owner_id=:id and disabled = false", nativeQuery = true)
+    List<Course> findByOwnerId(Integer id);
+
+    @Query(value = "select * from courses c inner join users_courses uc on c.id = uc.course_id where uc.user_id = :id and c.disabled = false", nativeQuery = true)
+    List<Course> findAllByUserId(Integer id);
 
     @Modifying
     @Transactional

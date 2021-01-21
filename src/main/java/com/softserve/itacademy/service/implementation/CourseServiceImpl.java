@@ -72,7 +72,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseResponse> findByOwner(Integer id) {
         log.info("Searching courses for user {}", id);
-        List<Course> coursesByOwner = courseRepository.findByOwner(id);
+        List<Course> coursesByOwner = courseRepository.findByOwnerId(id);
         if (coursesByOwner == null) {
             return Collections.emptyList();
         }
