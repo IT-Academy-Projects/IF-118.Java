@@ -21,4 +21,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     List<Group> findByOwnerId(Integer id);
 
     Optional<Group> findByIdAndOwnerId(Integer groupId, Integer ownerId);
+
+    @Query(value = "select avatar from student_groups where id = :id", nativeQuery = true)
+    byte[] getAvatarById(Integer id);
 }
