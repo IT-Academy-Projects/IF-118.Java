@@ -1,13 +1,13 @@
 function handleRegister() {
-   let email = $("#email").val();
+    let email = $("#email").val();
     let password = $("#password").val();
     let passwordRepeat = $("#passwordRepeat").val();
     let name = $("#name").val();
-    let pickedRole = $("#pickedRole").val();
+    let role = $("#role").val();
 
     if (email === '' || password === '' || passwordRepeat === '' || name === '') {
         makeRed();
-        showError("Fields cannot be empty")
+        showError("Enter all the data")
     } else if (password !== passwordRepeat) {
         $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
         showError("Password confirmation is not correct")
@@ -16,7 +16,7 @@ function handleRegister() {
             "email": email,
             "name": name,
             "password": password,
-            "pickedRole": pickedRole.toUpperCase()
+            "pickedRole": role.toUpperCase()
         });
     }
 }

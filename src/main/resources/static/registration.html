@@ -10,8 +10,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <!-- Font Awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
     <!-- Custom -->
     <link rel="stylesheet" href="css/registration.css">
+    <link rel="stylesheet" href="css/auth.css">
     <script src="js/registration.js"></script>
     <script>
         $(function () {
@@ -23,48 +28,64 @@
 
 <body>
 <div id="navbar"></div>
-<div class="container login-container">
-    <div class="col-md-12col-md-offset-4">
-        <div>
-            <h1 class="display-3">Registration</h1>
-            <div class="alert alert-danger" id="error-label" style="display: none"></div>
-            <form action="/api/v1/registration" method="post">
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" autofocus autocomplete="off"
-                           aria-describedby="emailHelp" placeholder="Email">
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>Sign Up</h3>
+                <p id="error-label"></p>
+                <div class="d-flex justify-content-end social">
+                    <span><a class="fab fa-google" href="/oauth2/authorize/google"></a></span>
                 </div>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" autofocus autocomplete="off"
-                           aria-describedby="emailHelp" placeholder="Name">
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-at"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Email" id="email" name="email">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Username" id="name" name="name">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Password" id="password"
+                               name="password">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Password confirmation"
+                               id="passwordRepeat" name="passwordRepeat">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-pencil-ruler"></i></span>
+                        </div>
+                        <select name="role" id="role" class="form-control">
+                            <option class="dropdown-item" value="Student">Student</option>
+                            <option class="dropdown-item" value="Teacher">Teacher</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" value="Register" class="btn float-right login_btn"
+                               onclick="handleRegister()">
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    Already have an account?<a href="/login">Sign In</a>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" autofocus
-                           autocomplete="off" placeholder="Password">
-                    <small id="passwordHelp" class="form-text text-muted">Password should be at least 8 characters long
-                        and
-                        contain one digit and one letter</small>
-                </div>
-                <div class="form-group">
-                    <label for="passwordRepeat">Confirm password</label>
-                    <input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat"
-                           placeholder="Confirm password">
-                </div>
-
-                <label for="pickedRole">Choose account type:</label>
-                <select name="pickedRole" id="pickedRole" class="form-control">
-                    <option value="Student">Student</option>
-                    <option value="Teacher">Teacher</option>
-                </select>
-
-                <input type="button" class="btn btn-dark" name="register" id="register" value="Register"
-                       onclick="handleRegister()" style="margin-top: 10px">
-
-                    <p style="display: inline"><a href="/oauth2/authorize/google"><img
-                            src="http://pngimg.com/uploads/google/google_PNG19635.png" style="height:60px"></a></p>
-            </form>
+            </div>
         </div>
     </div>
 </div>

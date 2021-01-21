@@ -3,10 +3,12 @@ function handleLogin() {
     let password = $("#password").val();
     let rememberMe = $("#remember-me").val();
 
-    if (email === '' || password === '') {
+    if (email === '') {
         $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showError("Email and password shouldn't be empty")
+        showError("Enter email");
+    } else if (password === '') {
+        $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red")
+        showError("Enter password");
     } else {
         loginRequest({
             "email": email,
@@ -45,9 +47,5 @@ function checkIfErrors() {
 }
 
 function showError(text) {
-    let label = $("#error-label");
-    label.text(text);
-    label.show();
-    $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-    $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+    $("#error-label").text(text);
 }

@@ -1,8 +1,8 @@
 function handleRolePick() {
-    let pickedRole = $("#pickedRole").val();
+    let role = $("#role").val();
 
     rolePickRequest({
-            "pickedRole": pickedRole.toUpperCase()
+            "pickedRole": role.toUpperCase()
         });
 }
 
