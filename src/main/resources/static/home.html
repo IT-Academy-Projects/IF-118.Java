@@ -1,26 +1,115 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Home</title>-->
-<!--    <meta name="description" content="Study and learn with SoftClass">-->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <meta name="description" content="Study and learn with SoftClass">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Custom styles and scripts -->
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body class="text-center">
+<div id="navbar"></div>
+<div id="content" class="site-content">
+    <div id="header" class="header-content">
+        <div class="container-fluid pad-top">
+            <h1 class="display-2 text-white">Best online courses</h1>
+            <h1 class="display-2 text-warning"> of Ukraine</h1>
+        </div>
+    </div>
 
-<!--    &lt;!&ndash; Bootstrap, jQuery &ndash;&gt;-->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
-<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+    <div id="advantages" class="advantages bg-white">
+        <div class="container" style="padding: 20px">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3 class="text-dark">U can study</h3>
+                    <div class="card border-warning mb-3 bg-dark">
+                        <div class="card-body text-warning">
+                            <h5 class="card-title">Anywhere</h5>
+                            <p class="card-text">Study from everywhere in the world</p>
+                        </div>
+                    </div>
+                    <div class="card border-warning mb-3 bg-dark">
+                        <div class="card-body text-warning">
+                            <h5 class="card-title">Anytime</h5>
+                            <p class="card-text">Study at a time convenient for you</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <img src="img/tree2.png" class="image-fluid" alt="tree"/>
+                </div>
+                <div class="col-lg-4">
+                    <h3 class="text-dark">We offer</h3>
+                    <div class="card border-warning mb-3 bg-dark">
+                        <div class="card-body text-warning">
+                            <h5 class="card-title">Courses</h5>
+                            <p class="card-text">Fast-growing database of courses for you</p>
+                        </div>
+                    </div>
+                    <div class="card border-warning mb-3 bg-dark">
+                        <div class="card-body text-warning">
+                            <h5 class="card-title">Teacher</h5>
+                            <p class="card-text">U will have Your own teacher to answer any questions about the course</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="becomeTeacher" class="becomeTeacher">
+        <div class="container pad-top">
+            <h3 class="display-4">Are You a teacher?</h3></br>
+            <span class="h3"><a class="text-warning" href="/registration">Register</a> as teacher, upload Your materials and start teaching people</br>from all over the world!</span>
+        </div>
+    </div>
 
-<!--    &lt;!&ndash; Custom &ndash;&gt;-->
-<!--    <script>-->
-<!--        $(function () {-->
-<!--            $("#navbar").load("navbar.html");-->
-<!--        });-->
-<!--    </script>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div id="navbar"></div>-->
-<!--<div class="container">-->
+    <footer class="bg-dark text-white">
+        <div class="container footer">
+            <div class="row">
+                <div class="col-lg-4">
+                    <span class="h5">Links</span>
+                    <p>
+                        <a href="/login" class="text-warning">Login</a></br>
+                        <a href="/registration" class="text-warning">Register</a>
+                    </p>
+                </div>
+                <div class="col-lg-4" style="border-right: orange 1px solid; border-left: orange 1px solid">
+                    <span class="h5">Email updates</span>
+                    <p>Be the first to hear about new courses and materials.</p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <span class="h5">Stay tuned</span>
+                    <p>Visit our project on GitHub.</p>
+                    <a href="https://github.com/IT-Academy-Projects/IF-118.Java">
+                        <img class="" src="img/github-icon.png" onmouseover="this.src='img/github-icon-hover.png'" onmouseout="this.src='img/github-icon.png'" alt="GitHubIcon">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div id="copyright" class="container-fluid copyright">
+        <div class="row">
+            <div class="col-lg-12">
+                Copyright &#169; - <span class="text-warning">SoftClass</span>, Ukraine, 2021
+            </div>
+        </div>
+    </div>
+</div>
 
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+<!-- Bootstrap, jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script>
+    $(function () {
+        $("#navbar").load("navbar.html");
+    });
+</script>
+</body>
+</html>
