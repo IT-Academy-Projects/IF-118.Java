@@ -4,6 +4,7 @@ import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.InvitationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
 @RequestMapping("/api/v1/invitation")
 public class InvitationController {
     private final InvitationService invitationService;
+    @Value("${application.address}")
+    private String address;
 
     public InvitationController(InvitationService invitationService) {
         this.invitationService = invitationService;
@@ -33,8 +37,10 @@ public class InvitationController {
     }
 
     @GetMapping("/approve/{email}/{code}")
-    public ResponseEntity<InvitationResponse> approveInvitation(@PathVariable String email, @PathVariable("code") String code) {
-        return new ResponseEntity<>(invitationService.approveByLink(email, code), HttpStatus.OK);
+    public ModelAndView approveInvitation(@PathVariable String email, @PathVariable("code") String code) {
+
+        invitationService.approveByLink(email, code);
+        return new ModelAndView("redirect:" + address + "/login");
     }
 
     @PatchMapping("/approve/{id}")

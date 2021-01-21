@@ -35,6 +35,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
 
+    @Modifying
+    @Transactional
+    @Query(value = "update User u set u.invitationCode = ?1 where u.email = ?2")
+    int updateInvite(String code, String email);
+
     Optional<UserFullTinyProjection> findProjectedById(Integer id);
 
     Optional<IdNameTupleProjection> findUserProjectedById(Integer id);

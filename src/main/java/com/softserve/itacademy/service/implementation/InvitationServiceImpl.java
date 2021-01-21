@@ -45,10 +45,16 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse approveByLink(String email, String code) {
-        Invitation invitation = invitationRepository.findByCode(code)
-                .orElseThrow(() -> new InvitationServiceException("No such invitation"));
+        Invitation invitation = invitationRepository.findByCode(code).get();
         log.info("approving invitation");
+        userRepository.updateInvite(code, email);
         return approveCourseOrGroup(invitation);
+    }
+
+    @Override
+    public InvitationResponse findByCode(String code) {
+        return invitationConverter.of(invitationRepository.findByCode(code)
+                .orElseThrow(() -> new InvitationServiceException("No such invitation")));
     }
 
     @Override
