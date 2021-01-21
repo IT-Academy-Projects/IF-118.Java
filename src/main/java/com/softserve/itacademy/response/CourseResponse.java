@@ -22,5 +22,6 @@ public class CourseResponse {
     private Set<Integer> materialIds;
     private Boolean disabled;
     private String description;
+    private Boolean hasAvatar;
 
 }

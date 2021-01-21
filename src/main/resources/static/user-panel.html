@@ -23,66 +23,29 @@
 
 <body>
 <div id="navbar"></div>
-<div class="wrapper">
-    <div class="content-wrapper">
-        <div class="user-info">
-            <div>Name: <span id="user-name"></span></div>
-            <div>Email: <span id="user-email"></span></div>
-            <div style="display: none">Id: <span id="user-id"></span></div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <p class="h2">Courses</p>
-                </div>
-                <div class="col-sm">
-                    <button id="create-course-button" type="button" class="btn btn-outline-success btn-sm"
-                            data-toggle="modal" data-target="#create-course-modal">+
-                    </button>
-                </div>
-                <div class="col-sm">
-                    <p class="h2">Groups</p>
-                </div>
-                <div class="col-sm">
-                    <button id="create-group-button" type="button" class="btn btn-outline-success btn-sm"
-                            data-toggle="modal" data-target="#create-group-modal">+
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm">
-                    <table class="table">
-                        <thead class="thead-dark">
-                        <tr id="course-table-head"></tr>
-                        </thead>
-                        <tbody id="course-table-content"></tbody>
-                    </table>
-                </div>
-                <div class="col-sm">
-                    <table class="table">
-                        <thead class="thead-dark">
-                        <tr id="group-table-head"></tr>
-                        </thead>
-                        <tbody id="group-table-content"></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="create-course-modal" class="modal fade" role="dialog"></div>
-        <div id="create-group-modal" class="modal fade" role="dialog"></div>
+<div class="wrapper" id="wrapper">
+    <div class="cards-wrapper" id="courses-wrapper" style="display: none">
+        <!-- BLOCK FOR COURSES CARDS -->
     </div>
+
+    <div class="cards-wrapper" id="groups-wrapper" style="display: none">
+        <!-- BLOCK FOR GROUPS CARDS -->
+    </div>
+
+    <div id="create-course-modal" class="modal fade" role="dialog"></div>
+    <div id="create-group-modal" class="modal fade" role="dialog"></div>
+
 </div>
 
-<script>
+<script src="js/user-panel.js" defer></script>
+<script defer>
     $(function () {
         $("#navbar").load("navbar.html");
         $("#create-course-modal").load("create-course-modal.html");
         $("#create-group-modal").load("create-group-modal.html");
+        init();
     });
 </script>
-<script src="js/user-panel.js"></script>
 <script src="js/create-course.js"></script>
 <script src="js/create-group.js"></script>
 
