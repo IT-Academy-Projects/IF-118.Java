@@ -13,6 +13,7 @@ import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.CourseUpdatePermission;
+import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -80,6 +81,12 @@ public class CourseController {
     @GetMapping
     public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal User currentUser) {
         return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);
+    }
+
+    @AdminRolePermission
+    @GetMapping("/forAdmin")
+    public ResponseEntity<List<CourseResponse>> findAll() {
+        return new ResponseEntity<>(courseService.findAll(), HttpStatus.OK);
     }
 
     @CourseDeletePermission
