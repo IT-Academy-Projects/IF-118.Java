@@ -10,8 +10,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <!-- Font Awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
     <!-- Custom -->
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/auth.css">
     <script src="js/login.js"></script>
     <script>
         $(function () {
@@ -23,39 +28,44 @@
 
 <body>
 <div id="navbar"></div>
-<div class="container login-container">
-    <div class="col-md-12 col-md-offset-4">
-        <div>
-
-            <h1 class="display-3">Login</h1>
-
-            <div class="alert alert-danger" id="error-label" style="display: none"></div>
-
-            <form action="/login" method="post" id="login-form">
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" autofocus autocomplete="off"
-                           aria-describedby="emailHelp" placeholder="Email">
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header">
+                <h3>Sign In</h3>
+                <p id="error-label"></p>
+                <div class="d-flex justify-content-end social">
+                    <span><a class="fab fa-google" href="/oauth2/authorize/google"></a></span>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" autofocus
-                           autocomplete="off" placeholder="Password">
-                    <small id="passwordHelp" class="form-text text-muted">Password should be at least 8 characters long
-                        and
-                        contain one digit and one letter</small>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-at"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Email" id="email" name="email">
+                    </div>
+                    <div class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Password" id="password"
+                               name="password">
+                    </div>
+                    <div class="row align-items-center remember">
+                        <input type="checkbox" id="remember-me" name="remember-me">Remember Me
+                    </div>
+                    <div class="form-group">
+                        <input type="button" value="Login" class="btn float-right login_btn" onclick="handleLogin()">
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    Don't have an account?<a href="/registration">Sign Up</a>
                 </div>
-                <div class="form-group form-check">
-                    <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
-                    <label class="form-check-label" for="remember-me">Remember Me</label>
-                </div>
-                <input type="button" class="btn btn-dark" name="login" id="login" value="Login"
-                       onclick="handleLogin()">
-
-                    <p style="display: inline"><a href="/oauth2/authorize/google"><img
-                            src="http://pngimg.com/uploads/google/google_PNG19635.png" style="height:60px"></a></p>
-
-            </form>
+            </div>
         </div>
     </div>
 </div>
