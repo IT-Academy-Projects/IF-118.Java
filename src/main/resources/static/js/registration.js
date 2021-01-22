@@ -7,10 +7,13 @@ function handleRegister() {
 
     if (email === '' || password === '' || passwordRepeat === '' || name === '') {
         makeRed();
-        showError("Enter all the data")
+        showError("Enter all required information")
     } else if (password !== passwordRepeat) {
         $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
         showError("Password confirmation is not correct")
+    } else if (!validateEmail(email)) {
+        $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+        showError("Email is not correct")
     } else {
         registerRequestJson({
             "email": email,
@@ -20,6 +23,7 @@ function handleRegister() {
         });
     }
 }
+
 
 function registerRequestJson(data) {
     return $.ajax({
@@ -47,6 +51,11 @@ function showError(text) {
     let label = $("#error-label");
     label.text(text);
     label.show();
+}
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }
 
 function makeRed() {

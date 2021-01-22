@@ -25,7 +25,7 @@ function loginRequest(data) {
         type: 'post',
         data: data,
 
-        success: function (request) {
+        success: function (request, textStatus, xhr) {
             checkIfErrors();
         }
     });
@@ -37,11 +37,11 @@ function checkIfErrors() {
         type: 'get',
 
         error: function (request, textStatus, xhr) {
-            if (request.responseJSON != null) {
-                showError(request.responseJSON.message);
-            } else {
-                window.location.replace('/user');
-            }
+            showError(request.responseJSON.message);
+        },
+
+        success: function (request) {
+            window.location.replace("/user");
         }
     });
 }

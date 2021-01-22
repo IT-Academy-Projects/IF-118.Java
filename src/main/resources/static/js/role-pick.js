@@ -17,27 +17,17 @@ function rolePickRequest(data) {
         data: JSON.stringify(data),
         dataType: 'json',
 
-        success: function (request, textStatus, xhr) {
-            showSuccess("Role picked successfully. Redirecting...")
-            setTimeout(function(){  window.location.replace('/user'); }, 1500);
+        success: function () {
+            window.location.replace('/user');
         },
 
-        error: function (request, textStatus, errorThrown) {
+        error: function (request) {
             showError(request.responseJSON.message)
         }
     });
 }
 
 function showError(text) {
-    let label = $("#alert");
-    label.addClass("alert-danger");
-    label.text(text);
-    label.show();
+    $("#error-label").text(text);
 }
 
-function showSuccess(text) {
-    let label = $("#alert");
-    label.addClass("alert-success");
-    label.text(text);
-    label.show();
-}
