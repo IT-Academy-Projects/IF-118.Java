@@ -10,60 +10,82 @@ function init() {
 
 function saveChanges() {
     const obj = {
-        name: '', email: ''
+        name: $('#update-name').val(),
+        email: $('#update-email').val()
     }
+
+    $.ajax({
+        url: `/api/v1/users/${user.id}/profile?` + $.param(obj),
+        type: 'PATCH'
+    })
+
+}
+
+function checkEmailNameCompatible() {
+
     let name = $('#update-name').val();
     let email = $('#update-email').val();
-    if (name !== "") {
-        obj.name = name;
-    } else {
-        obj.name = user.name;
-    }
-    if (email !== "") {
-        obj.email = email;
-    } else {
-        obj.email = user.email;
-    }
-    if (obj.name !== user.name || obj.email !== user.email) {
-        $.ajax({
-            url: `/api/v1/users/${user.id}/profile?` + $.param(obj),
-            type: 'PATCH'
-        })
-    }
-    changeOldPassword();
-}
-function changeOldPassword() {
-    let userPasswordRequest = {oldPassword: '', newPassword: ''};
-    const obj = {
-        oldPassword: '', newPassword1: '', newPassword2: ''
-    }
-    obj.oldPassword = $('#old-pass').val();
-    obj.newPassword1 = $('#new-pass1').val();
-    obj.newPassword2 = $('#new-pass2').val();
 
-    if (obj.newPassword1 === obj.newPassword2) {
-        userPasswordRequest.oldPassword = obj.oldPassword
-        userPasswordRequest.newPassword = obj.newPassword1
+    let isNameSame = name === user.name;
+    let isEmailSame = email === user.email;
+
+    let isNameEmpty = name === '';
+    let isEmailEmpty = email === ''
+
+
+    if (isNameSame) {
+        $('#save-chg-btn').attr('disabled', true);
+        $('#sameNameError').show()
+    } else {
+        $('#sameNameError').hide()
+    }
+
+    if (isEmailSame) {
+        $('#save-chg-btn').attr('disabled', true);
+        $('#sameEmailError').show()
+    } else {
+        $('#sameEmailError').hide()
+    }
+
+    if (isEmailEmpty || isNameEmpty) {
+        $('#save-chg-btn').attr('disabled', true);
+    }
+
+
+    if (!isNameSame && !isEmailSame && !isEmailEmpty && !isNameEmpty) {
+        $('#save-chg-btn').removeAttr('disabled');
+    }
+
+}
+
+function savePasswordChanges() {
+    $('#currentPasswordError').hide();
+    const userPasswordRequest = {
+        oldPassword: $('#old-pass').val(),
+        newPassword: $('#new-pass1').val(),
+    }
 
         $.ajax({
             type: "PUT",
             url: `/api/v1/users/${user.id}/updatePass`,
             data: JSON.stringify(userPasswordRequest),
             contentType: "application/json; charset=utf-8",
-        })
-    }
-    else {
-        $('#new-pass2').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showError("Passwords do not match");
-    }
+        }).then(
+            res => {},
+            err => {
+                $('#currentPasswordError').show();
+            })
 }
 
-function showError(text) {
-    let label = $("#error-label");
-    label.text(text);
-    label.show();
-    $('#new-pass1').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-    $('#new-pass2').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
+
+function checkPasswordsCompatible() {
+    if ($('#new-pass1').val() === $('#new-pass2').val()) {
+        $('#passwordHelp').hide()
+        $('#save-pass-btn').removeAttr('disabled');
+    } else {
+        $('#passwordHelp').show()
+        $('#save-pass-btn').attr('disabled', true);
+    }
 }
 
 function showUser(user) {
