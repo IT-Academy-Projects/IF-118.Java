@@ -25,7 +25,7 @@ public class GroupConverter {
                 .map(courseConverter::of)
                 .collect(Collectors.toSet()));
         map.setUsers(group.getUsers().stream()
-                .filter(user -> !user.getId().equals(group.getOwnerId()))
+                .filter(user -> !user.getId().equals(group.getOwnerId()) && !user.getDisabled())
                 .map(userConverter::of)
                 .collect(Collectors.toSet()));
         map.setHasAvatar(group.getAvatar() != null);

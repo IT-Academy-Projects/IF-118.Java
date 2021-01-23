@@ -78,6 +78,8 @@ public class AuthController {
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(ex.getClass().getSimpleName())
                         .build();
+            } else {
+                return new ResponseEntity<>(HttpStatus.OK);
             }
         }
 
