@@ -32,7 +32,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
 
     List<Invitation> findAllByEmail(String email);
 
-
     @Transactional
     @Modifying
     @Query(value = "delete from invitation where expiration_date < created_at", nativeQuery = true)
