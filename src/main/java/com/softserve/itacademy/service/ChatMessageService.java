@@ -15,5 +15,6 @@ public interface ChatMessageService {
     ChatMessageResponse processMessage(ChatMessageRequest chatMessageRequest, User user);
 
     ChatMessage save(ChatMessage chatMessage);
-    List<ChatMessageTinyProjection> findPaginatedByGroupChatId(int pageNo, int pageSize, int chatId);
+
+    List<ChatMessageTinyProjection> findPaginatedByChatRoomId(int pageNo, int pageSize, int chatId);
 }

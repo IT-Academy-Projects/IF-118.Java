@@ -15,5 +15,5 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Integer> {
 
-    Page<ChatMessageTinyProjection> findPaginatedByGroupChatId(Pageable pageable, int chatId);
+    Page<ChatMessageTinyProjection> findPaginatedByChatRoomId(Pageable pageable, int chatId);
 }

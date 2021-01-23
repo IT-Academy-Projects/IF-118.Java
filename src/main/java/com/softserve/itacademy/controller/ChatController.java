@@ -24,13 +24,13 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/chat")
-public class GroupChatController {
+public class ChatController {
 
     private final int PAGE_SIZE = 20;
 
     private final ChatMessageService chatMessageService;
 
-    public GroupChatController(ChatMessageService chatMessageService) {
+    public ChatController(ChatMessageService chatMessageService) {
         this.chatMessageService = chatMessageService;
     }
 
@@ -51,6 +51,6 @@ public class GroupChatController {
             @PathVariable int groupId,
             @PathVariable int pageNo) {
 
-        return new ResponseEntity<>(chatMessageService.findPaginatedByGroupChatId(pageNo, PAGE_SIZE, groupId), OK);
+        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, PAGE_SIZE, groupId), OK);
     }
 }

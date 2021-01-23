@@ -21,12 +21,11 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
-public class GroupChat extends BasicEntity {
+public class ChatRoom extends BasicEntity {
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "chatRoom")
     private Group group;
 
-    @OneToMany(mappedBy = "groupChat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages;
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,7 +55,9 @@ public class Group extends BasicEntity {
     )
     private Set<Course> courses = new HashSet<>();
 
-    @OneToOne(mappedBy = "group")
-    private GroupChat groupChat;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
+    private ChatRoom chatRoom;
 
 }

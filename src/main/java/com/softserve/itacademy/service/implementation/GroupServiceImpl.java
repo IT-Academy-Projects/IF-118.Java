@@ -1,14 +1,13 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.GroupChat;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
-import com.softserve.itacademy.service.GroupChatService;
+import com.softserve.itacademy.service.ChatRoomService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
@@ -23,9 +22,9 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
     private final UserService userService;
-    private final GroupChatService groupChatService;
+    private final ChatRoomService groupChatService;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, GroupChatService groupChatService) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService groupChatService) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -41,7 +40,7 @@ public class GroupServiceImpl implements GroupService {
         }
 
         Group newGroup = groupConverter.of(groupRequest);
-        newGroup.setGroupChat(groupChatService.create());
+        newGroup.setChatRoom(groupChatService.create());
 
         return groupConverter.of(groupRepository.save(newGroup));
     }

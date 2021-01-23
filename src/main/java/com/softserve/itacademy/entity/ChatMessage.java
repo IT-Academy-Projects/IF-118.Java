@@ -21,8 +21,8 @@ import javax.validation.constraints.Size;
 public class ChatMessage extends BasicEntity {
 
     @ManyToOne
-    @JoinColumn(name = "group_chat_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_message_group_chat"))
-    private GroupChat groupChat;
+    @JoinColumn(name = "chat_room_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_message_chat_room"))
+    private ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_message"))
