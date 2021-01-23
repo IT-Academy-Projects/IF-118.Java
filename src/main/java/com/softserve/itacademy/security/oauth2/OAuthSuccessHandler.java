@@ -26,12 +26,10 @@ import java.util.Optional;
 @Component
 public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final InvitationRepository invitationRepository;
     private UserRepository userRepository;
 
-    public OAuthSuccessHandler(UserRepository userRepository, InvitationRepository invitationRepository) {
+    public OAuthSuccessHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.invitationRepository = invitationRepository;
     }
 
     @Override
@@ -49,10 +47,6 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
-        if (user.getInvitationCode() != null) {
-            Optional<Invitation> byCode = invitationRepository.findByCode(user.getInvitationCode());
-            getRedirectStrategy().sendRedirect(request, response, getLink(byCode.get()));
-        }
         if (!user.getIsPickedRole()) {
             getRedirectStrategy().sendRedirect(request, response, "/role-pick");
         } else {
@@ -60,11 +54,4 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
 
     }
-
-    private String getLink(Invitation invitation) {
-        String courseOrGroup = invitation.getGroup() == null ? "course" : "group";
-        Integer id = courseOrGroup.equals("course") ? invitation.getCourse().getId() : invitation.getGroup().getId();
-        return String.format("%s/%s", courseOrGroup, id);
-    }
-
 }

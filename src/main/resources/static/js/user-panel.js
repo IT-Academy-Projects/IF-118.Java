@@ -18,15 +18,15 @@ function init() {
                 }
             )
 
-        }
-
-        let role = user.roles.find(role => role.name === "TEACHER");
-        if (content === 'groups') {
-            initGroupContent(role, user);
-            $('#groups-btn').addClass('active');
         } else {
-            initCourseContent(role, user);
-            $('#courses-btn').addClass('active');
+            let role = user.roles.find(role => role.name === "TEACHER");
+            if (content === 'groups') {
+                initGroupContent(role, user);
+                $('#groups-btn').addClass('active');
+            } else {
+                initCourseContent(role, user);
+                $('#courses-btn').addClass('active');
+            }
         }
 
     })
