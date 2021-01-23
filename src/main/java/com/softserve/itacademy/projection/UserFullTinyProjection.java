@@ -7,5 +7,6 @@ public interface UserFullTinyProjection extends UserTinyProjection {
     Set<CourseTinyProjection> getCourses();
     Set<GroupTinyProjection> getGroups();
     Set<CommentTinyProjection> getComments();
+    String getInvitationCode();
 
 }

@@ -27,4 +27,6 @@ public interface UserService {
     List<UserResponse> findByGroupId(Integer id);
 
     void changePass(Integer id, String oldPass, String newPass);
+
+    void deleteInvitation(Integer userId, Integer invitationId);
 }

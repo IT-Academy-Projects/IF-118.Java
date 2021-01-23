@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
@@ -87,5 +88,11 @@ public class UserController {
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{userId}/delete/{invitationId}")
+    public ResponseEntity<Void> deleteInvite(@PathVariable Integer userId, @PathVariable Integer invitationId) {
+        userService.deleteInvitation(userId, invitationId);
+        return new ResponseEntity<>(OK);
     }
 }

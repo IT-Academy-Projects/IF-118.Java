@@ -68,6 +68,7 @@ public class InvitationServiceImpl implements InvitationService {
         log.info("approving invitation");
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
+        invitationRepository.deleteById(invitationResponse.getId());
     }
 
     @Override
@@ -131,8 +132,6 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private String getLink(Invitation invitation) {
-//        String courseOrGroup = invitation.getGroup() != null ? "group?id=" : "course?id=";
-//        Integer id = courseOrGroup.equals("group?id=") ? invitation.getGroup().getId() : invitation.getCourse().getId();
         return invitation.getLink() + invitation.getEmail() + "/" + invitation.getCode();
     }
 

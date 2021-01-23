@@ -1,5 +1,6 @@
 let currentUserId;
 const urlCreator = window.URL || window.webkitURL;
+
 // init();
 
 function init() {
@@ -7,6 +8,18 @@ function init() {
     let content = urlParams.get('content');
     getRequest(`api/v1/users/me`).then(user => {
         currentUserId = user.id;
+        let invitationCode = user.invitationCode;
+        if (invitationCode !== null) {
+            getRequest(`api/v1/invitation/${invitationCode}`).then(invitation => {
+                    if (invitation.courseOrGroupId !== null) {
+                        fetch(`api/v1/users/${user.id}/delete/${invitation.id}`, {method: 'PATCH'});
+                        window.location.replace(`${invitation.courseOrGroup}?id=${invitation.courseOrGroupId}`);
+                    }
+                }
+            )
+
+        }
+
         let role = user.roles.find(role => role.name === "TEACHER");
         if (content === 'groups') {
             initGroupContent(role, user);
@@ -15,6 +28,7 @@ function init() {
             initCourseContent(role, user);
             $('#courses-btn').addClass('active');
         }
+
     })
 }
 
@@ -41,7 +55,7 @@ function showStudentCourses(courses) {
         showNoCoursesText();
     } else {
         courses.forEach(course => {
-           addCourseCard(course)
+            addCourseCard(course)
         });
     }
 }
@@ -78,7 +92,7 @@ function showTeacherGroups() {
     addCheckboxOfCourses();
     $.get(`/api/v1/groups/owner/${currentUserId}`).then(groups => {
         groups.forEach(group => {
-          addGroupCard(group);
+            addGroupCard(group);
         });
     });
 }
