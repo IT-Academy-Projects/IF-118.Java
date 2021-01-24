@@ -84,6 +84,6 @@ public class ViewController {
     }
 
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
-    @PreAuthorize("@decider.checkIfGroupMember(authentication.principal, #id)")
+    @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #id)")
     public String chatView(@RequestParam int id) { return "group-chat.html"; }
 }

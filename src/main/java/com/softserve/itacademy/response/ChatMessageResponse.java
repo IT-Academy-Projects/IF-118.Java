@@ -19,4 +19,5 @@ public class ChatMessageResponse {
     private UserTinyProjection user;
     private String content;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

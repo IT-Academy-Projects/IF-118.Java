@@ -18,17 +18,24 @@ public class GroupConverter {
     private final ModelMapper mapper;
     private final CourseConverter courseConverter;
     private final UserConverter userConverter;
+    private final ChatRoomConverter chatRoomConverter;
 
     public GroupResponse of(Group group) {
         GroupResponse map = mapper.map(group, GroupResponse.class);
+
         map.setCourses(group.getCourses().stream()
                 .map(courseConverter::of)
                 .collect(Collectors.toSet()));
+
         map.setUsers(group.getUsers().stream()
                 .filter(user -> !user.getId().equals(group.getOwnerId()) && !user.getDisabled())
                 .map(userConverter::of)
                 .collect(Collectors.toSet()));
+
         map.setHasAvatar(group.getAvatar() != null);
+
+        map.setChatRoom(chatRoomConverter.of(group.getChatRoom()));
+
         return map;
     }
 

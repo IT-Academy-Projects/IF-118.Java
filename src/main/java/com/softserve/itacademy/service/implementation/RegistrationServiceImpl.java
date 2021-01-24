@@ -1,4 +1,4 @@
-package com.softserve.itacademy.security.service.implementation;
+package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
@@ -10,7 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.security.service.RegistrationService;
+import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {

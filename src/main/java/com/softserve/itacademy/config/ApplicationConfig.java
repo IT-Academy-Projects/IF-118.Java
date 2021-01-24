@@ -1,14 +1,17 @@
 package com.softserve.itacademy.config;
 
+import com.softserve.itacademy.repository.ChatRoomRepository;
 import com.softserve.itacademy.repository.GroupRepository;
-import com.softserve.itacademy.security.Decider;
+import com.softserve.itacademy.security.AccessManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
+@EnableAsync
 public class ApplicationConfig {
 
     @Bean
@@ -16,8 +19,8 @@ public class ApplicationConfig {
         return new ModelMapper();
     }
 
-    @Bean(name="decider")
-    public Decider deciderService(GroupRepository groupRepository) {
-        return new Decider(groupRepository);
+    @Bean(name="accessManager")
+    public AccessManager accessManager(GroupRepository groupRepository, ChatRoomRepository chatRoomRepository) {
+        return new AccessManager(groupRepository, chatRoomRepository);
     }
 }

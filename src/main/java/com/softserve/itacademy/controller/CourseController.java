@@ -102,7 +102,4 @@ public class CourseController {
         courseService.updateDescription(id, descriptionRequest.getDescription());
         return new ResponseEntity<>(OK);
     }
-
-    //TODO create readByID and update courses
-
 }

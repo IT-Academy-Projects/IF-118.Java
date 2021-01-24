@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,9 +31,10 @@ public class ChatMessage extends BasicEntity {
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_message"))
     private User user;
 
-    @Size(min = 1, max=255)
+    @Length(min = 1, max = 255)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     private MessageStatus status;
 
     public enum MessageStatus {

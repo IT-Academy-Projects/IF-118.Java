@@ -17,7 +17,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public ChatRoom getById(int id) {
-        return chatRoomRepository.findById(id).orElseThrow(NotFoundException::new);
+        return chatRoomRepository.findById(id).orElseThrow(() -> new NotFoundException("Message with id " + id + " not found"));
     }
 
     @Override

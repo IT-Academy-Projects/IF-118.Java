@@ -1,11 +1,13 @@
 package com.softserve.itacademy.service.implementation;
 
+import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.projection.GroupTinyProjection;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.GroupRequest;
@@ -29,14 +31,14 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
     private final UserService userService;
-    private final ChatRoomService groupChatService;
+    private final ChatRoomService chatRoomService;
     private final CourseRepository courseRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService groupChatService, CourseRepository courseRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
-        this.groupChatService = groupChatService;
+        this.chatRoomService = chatRoomService;
         this.courseRepository = courseRepository;
     }
 
@@ -64,7 +66,9 @@ public class GroupServiceImpl implements GroupService {
             }
         }
 
-        newGroup.setChatRoom(groupChatService.create());
+        ChatRoom chat = chatRoomService.create();
+        chat.setType(ChatRoom.ChatType.GROUP);
+        newGroup.setChatRoom(chat);
 
         return groupConverter.of(groupRepository.save(newGroup));
     }

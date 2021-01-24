@@ -10,6 +10,8 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -28,4 +30,11 @@ public class ChatRoom extends BasicEntity {
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages;
+
+    @Enumerated(EnumType.STRING)
+    private ChatType type;
+
+    public enum ChatType {
+        GROUP
+    }
 }

@@ -2,10 +2,11 @@ package com.softserve.itacademy.controller;
 
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.projection.ChatMessageTinyProjection;
+import com.softserve.itacademy.projection.ChatMessageProjection;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
 import com.softserve.itacademy.service.ChatMessageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -26,7 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/v1/chat")
 public class ChatController {
 
-    private final int PAGE_SIZE = 20;
+    private final int PAGE_SIZE = 50;
 
     private final ChatMessageService chatMessageService;
 
@@ -34,23 +35,22 @@ public class ChatController {
         this.chatMessageService = chatMessageService;
     }
 
-    @MessageMapping("/chat/group/{groupId}")
-    @PreAuthorize("@decider.checkIfGroupMember(#user, #groupId)")
+    @MessageMapping("/chat/{chatId}")
+    @PreAuthorize("@accessManager.isAllowedToChat(#user, #chatId)")
     public ChatMessageResponse processMessage(
             @Payload @Valid ChatMessageRequest chatMessageRequest,
-            @DestinationVariable Integer groupId,
+            @DestinationVariable Integer chatId,
             @AuthenticationPrincipal User user) {
 
-        chatMessageRequest.setGroupId(groupId); //TODO
-        return chatMessageService.processMessage(chatMessageRequest, user);
+        return chatMessageService.processMessage(chatMessageRequest, user, chatId);
     }
 
-    @GetMapping("/group/{groupId}/{pageNo}")
-    @PreAuthorize("@decider.checkIfGroupMember(authentication.principal, #groupId)")
-    public ResponseEntity<List<ChatMessageTinyProjection>> getPaginatedCountries(
-            @PathVariable int groupId,
+    @GetMapping("/{chatId}/{pageNo}")
+    @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #chatId)")
+    public ResponseEntity<List<ChatMessageResponse>> getPaginatedMessages(
+            @PathVariable int chatId,
             @PathVariable int pageNo) {
 
-        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, PAGE_SIZE, groupId), OK);
+        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, PAGE_SIZE, chatId), HttpStatus.OK);
     }
 }
