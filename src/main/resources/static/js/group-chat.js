@@ -61,6 +61,7 @@ function appendMessage(message) {
     }
 
     $("#chat-content").append(msg);
+    msg.scrollIntoView();
 }
 
 function sendMessage() {

@@ -107,6 +107,8 @@ public class GenericExceptionHandler {
                 .error(exception.getClass().getSimpleName())
                 .build();
 
+        log.info(exception.getMessage());
+
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
