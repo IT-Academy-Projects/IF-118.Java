@@ -19,10 +19,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users", nativeQuery = true)
     List<User> findAll();
 
-    @Query(value = "select * from users u where u.email = ?" , nativeQuery = true)
+    @Query(value = "select * from users u where u.email = ?", nativeQuery = true)
     Optional<User> findByEmail(String email);
 
-    @Query(value = "select * from users u where u.activation_code = ?" , nativeQuery = true)
+    @Query(value = "select * from users u where u.activation_code = ?", nativeQuery = true)
     Optional<User> findByActivationCode(String code);
 
     @Modifying
@@ -36,10 +36,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int updateDisabled(Integer id, boolean disabled);
 
     Optional<UserFullTinyProjection> findProjectedById(Integer id);
+
     Optional<IdNameTupleProjection> findUserProjectedById(Integer id);
 
-    @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id" , nativeQuery = true)
+    @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id", nativeQuery = true)
     List<User> findByGroupId(Integer id);
 
+    boolean existsByEmail(String email);
+
 }
+
+
 

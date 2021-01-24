@@ -51,7 +51,7 @@ function showGroups() {
 function showCourses() {
     $('#table-title').text('Courses');
     $('#table-content').html('');
-    getRequest('/api/v1/courses').then(data => {
+    getRequest('/api/v1/courses/forAdmin').then(data => {
         $('#table-head').html(`
          <th scope="col">Id</th>
          <th scope="col">Name</th>

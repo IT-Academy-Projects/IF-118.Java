@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SoftClass</title>
+    <meta name="description" content="Study and learn with SoftClass">
+
+    <!-- Bootstrap, jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <!-- Custom styles and scripts -->
+    <link rel="stylesheet" href="css/material.css">
+    <script>
+        $(function () {
+            $("#navbar").load("navbar.html");
+        });
+    </script>
+
+</head>
+
+<body>
+<div id="navbar"></div>
+
+    <div id="main" class="wrapper">
+
+        <div id="materials"></div>
+        <div class="assignment-title">
+            <h3>Assignments</h3>
+            <div class="col-sm" id="add-assignment-btn">
+                <button id="create-assignment-button" type="button" class="btn btn-outline-success btn-sm"
+                        data-toggle="modal" data-target="#create-assignment-modal">+
+                </button>
+            </div>
+        </div>
+        <div class="assignments" id="assignments">
+
+        </div>
+    </div>
+
+<!-- Modal for assignments -->
+<div id="create-assignment-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add assignment</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="assignment-input">
+                            <label for="assignment-name">Name:</label>
+                            <input id="assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <label for="assignment-description">Description:</label>
+                            <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="create-assignment-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="createAssignment()">Create
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for answers -->
+<div id="create-answer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="answer-input">
+                            <label for="answer-file">File:</label>
+                            <input type="file" class="form-control" id="answer-file"  lang="en"
+                                   onchange="checkAnswerFile()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="create-answer-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="createAnswer()">Create
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for updating answers -->
+<div id="update-answer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="answer-input">
+                            <label for="answer-file">File:</label>
+                            <input type="file" class="form-control" id="new-answer-file"  lang="en"
+                                   onchange="checkAnswerFile()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-answer-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="updateAnswer()">Update
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="js/material.js"></script>
+</html>

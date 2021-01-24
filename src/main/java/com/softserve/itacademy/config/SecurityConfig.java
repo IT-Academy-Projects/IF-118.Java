@@ -53,11 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
-
-        http.authorizeRequests()
-                .antMatchers("/", "/registration", "/api/v1/registration", "/api/v1/activation/*", "/activation", "/oauth2/**").permitAll()
-                .antMatchers("/api/v1/users/is-authenticated", "/navbar.html").permitAll()
+        http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        .authorizeRequests()
+                .mvcMatchers("/","/api/v1/invitation/invite", "/registration", "/api/v1/invitation/approve/**", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
+                .antMatchers("/api/v1/users/is-authenticated", "/navbar.html", "/img/*").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()

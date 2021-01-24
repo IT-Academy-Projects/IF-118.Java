@@ -15,6 +15,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @MappedSuperclass
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class BasicEntity {

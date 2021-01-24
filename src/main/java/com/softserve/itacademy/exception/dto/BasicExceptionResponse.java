@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @Builder
 public class BasicExceptionResponse {
 
-        @Builder.Default()
-        private LocalDateTime timestamp = LocalDateTime.now();
+    @Builder.Default()
+    private LocalDateTime timestamp = LocalDateTime.now();
 
-        private String error;
-        private String message;
-        private Integer status;
+    private String error;
+    private String message;
+    private Integer status;
 
 }

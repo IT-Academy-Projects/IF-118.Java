@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,13 +27,15 @@ public class CourseConverter {
         map.setMaterialIds((course.getMaterials().stream()
                 .map(Material::getId)
                 .collect(Collectors.toSet())));
+        map.setHasAvatar(course.getAvatar() != null);
         return map;
     }
 
-    public Course of(CourseRequest courseDto, Set<Group> groups, Set<Material> materials) {
-        Course map = mapper.map(courseDto, Course.class);
+    public Course of(CourseRequest courseRequest, Set<Material> materials) {
+        Course map = mapper.map(courseRequest, Course.class);
+        map.setId(null);
         map.setDisabled(false);
-        map.setGroups(groups);
+        map.setGroups(Collections.emptySet());
         map.setMaterials(materials);
         return map;
     }

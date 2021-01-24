@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
 
         if (user == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("user was not found");
         }
 
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
@@ -76,7 +76,7 @@ public class UserController {
         userService.updateProfileInfo(id, name, email);
         return new ResponseEntity<>(OK);
     }
-  
+
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);

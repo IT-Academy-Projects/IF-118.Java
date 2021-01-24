@@ -42,9 +42,8 @@
     width: 1000px;
 }
 
-material-info {
+.material-info {
     display: flex;
-    flex-direction: column;
     width: 100%;
 }
 

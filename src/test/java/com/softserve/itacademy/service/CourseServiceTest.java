@@ -44,10 +44,10 @@ public class CourseServiceTest {
     @Test
     public void create_whenValidData_thenCreateCourse() {
         when(courseRepository.save(any(Course.class))).thenReturn(generateCourse());
-        when(courseConverter.of(any(), any(), any())).thenReturn(generateCourse());
+        when(courseConverter.of(any(), any())).thenReturn(generateCourse());
         when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
 
-        CourseResponse courseDto = courseServiceImpl.create(generateCourseDto());
+        CourseResponse courseDto = courseServiceImpl.create(generateCourseDto(), null);
         assertEquals("NewCourse", courseDto.getName());
         assertEquals(1, courseDto.getOwnerId());
         verify(courseRepository, times(1)).save(any(Course.class));
@@ -57,14 +57,14 @@ public class CourseServiceTest {
     public void create_whenInvalidOwnerId_thenThrowsNotFoundException() {
         when(userService.findById(anyInt())).thenThrow(NotFoundException.class);
 
-        assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
+        assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto(), null));
     }
 
     @Test
     public void create_whenInvalidGroupId_thenThrowsNotFoundException() {
         when(groupService.findById(anyInt())).thenThrow(NotFoundException.class);
 
-        assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto()));
+        assertThrows(NotFoundException.class, ()-> courseServiceImpl.create(generateCourseDto(), null));
     }
 
     private CourseResponse generateCourseResponse() {
@@ -79,7 +79,6 @@ public class CourseServiceTest {
         return CourseRequest.builder()
                 .name("NewCourse")
                 .ownerId(1)
-                .groupIds(Set.of(1,2,3))
                 .build();
     }
 
