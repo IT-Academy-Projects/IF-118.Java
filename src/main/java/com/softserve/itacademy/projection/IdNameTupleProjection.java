@@ -1,8 +1,6 @@
 package com.softserve.itacademy.projection;
 
-public interface IdNameTupleProjection {
+public interface IdNameTupleProjection extends IdProjection {
 
-    Integer getId();
     String getName();
-
 }

@@ -71,6 +71,13 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     }
 
     @Override
+    public void grade(Integer id, Integer grade) {
+        if(assignmentAnswersRepository.updateGrade(id, grade) == 0){
+            throw new NotFoundException("Assignment answer not found");
+        }
+    }
+
+    @Override
     public AssignmentAnswers getById(Integer id) {
         return assignmentAnswersRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Assignment answer not found"));

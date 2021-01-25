@@ -19,5 +19,5 @@ public interface InvitationService {
 
     int deleteByExpirationDate();
 
-    List<InvitationResponse> findAll();
+    InvitationResponse findByCode(String code);
 }

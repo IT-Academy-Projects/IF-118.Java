@@ -1,12 +1,15 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.service.MailSender;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class MailSenderImpl implements MailSender {
 
     private final JavaMailSender mailSender;
@@ -19,6 +22,7 @@ public class MailSenderImpl implements MailSender {
     private String username;
 
     @Override
+    @Async
     public void send(String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
@@ -26,6 +30,8 @@ public class MailSenderImpl implements MailSender {
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
+
+        log.info("Sending message to {} with {} subject", emailTo, subject);
 
         mailSender.send(mailMessage);
     }

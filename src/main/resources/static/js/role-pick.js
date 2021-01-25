@@ -22,7 +22,11 @@ function rolePickRequest(data) {
         },
 
         error: function (request) {
-            showError(request.responseJSON.message)
+            if(request.responseJSON.error === "RoleAlreadyPickedException") {
+                showError("This account already picked a role")
+            } else {
+                showError(request.message)
+            }
         }
     });
 }

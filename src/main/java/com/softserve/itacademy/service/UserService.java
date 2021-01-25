@@ -25,4 +25,8 @@ public interface UserService {
     void updateProfileInfo(Integer id, String name, String email);
 
     List<UserResponse> findByGroupId(Integer id);
+
+    void changePass(Integer id, String oldPass, String newPass);
+
+    void deleteInvitation(Integer userId, Integer invitationId);
 }

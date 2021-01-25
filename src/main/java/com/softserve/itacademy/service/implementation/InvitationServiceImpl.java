@@ -45,10 +45,16 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse approveByLink(String email, String code) {
-        Invitation invitation = invitationRepository.findByCode(code)
-                .orElseThrow(() -> new InvitationServiceException("No such invitation"));
+        Invitation invitation = invitationRepository.findByCode(code).get();
         log.info("approving invitation");
+        userRepository.updateInvite(code, email);
         return approveCourseOrGroup(invitation);
+    }
+
+    @Override
+    public InvitationResponse findByCode(String code) {
+        return invitationConverter.of(invitationRepository.findByCode(code)
+                .orElseThrow(() -> new InvitationServiceException("No such invitation")));
     }
 
     @Override
@@ -62,6 +68,7 @@ public class InvitationServiceImpl implements InvitationService {
         log.info("approving invitation");
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
+        invitationRepository.deleteById(invitationResponse.getId());
     }
 
     @Override
@@ -76,13 +83,6 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public int deleteByExpirationDate() {
         return invitationRepository.deleteByExpirationDate();
-    }
-
-    @Override
-    public List<InvitationResponse> findAll() {
-        return invitationRepository.findAll().stream()
-                .map(invitationConverter::of)
-                .collect(Collectors.toList());
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
@@ -111,7 +111,6 @@ public class InvitationServiceImpl implements InvitationService {
         invitationRepository.approve(invitation.getUser().getId(), invitation.getCode());
     }
 
-
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
                 .orElseThrow(() -> new NotFoundException("User with such id was not found"));
@@ -125,8 +124,6 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private String getLink(Invitation invitation) {
-//        String courseOrGroup = invitation.getGroup() != null ? "group?id=" : "course?id=";
-//        Integer id = courseOrGroup.equals("group?id=") ? invitation.getGroup().getId() : invitation.getCourse().getId();
         return invitation.getLink() + invitation.getEmail() + "/" + invitation.getCode();
     }
 

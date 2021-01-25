@@ -8,3 +8,7 @@
 td {
     width: 200px;
 }
+
+.error-label {
+    color: red !important;
+}
