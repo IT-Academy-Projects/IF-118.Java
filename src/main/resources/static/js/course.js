@@ -79,7 +79,7 @@ function getMaterials(materialIds) {
                             <section>
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-sm-5 col-md-6 col-12 pb-4" id="material-${materialId}-comments-body">
+                                        <div class="col-lg-12" id="material-${materialId}-comments-body">
                                         </div>
                                     </div>
                                 </div>
