@@ -133,6 +133,34 @@
     </div>
 </div>
 
+<!-- Modal for assignment answer grade -->
+<div id="grade-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Grade student`s answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="grade-input">
+                            <label for="grade-textarea">Grade:</label>
+                            <input id="grade-textarea" class="form-control" placeholder="Grade" type="number" min="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submit-grade-btn" type="button" class="btn btn-outline-success show"
+                        onclick="gradeAssignmentAnswer()">Grade
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script src="js/material.js"></script>
 </html>

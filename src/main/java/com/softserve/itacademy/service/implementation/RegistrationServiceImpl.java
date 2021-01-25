@@ -1,4 +1,4 @@
-package com.softserve.itacademy.security.service.implementation;
+package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
@@ -10,9 +10,10 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.security.service.RegistrationService;
+import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,13 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
 
     @Value("${application.address}")
@@ -73,9 +71,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public ActivationResponse activateUser(String code) {
-        User user = userRepository.findByActivationCode(code).orElseThrow(() -> new NotFoundException("user was not found"));
+        User user = userRepository.findByActivationCode(code).orElseThrow(
+                () -> new NotFoundException("User with " + code + " activation code was not found"));
         user.setActivated(true);
         userRepository.save(user);
+
+        log.info("User with {} activation code successfully activated", code);
+
         return ActivationResponse.builder()
                 .isActivated(true)
                 .message("Successfully activated")
@@ -84,7 +86,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user was not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with " + userId + " id was not found"));
 
         if (!user.getIsPickedRole()) {
 
@@ -103,13 +105,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .pickedRole(request.getPickedRole())
                     .build();
         }
-        throw new RoleAlreadyPickedException("This account already picked a role");
+        throw new RoleAlreadyPickedException("Account " + userId + " already picked a role");
     }
 
     private void setPickedRole(String role, User user) {
 
         if (!(role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("TEACHER"))) {
-            throw new BadCredentialsException("Role not allowed");
+            throw new BadCredentialsException("User " + user.getId() + "picked forbidden registration role " + role);
         }
 
         Role userRole = roleService.findByNameIgnoreCase("USER");
@@ -125,6 +127,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new BadCredentialsException("Email is not unique");
         }
+
+        log.info("User with {} email successfully registered", user.getEmail());
 
         userRepository.save(user);
     }

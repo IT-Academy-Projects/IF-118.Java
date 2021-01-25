@@ -1,6 +1,7 @@
 package com.softserve.itacademy.entity.security;
 
 import com.softserve.itacademy.entity.BasicEntity;
+import com.softserve.itacademy.projection.RoleProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

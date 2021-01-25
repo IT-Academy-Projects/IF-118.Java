@@ -10,8 +10,19 @@ function init() {
 
 function saveChanges() {
     const obj = {
-        name: $('#update-name').val(),
-        email: $('#update-email').val()
+        name: '', email: ''
+    }
+    let name = $('#update-name').val();
+    let email = $('#update-email').val();
+    if (name !== "") {
+        obj.name = name;
+    } else {
+        obj.name = user.name;
+    }
+    if (email !== "") {
+        obj.email = email;
+    } else {
+        obj.email = user.email;
     }
 
     $.ajax({
@@ -30,8 +41,11 @@ function checkEmailNameCompatible() {
     let isEmailSame = email === user.email;
 
     let isNameEmpty = name === '';
-    let isEmailEmpty = email === ''
+    let isEmailEmpty = email === '';
 
+    if (isEmailEmpty || isNameEmpty) {
+        $('#save-chg-btn').attr('disabled', true);
+    }
 
     if (isNameSame) {
         $('#save-chg-btn').attr('disabled', true);
@@ -47,12 +61,10 @@ function checkEmailNameCompatible() {
         $('#sameEmailError').hide()
     }
 
-    if (isEmailEmpty || isNameEmpty) {
-        $('#save-chg-btn').attr('disabled', true);
-    }
 
 
-    if (!isNameSame && !isEmailSame && !isEmailEmpty && !isNameEmpty) {
+
+    if ((!isNameSame && !isEmailSame) && (!isEmailEmpty || !isNameEmpty)) {
         $('#save-chg-btn').removeAttr('disabled');
     }
 

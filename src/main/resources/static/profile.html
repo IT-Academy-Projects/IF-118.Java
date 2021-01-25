@@ -85,7 +85,10 @@
                                         </div>
                                         <div class="row">
                                             <div class="col d-flex justify-content-end">
-                                                <button class="button success outline rounded" onclick=saveChanges()>Save changes</button>
+
+                                                <button id="save-chg-btn" class="button success outline rounded" type="submit" disabled
+                                                        onclick=saveChanges()>Save changes
+                                                </button>
                                             </div>
                                         </div>
                                     </form>
@@ -130,8 +133,9 @@
                                         </div>
                                         <div class="row">
                                             <div class="col d-flex justify-content-end">
-                                                <button class="button success outline rounded" onclick=savePasswordChanges()>Save changes</button>
-
+                                                <button id="save-pass-btn" class="button success outline rounded" type="submit" disabled
+                                                        onclick=savePasswordChanges()>Save changes
+                                                </button>
                                             </div>
                                         </div>
                                     </form>

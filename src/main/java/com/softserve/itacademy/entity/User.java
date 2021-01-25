@@ -1,13 +1,13 @@
 package com.softserve.itacademy.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.itacademy.entity.security.Role;
+import com.softserve.itacademy.projection.UserFullTinyProjection;
+import com.softserve.itacademy.projection.UserTinyProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Singular;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -94,7 +94,6 @@ public class User extends BasicEntity {
     }
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -116,5 +115,4 @@ public class User extends BasicEntity {
     public void addRole(Role role) {
         this.roles.add(role);
     }
-
 }

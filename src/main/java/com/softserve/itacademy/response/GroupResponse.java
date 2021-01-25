@@ -24,4 +24,6 @@ public class GroupResponse {
     private Set<CourseResponse> courses;
 
     private Set<UserResponse> users;
+
+    private ChatRoomResponse chatRoom;
 }
