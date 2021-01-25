@@ -25,9 +25,6 @@ import java.util.List;
 @Entity
 public class ChatRoom extends BasicEntity {
 
-    @OneToOne(mappedBy = "chatRoom")
-    private Group group;
-
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages;
 
