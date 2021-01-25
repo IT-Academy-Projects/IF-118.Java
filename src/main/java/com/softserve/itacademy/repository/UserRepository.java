@@ -35,6 +35,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "update users set users.disabled = :disabled where users.id = :id", nativeQuery = true)
     int updateDisabled(Integer id, boolean disabled);
 
+    @Modifying
+    @Transactional
+    @Query(value = "update User u set u.invitationCode = ?1 where u.email = ?2")
+    int updateInvite(String code, String email);
+
     Optional<UserFullTinyProjection> findProjectedById(Integer id);
 
     Optional<IdNameTupleProjection> findUserProjectedById(Integer id);
@@ -42,8 +47,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id", nativeQuery = true)
     List<User> findByGroupId(Integer id);
 
-    boolean existsByEmail(String email);
+    @Modifying
+    @Transactional
+    @Query("update User u set u.password = ?2 where u.id = ?1")
+    void updatePass(Integer id, String pass);
 
+    @Modifying
+    @Transactional
+    @Query("update User u set u.invitationCode = null where u.id=?1")
+    void deleteInvitation(Integer id);
 }
 
 

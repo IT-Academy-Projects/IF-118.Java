@@ -12,5 +12,6 @@ public interface UserFullTinyProjection extends UserTinyProjection {
     @Value("#{@groupRepository.findAllByUserId(target.id)}")
     Set<GroupTinyProjection> getGroups();
     Set<CommentTinyProjection> getComments();
+    String getInvitationCode();
 
 }

@@ -1,10 +1,12 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.request.UserPasswordRequest;
 import com.softserve.itacademy.response.IsAuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
@@ -15,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,7 +52,6 @@ public class UserController {
         if (user == null) {
             throw new NotFoundException("user was not found");
         }
-
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
@@ -77,8 +79,20 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
+    @PutMapping("/{id}/updatePass")
+    public ResponseEntity<Void> updatePass(@PathVariable Integer id, @RequestBody UserPasswordRequest request) {
+        userService.changePass(id, request.getOldPassword(), request.getNewPassword());
+        return new ResponseEntity<>(OK);
+    }
+
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<UserResponse>> findByGroupId(@PathVariable Integer groupId) {
         return new ResponseEntity<>(userService.findByGroupId(groupId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{userId}/delete/{invitationId}")
+    public ResponseEntity<Void> deleteInvite(@PathVariable Integer userId, @PathVariable Integer invitationId) {
+        userService.deleteInvitation(userId, invitationId);
+        return new ResponseEntity<>(OK);
     }
 }

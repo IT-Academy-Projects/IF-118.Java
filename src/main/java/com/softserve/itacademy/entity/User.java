@@ -11,6 +11,7 @@ import lombok.Singular;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,6 +61,9 @@ public class User extends BasicEntity {
 
     @Column
     private String activationCode;
+
+    @Column
+    private String invitationCode;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)

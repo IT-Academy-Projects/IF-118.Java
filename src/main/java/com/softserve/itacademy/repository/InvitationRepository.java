@@ -36,5 +36,4 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     @Modifying
     @Query(value = "delete from invitation where expiration_date < created_at", nativeQuery = true)
     int deleteByExpirationDate();
-
 }
