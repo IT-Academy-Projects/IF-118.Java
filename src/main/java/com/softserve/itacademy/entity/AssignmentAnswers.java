@@ -26,6 +26,8 @@ public class AssignmentAnswers extends BasicEntity {
 
     private String fileReference;
 
+    private Boolean isSubmitted;
+
     @ManyToOne
     @JoinColumn(name = "assignment_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_assignment_assignment_answers"))
     private Assignment assignment;

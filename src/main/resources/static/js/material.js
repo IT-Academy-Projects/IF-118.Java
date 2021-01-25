@@ -42,28 +42,33 @@ function getMaterial(id) {
 
             material.assignments.forEach(assignment => {
 
-                let buttons = canEdit ? `<button class="btn btn-outline-info btn-sm" onclick="toggleAnswers(${assignment.id})">View answers</button>` :
-                    `<button type="button" id="answer-${assignment.id}-btn" class="btn btn-outline-success btn-sm"
+                let buttons = canEdit ? `<button class="btn btn-outline-info" onclick="toggleAnswers(${assignment.id})">View answers</button>` :
+                    `<button type="button" id="answer-${assignment.id}-btn" class="btn btn-outline-success"
                         data-toggle="modal" data-target="#create-answer-modal" onclick="tempAssignmentId = ${assignment.id}">Answer</button>`;
 
                 $('#assignments').append(`
                     <div class="assignment">
-                        <div class="assignment-name">${assignment.name}</div>
-                        <div class="assignment-description">${assignment.description}</div>
-                         <div style="margin-top: 10px">
-                              ${buttons}
-                         </div>
-                         <div id="answer-${assignment.id}-review" class="answer-body">
-                                <section>
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm-5 col-md-6 col-12 pb-4" id="answer-${assignment.id}-review-body">
-                                            </div>
-                                        </div>
+                        <button class="btn btn-primary btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
+                            <span class="assignment-name">
+                                ${assignment.name}
+                            </span>
+                        </button>
+                        <div class="collapse" id="collapse-${assignment.id}">
+                            <div class="card card-body">
+                                <div class="assignment-description">${assignment.description}</div>
+                                <div style="margin-top: 10px">
+                                     ${buttons}
+                                </div>
+                                <div id="answer-${assignment.id}-review" class="answer-body">
+                                    <div id="answer-${assignment.id}-review-body">
+                                        <table class="table">
+                                            <tbody id="answer-${assignment.id}-table">
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </section>
-                         </div>
-                         </br>
+                                </div>
+                            </div>
+                        </div>
                     </div>`);
                 if (!canEdit) {
                     let myAnswer = assignment.assignmentAnswers.find(answer => answer.ownerId === currentUser.id);
@@ -110,36 +115,38 @@ function checkAnswerFile() {
 }
 
 function showMyAnswer(answer, assignmentId) {
-    let answerReviewBody = "#answer-" + assignmentId+ "-review-body"
-    $(answerReviewBody).innerHTML = ''
-    $(answerReviewBody).append(`
-        <div style="display: flex">
-              <span style="font-size: 36px">∟</span>
-              <div class="comment mt-4 text-justify" style="font-size: 22px">
-                  <span style="font-weight: bold" class="h3">${currentUser.name}</span><br>
-                  <a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a>
-                  <button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success btn-sm"
-                        data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button>
-               </div>
-        </div>`);
+    let answerTable = "#answer-" + assignmentId + "-table"
+    $(answerTable).innerHTML = ''
+    $(answerTable).append(`
+            <tr>
+                <td><span style="font-weight: bold" class="h3">${currentUser.name}</span></td>
+                <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
+                <td><button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success"
+                        data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button></td>
+                <td><button type="button" id="submit-${answer.id}-btn" class="btn btn-outline-success" onclick=submit(${answer.id})>Submit</button></td>
+            </tr>
+        `);
+    let submit = '#submit-' + answer.id + '-btn'
+    $(submit).attr('disabled', answer.isSubmitted)
 
     $(`#answer-${assignmentId}-review`).toggle();
     $(`#answer-${assignmentId}-btn`).hide();
 }
 
 function showAnswers(assignment) {
-    let answerReviewBody = "#answer-" + assignment.id+ "-review-body";
+    let answerTable = "#answer-" + assignment.id+ "-table";
+    $(answerTable).innerHTML = ''
     assignment.assignmentAnswers.forEach(answer => {
-        getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
-            $(answerReviewBody).append(`
-        <div style="display: flex">
-              <span style="font-size: 36px">∟</span>
-              <div class="comment mt-4 text-justify" style="font-size: 22px">
-                  <span style="font-weight: bold" class="h3">${user.name}</span><br>
-                  <a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a>
-               </div>
-        </div>`);
-        });
+        if (answer.isSubmitted === true) {
+            getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
+                $(answerTable).append(`
+                <tr>
+                    <td><span style="font-weight: bold" class="h3">${user.name}</span></td>
+                    <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
+                </tr>
+                `);
+            });
+        }
     });
 }
 
@@ -176,6 +183,8 @@ function updateAnswer() {
         $('#update-answer-modal').modal('hide');
         file = '';
     })
+    let submit = '#submit-' + tempAnswerId + '-btn'
+    $(submit).removeAttr('disabled')
 }
 
 function checkAssignment() {
@@ -184,6 +193,10 @@ function checkAssignment() {
     } else {
         $('#create-assignment-btn').attr('disabled', true);
     }
+}
+
+function submit(id) {
+    postRequest(`/api/v1/assignment-answers/${id}/submit`).then($('#submit-' + id + '-btn').attr('disabled', true));
 }
 
 function getRequest(url) {

@@ -85,4 +85,11 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         String fileRef = s3Utils.saveFile(file, BUCKET_NAME, ASSIGNMENTS_FOLDER);
         assignmentAnswersRepository.update(fileRef, id);
     }
+
+    @Override
+    public void submit(Integer id) {
+        if (assignmentAnswersRepository.submit(id) == 0) {
+            throw new NotFoundException("Assignment answer " + id + " not found");
+        }
+    }
 }

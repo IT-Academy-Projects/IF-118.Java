@@ -167,3 +167,7 @@ CREATE TABLE if not exists `assignment_answers`(
     KEY `fk_assignment_assignment_answers` (`assignment_id`),
     CONSTRAINT `fk_assignment_assignment_answers` FOREIGN KEY (`assignment_id`) REFERENCES `assignment` (`id`)
 );
+
+-- changeSet Ivanyshyn:structure-1.1.1 endDelimiter:; splitStatements:true
+
+ALTER TABLE assignment_answers ADD COLUMN is_submitted BOOLEAN DEFAULT FALSE;

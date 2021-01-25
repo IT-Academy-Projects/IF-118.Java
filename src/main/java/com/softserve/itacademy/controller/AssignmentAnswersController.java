@@ -76,4 +76,11 @@ public class AssignmentAnswersController {
     public ResponseEntity<AssignmentAnswersResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(assignmentAnswersService.findById(id), HttpStatus.OK);
     }
+
+    @UserRolePermission
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<Void> submit(@PathVariable Integer id) {
+        assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
