@@ -18,31 +18,19 @@ function handleLogin() {
     }
 }
 
-
 function loginRequest(data) {
     $.ajax({
         url: "/login",
         type: 'post',
         data: data,
 
-        success: function (request, textStatus, xhr) {
-            checkIfErrors();
-        }
-    });
-}
-
-function checkIfErrors() {
-    $.ajax({
-        url: "/api/v1/login-error",
-        type: 'get',
-
-        error: function (request, textStatus, xhr) {
-            showError(request.responseJSON.message);
+        success: function () {
+            window.location.replace("/user");
         },
 
-        success: function (request) {
-            window.location.replace("/user");
-        }
+        error: function (request) {
+            showError(request.responseJSON.message);
+        },
     });
 }
 

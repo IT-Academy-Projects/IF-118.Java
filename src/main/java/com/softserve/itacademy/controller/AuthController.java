@@ -62,27 +62,4 @@ public class AuthController {
 
         return new ResponseEntity<>(registrationService.activateUser(code), headers, HttpStatus.MOVED_PERMANENTLY);
     }
-
-    @GetMapping("/login-error")
-    public ResponseEntity<BasicExceptionResponse> loginError(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-
-        BasicExceptionResponse dto = null;
-
-        if (session != null) {
-            AuthenticationException ex = (AuthenticationException) session
-                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-            if (ex != null) {
-                dto = BasicExceptionResponse.builder()
-                        .message(ex.getMessage())
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(ex.getClass().getSimpleName())
-                        .build();
-            } else {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-        }
-
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
-    }
 }
