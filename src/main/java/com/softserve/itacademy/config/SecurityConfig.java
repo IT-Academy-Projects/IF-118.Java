@@ -63,7 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .oauth2Login()
                     .loginPage("/login").permitAll()
-                        .failureUrl("/api/v1/login-error")
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService)
                 .and()
