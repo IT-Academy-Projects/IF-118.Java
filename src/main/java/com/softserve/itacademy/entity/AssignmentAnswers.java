@@ -26,6 +26,8 @@ public class AssignmentAnswers extends BasicEntity {
 
     private String fileReference;
 
+    private Boolean isSubmitted;
+
     private Integer grade;
 
     @ManyToOne

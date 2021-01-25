@@ -16,5 +16,6 @@ public class AssignmentAnswersResponse {
     private Integer id;
     private Integer assignmentId;
     private Integer ownerId;
+    private Boolean isSubmitted;
     private Integer grade;
 }
