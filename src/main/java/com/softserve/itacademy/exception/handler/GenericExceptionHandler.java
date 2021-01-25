@@ -1,5 +1,6 @@
 package com.softserve.itacademy.exception.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.FileProcessingException;
@@ -131,6 +132,18 @@ public class GenericExceptionHandler {
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(exception.getMessage())
                 .status(HttpStatus.FORBIDDEN.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({JsonProcessingException.class})
+    public ResponseEntity<BasicExceptionResponse> handleJsonProcessingException(JsonProcessingException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .error(exception.getClass().getSimpleName())
                 .build();
 
