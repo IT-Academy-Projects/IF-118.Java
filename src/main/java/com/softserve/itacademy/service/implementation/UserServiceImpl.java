@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
@@ -12,8 +13,11 @@ import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +58,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+
     @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with such id was not found"));
@@ -61,7 +67,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProfileInfo(Integer id, String name, String email) {
-        if (userRepository.updateProfileInfo(id, name, email) == 0) throw new NotFoundException("User with such id was not found");
+        if (userRepository.updateProfileInfo(id, name, email) == 0)
+            throw new NotFoundException("User with such id was not found");
     }
 
     @Override
@@ -76,14 +83,38 @@ public class UserServiceImpl implements UserService {
 
         if (passwordEncoder.matches(oldPass, getById(id).getPassword())) {
             userRepository.updatePass(id, passwordEncoder.encode(newPass));
-        }
-        else throw new OperationNotAllowedException("wrong current password");
+        } else throw new OperationNotAllowedException("wrong current password");
     }
 
     @Override
     public void deleteInvitation(Integer id, Integer invitationId) {
         invitationService.delete(invitationId);
         userRepository.deleteInvitation(id);
+    }
+
+    @Override
+    public void createAvatar(MultipartFile file, Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        try {
+            if (user.isPresent()) {
+                user.get().setAvatar(file.getBytes());
+                userRepository.save(user.get());
+            } else {
+                throw new NotFoundException("User was not found");
+            }
+        } catch (IOException e) {
+            throw new FileProcessingException("Cannot get bytes from avatar file for course");
+        }
+    }
+
+    @Override
+    public byte[] getAvatar(Integer id) {
+        return userRepository.getAvatarById(id);
+    }
+
+    @Override
+    public UserResponse getUserById(Integer id) {
+        return userConverter.of(getById(id));
     }
 
 

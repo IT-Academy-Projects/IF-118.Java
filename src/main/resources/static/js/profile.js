@@ -2,7 +2,7 @@ let user;
 init();
 
 function init() {
-    getRequest(`api/v1/users/me`).then(data => {
+    getRequest(`api/v1/users/profile`).then(data => {
         user = data;
         showUser(user);
     })
@@ -61,9 +61,6 @@ function checkEmailNameCompatible() {
         $('#sameEmailError').hide()
     }
 
-
-
-
     if ((!isNameSame && !isEmailSame) && (!isEmailEmpty || !isNameEmpty)) {
         $('#save-chg-btn').removeAttr('disabled');
     }
@@ -100,7 +97,34 @@ function checkPasswordsCompatible() {
     }
 }
 
+function changeAvatar() {
+    let avatar = $('#user-avatar-input').prop('files')[0];
+
+    let formData = new FormData();
+    formData.append('avatar', avatar);
+
+    $.ajax({
+        type: 'PUT',
+        url: `/api/v1/users/${user.id}/avatar`,
+        data: formData,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data'
+    }).then(res => {
+        location.reload();
+    });
+}
+
 function showUser(user) {
+    if (user.avatar !== '' && user.avatar !== undefined && user.avatar !== null) {
+        $('#user-avatar').attr('src', `data:image/png;base64,${user.avatar}`);
+        $('#avatar-placeholder').hide();
+    }
+    else {
+        $('#user-avatar').attr('src', `img/no-avatar.png`);
+        $('#avatar-placeholder').hide();
+    }
+
     $('#user-name').text(user.name);
     $('#user-email').text(user.email);
 }

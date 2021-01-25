@@ -65,6 +65,9 @@ public class User extends BasicEntity {
     @Column
     private String invitationCode;
 
+    @Column
+    private byte[] avatar;
+
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
