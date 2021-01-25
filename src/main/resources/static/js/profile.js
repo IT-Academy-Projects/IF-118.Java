@@ -120,6 +120,10 @@ function showUser(user) {
         $('#user-avatar').attr('src', `data:image/png;base64,${user.avatar}`);
         $('#avatar-placeholder').hide();
     }
+    else {
+        $('#user-avatar').attr('src', `img/no-avatar.png`);
+        $('#avatar-placeholder').hide();
+    }
 
     $('#user-name').text(user.name);
     $('#user-email').text(user.email);
