@@ -60,10 +60,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()
-                .csrf().disable() //TODO: Implement CSRF
+                .csrf().disable()
                 .oauth2Login()
                     .loginPage("/login").permitAll()
-                        .failureUrl("/api/v1/login-error")
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService)
                 .and()

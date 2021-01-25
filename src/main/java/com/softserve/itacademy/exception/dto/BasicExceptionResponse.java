@@ -21,5 +21,4 @@ public class BasicExceptionResponse {
     private String error;
     private String message;
     private Integer status;
-
 }

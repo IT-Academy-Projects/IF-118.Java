@@ -3,9 +3,11 @@ package com.softserve.itacademy.controller.view;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -81,4 +83,7 @@ public class ViewController {
         return "invitation.html";
     }
 
+    @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
+    @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #id)")
+    public String chatView(@RequestParam int id) { return "group-chat.html"; }
 }

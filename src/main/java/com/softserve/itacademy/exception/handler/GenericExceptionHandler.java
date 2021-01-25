@@ -9,6 +9,8 @@ import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -83,6 +85,19 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
+    @MessageExceptionHandler({org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException.class})
+    public ResponseEntity<BasicExceptionResponse> handleSockedValidationException(
+            org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<BasicExceptionResponse> handleAuthException(AuthenticationException exception) {
 
@@ -91,6 +106,8 @@ public class GenericExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(exception.getClass().getSimpleName())
                 .build();
+
+        log.info(exception.getMessage());
 
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
@@ -105,5 +122,18 @@ public class GenericExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(dto, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    @MessageExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<BasicExceptionResponse> handleAccessDeniedException(AccessDeniedException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.FORBIDDEN.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 }

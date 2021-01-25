@@ -1,4 +1,4 @@
-package com.softserve.itacademy.security.service;
+package com.softserve.itacademy.service;
 
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
