@@ -104,19 +104,23 @@ function changeAvatar() {
     formData.append('avatar', avatar);
 
     $.ajax({
-        type: 'POST',
-        url: `/api/v1/users/${user.id}/profile`,
+        type: 'PUT',
+        url: `/api/v1/users/${user.id}/avatar`,
         data: formData,
         processData: false,
         contentType: false,
-        enctype: 'multipart/form-data',
-        success: function() {
-            $("#close-avatar-modal").click();
-        }
+        enctype: 'multipart/form-data'
+    }).then(res => {
+        location.reload();
     });
 }
 
 function showUser(user) {
+    if (user.avatar !== '' && user.avatar !== undefined && user.avatar !== null) {
+        $('#user-avatar').attr('src', `data:image/png;base64,${user.avatar}`);
+        $('#avatar-placeholder').hide();
+    }
+
     $('#user-name').text(user.name);
     $('#user-email').text(user.email);
 }

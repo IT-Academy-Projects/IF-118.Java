@@ -1,10 +1,9 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.Invitation;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
 import com.softserve.itacademy.response.IsAuthenticatedResponse;
@@ -17,18 +16,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -62,7 +60,7 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
-    @PostMapping("/{id}/avatar")
+    @PutMapping("/{id}/avatar")
     public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
                                             @PathVariable Integer id) {
         userService.createAvatar(file, id);
