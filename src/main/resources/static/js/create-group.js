@@ -20,6 +20,7 @@ function createGroup() {
         enctype: 'multipart/form-data',
         success: function() {
             $( "#groups-wrapper" ).html(``);
+            $('#courses').html('');
             showTeacherGroups();
             $("#close-group-modal").click();
         }
