@@ -8,5 +8,4 @@ public interface UserTinyProjection extends IdNameTupleProjection {
 
     String getEmail();
     Set<RoleProjection> getRoles();
-
 }

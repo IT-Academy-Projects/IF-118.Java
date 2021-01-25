@@ -18,6 +18,7 @@ public class UserConverter {
     public UserResponse of(User user) {
         UserResponse map = mapper.map(user, UserResponse.class);
         map.setDisabled(user.getDisabled());
+        map.setAvatar(user.getAvatar());
         return map;
     }
 }

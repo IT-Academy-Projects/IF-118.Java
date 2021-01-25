@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -46,13 +47,23 @@ public class UserController {
         return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(true).userId(user.getId()).build(), OK);
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponse> getUserProfile(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.getUserById(user.getId()), OK);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
-
         if (user == null) {
             throw new NotFoundException("user was not found");
         }
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
+    }
+
+    @PutMapping("/{id}/avatar")
+    public ResponseEntity<Void> changePhoto(@PathVariable Integer id, MultipartFile file) {
+        userService.createAvatar(file, id);
+        return new ResponseEntity<>(OK);
     }
 
     @GetMapping

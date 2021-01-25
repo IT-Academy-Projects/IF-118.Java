@@ -2,7 +2,7 @@ let user;
 init();
 
 function init() {
-    getRequest(`api/v1/users/me`).then(data => {
+    getRequest(`api/v1/users/profile`).then(data => {
         user = data;
         showUser(user);
     })

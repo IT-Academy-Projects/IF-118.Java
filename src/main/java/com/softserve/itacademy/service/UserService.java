@@ -7,6 +7,8 @@ import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.transaction.annotation.Transactional;
 import com.softserve.itacademy.response.UserResponse;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 
@@ -29,4 +31,10 @@ public interface UserService {
     void changePass(Integer id, String oldPass, String newPass);
 
     void deleteInvitation(Integer userId, Integer invitationId);
+
+    void createAvatar(MultipartFile file, Integer id);
+
+    byte[] getAvatar(Integer id);
+
+    UserResponse getUserById(Integer id);
 }
