@@ -8,6 +8,6 @@ import javax.validation.constraints.Size;
 @Data
 public class ChatMessageRequest {
 
-    @Length(min = 1, max = 255)
+    @Length(min = 1, max = 4096)
     private String content;
 }

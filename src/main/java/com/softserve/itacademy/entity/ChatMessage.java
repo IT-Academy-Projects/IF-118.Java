@@ -31,7 +31,7 @@ public class ChatMessage extends BasicEntity {
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_message"))
     private User user;
 
-    @Length(min = 1, max = 255)
+    @Length(min = 1, max = 4096)
     private String content;
 
     @Enumerated(EnumType.STRING)

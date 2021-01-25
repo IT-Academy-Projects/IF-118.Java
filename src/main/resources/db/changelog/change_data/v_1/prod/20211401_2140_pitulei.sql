@@ -15,7 +15,7 @@ CREATE TABLE if not exists `chat_message`(
     `id`            int AUTO_INCREMENT PRIMARY KEY,
     `created_at`    datetime    NOT NULL,
     `updated_at`    datetime    DEFAULT NULL,
-    `content`       varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+    `content`       text COLLATE utf8_unicode_ci DEFAULT NULL,
     `status`        varchar(30) DEFAULT NULL,
     `chat_room_id`  int         DEFAULT NULL,
     `user_id`       int         DEFAULT NULL,
