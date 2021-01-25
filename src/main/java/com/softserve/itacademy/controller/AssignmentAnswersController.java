@@ -90,7 +90,7 @@ public class AssignmentAnswersController {
     }
 
     @UserRolePermission
-    @PostMapping("/{id}/submit")
+    @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
         return new ResponseEntity<>(HttpStatus.OK);

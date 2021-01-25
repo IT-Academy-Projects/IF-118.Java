@@ -122,9 +122,11 @@ function showMyAnswer(answer, assignmentId) {
             <tr>
                 <td><span style="font-weight: bold" class="h3">${currentUser.name}</span></td>
                 <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
+                <td><span>${answer.grade}</span></td>
                 <td><button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success"
                         data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button></td>
-                <td><button type="button" id="submit-${answer.id}-btn" class="btn btn-outline-success" onclick=submit(${answer.id})>Submit</button></td>
+                <td><button type="button" id="submit-${answer.id}-btn" class="btn btn-outline-success" 
+                        onclick=submit(${answer.id})>Submit</button></td>
             </tr>
         `);
     let submit = '#submit-' + answer.id + '-btn'
@@ -144,6 +146,9 @@ function showAnswers(assignment) {
                 <tr>
                     <td><span style="font-weight: bold" class="h3">${user.name}</span></td>
                     <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
+                    <td><span id="grade-${answer.id}">${answer.grade}</span></td>
+                    <td><button type="button" id="grade-${answer.id}-btn" class="btn btn-outline-success" 
+                        data-toggle="modal" data-target="#grade-modal" onclick="assignmentAnswerId = ${answer.id}">Grade</button></td>
                 </tr>
                 `);
             });
@@ -188,11 +193,13 @@ function updateAnswer() {
     $(submit).removeAttr('disabled')
 }
 
-function gradeAssignmentAnswer(){
+function gradeAssignmentAnswer() {
     let gr = parseInt($('#grade-textarea').val());
     let data = {grade: gr};
-    patchRequest(`/api/v1/assignment-answers/${assignmentAnswerId}/grade`, data).then(res => {
-        window.location.reload();
+    patchRequest(`/api/v1/assignment-answers/${assignmentAnswerId}/grade`, data).then(() => {
+        $(`#grade-${assignmentAnswerId}`)[0].innerHTML = gr;
+        $('#grade-modal').modal('hide');
+        gr = '';
     })
 }
 
@@ -205,7 +212,7 @@ function checkAssignment() {
 }
 
 function submit(id) {
-    postRequest(`/api/v1/assignment-answers/${id}/submit`).then($('#submit-' + id + '-btn').attr('disabled', true));
+    patchRequest(`/api/v1/assignment-answers/${id}/submit`).then($('#submit-' + id + '-btn').attr('disabled', true));
 }
 
 function getRequest(url) {

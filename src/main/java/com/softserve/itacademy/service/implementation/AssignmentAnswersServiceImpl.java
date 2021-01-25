@@ -56,6 +56,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .ownerId(assignmentAnswersRequest.getOwnerId())
                 .assignment(assignment)
                 .fileReference(s3Utils.saveFile(file, BUCKET_NAME, ASSIGNMENTS_FOLDER))
+                .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
         return assignmentAnswersConverter.of(assignmentAnswers);

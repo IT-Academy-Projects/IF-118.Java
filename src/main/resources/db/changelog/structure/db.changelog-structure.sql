@@ -171,3 +171,7 @@ CREATE TABLE if not exists `assignment_answers`(
 -- changeSet Ivanyshyn:structure-1.1.1 endDelimiter:; splitStatements:true
 
 ALTER TABLE assignment_answers ADD COLUMN is_submitted BOOLEAN DEFAULT FALSE;
+
+-- changeSet Ivanyshyn:structure-1.1.2 endDelimiter:; splitStatements:true
+
+ALTER TABLE assignment_answers ADD COLUMN grade INTEGER NOT NULL;
