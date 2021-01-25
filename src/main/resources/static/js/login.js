@@ -18,7 +18,6 @@ function handleLogin() {
     }
 }
 
-
 function loginRequest(data) {
     $.ajax({
         url: "/login",

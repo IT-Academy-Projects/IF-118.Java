@@ -7,17 +7,13 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.security.service.RegistrationService;
-import com.softserve.itacademy.service.RoleService;
+import com.softserve.itacademy.service.RegistrationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.WebAttributes;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,6 +74,7 @@ public class AuthController {
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(ex.getClass().getSimpleName())
                         .build();
+                session.setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, null);
             } else {
                 return new ResponseEntity<>(HttpStatus.OK);
             }

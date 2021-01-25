@@ -1,0 +1,53 @@
+#chat {
+    height: 500px;
+    overflow: auto;
+    font-size: 16px;
+}
+
+.content {
+    box-sizing: border-box;
+    overflow: auto;
+    height: 85%;
+    margin: 1% 0;
+}
+
+/* msg */
+
+.msg {
+    padding: 1%;
+    margin: 1%;
+    background-color: lightgray;
+    border-radius: 10px;
+    color: black;
+    height: fit-content;
+    width: 60%;
+    word-wrap: break-word;
+}
+
+.msg-own {
+    margin: 1% 1% 1% 39%;
+    text-align: right;
+}
+
+.msg .head {
+    width: 100%;
+    color: black;
+    font-weight: 350;
+    font-size: 12px;
+}
+
+.msg .body {
+    margin: 1% 0;
+    font-size: 16px;
+}
+
+.msg .footer {
+    color: dimgrey;
+    font-size: 12px;
+}
+
+/* tools */
+
+.tools {
+    position: relative;
+}
