@@ -11,6 +11,7 @@ public interface AssignmentAnswersService {
     AssignmentAnswersResponse findById(Integer id);
     AssignmentAnswersResponse create(MultipartFile file, AssignmentAnswersRequest assignmentAnswersRequest);
     DownloadFileResponse downloadById(Integer id);
+    void grade(Integer id, Integer grade);
     AssignmentAnswers getById(Integer id);
     void update(MultipartFile file, Integer id);
 }

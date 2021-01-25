@@ -5,6 +5,7 @@ let canEdit;
 let tempAssignmentId;
 let tempAnswerId;
 let currentUser;
+let assignmentAnswerId;
 
 initPage();
 
@@ -122,7 +123,11 @@ function showMyAnswer(answer, assignmentId) {
                         data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button>
                </div>
         </div>`);
-
+    if(parseInt(answer.grade)){
+        $(answerReviewBody).append(`
+        <div>Teacher graded your answer. Grade: ${answer.grade}</div>
+        `);
+    }
     $(`#answer-${assignmentId}-review`).toggle();
     $(`#answer-${assignmentId}-btn`).hide();
 }
@@ -130,6 +135,7 @@ function showMyAnswer(answer, assignmentId) {
 function showAnswers(assignment) {
     let answerReviewBody = "#answer-" + assignment.id+ "-review-body";
     assignment.assignmentAnswers.forEach(answer => {
+        assignmentAnswerId = answer.id;
         getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
             $(answerReviewBody).append(`
         <div style="display: flex">
@@ -139,6 +145,20 @@ function showAnswers(assignment) {
                   <a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a>
                </div>
         </div>`);
+            if(!parseInt(answer.grade)){
+                $(answerReviewBody).append(`
+                <div>
+                    <button type="button" class="btn btn-outline-success show"  data-toggle="modal" data-target="#grade-modal">Grade it</button>
+                </div>`);
+            } else{
+                $(answerReviewBody).append(`
+                <div>
+                    Already graded. Grade: ${answer.grade}
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-success show"  data-toggle="modal" data-target="#grade-modal">Change grade</button>
+                </div>`);
+            }
         });
     });
 }
@@ -175,6 +195,14 @@ function updateAnswer() {
         showMyAnswer(res, tempAssignmentId);
         $('#update-answer-modal').modal('hide');
         file = '';
+    })
+}
+
+function gradeAssignmentAnswer(){
+    let gr = parseInt($('#grade-textarea').val());
+    let data = {grade: gr};
+    patchRequest(`/api/v1/assignment-answers/${assignmentAnswerId}/grade`, data).then(res => {
+        window.location.reload();
     })
 }
 
@@ -219,4 +247,13 @@ function patchFileRequest(url, data) {
         contentType: false,
         enctype: 'multipart/form-data'
     });
+}
+
+function patchRequest(url, data) {
+    return $.ajax({
+        url: url,
+        type: 'PATCH',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8'
+    })
 }
