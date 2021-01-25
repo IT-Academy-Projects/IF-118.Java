@@ -4,7 +4,7 @@ function loadComments(id) {
             let comment = comments[i];
             let material_id_comments_body = "#material-" + id + "-comments-body"
             $(material_id_comments_body).append(`
-                <div class="comment mt-4 text-justify">
+                <div class="comment mt-4 text-justify text-white">
                     <span class="author-${comment.ownerId}-name" class="h3"></span> <span class="created-at">- ${comment.created_at}</span> <br>
                     <p id="message">${comment.message}</p>
                 </div>
@@ -72,13 +72,6 @@ function setMaterialId(id) {
 function cleanComments(materialId) {
     let material_id_comments = "#material-" + materialId + "-comments"
     $(material_id_comments).html(`
-        <section>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12" id="material-${materialId}-comments-body">
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div id="material-${materialId}-comments-body"></div>
     `)
 }
