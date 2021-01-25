@@ -61,9 +61,6 @@ function checkEmailNameCompatible() {
         $('#sameEmailError').hide()
     }
 
-
-
-
     if ((!isNameSame && !isEmailSame) && (!isEmailEmpty || !isNameEmpty)) {
         $('#save-chg-btn').removeAttr('disabled');
     }
@@ -98,6 +95,25 @@ function checkPasswordsCompatible() {
         $('#passwordHelp').show()
         $('#save-pass-btn').attr('disabled', true);
     }
+}
+
+function changeAvatar() {
+    let avatar = $('#user-avatar-input').prop('files')[0];
+
+    let formData = new FormData();
+    formData.append('avatar', avatar);
+
+    $.ajax({
+        type: 'POST',
+        url: `/api/v1/users/${user.id}/profile`,
+        data: formData,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+        success: function() {
+            $("#close-avatar-modal").click();
+        }
+    });
 }
 
 function showUser(user) {

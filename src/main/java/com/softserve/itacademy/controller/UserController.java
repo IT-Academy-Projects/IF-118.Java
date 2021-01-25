@@ -17,10 +17,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -60,8 +62,9 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
-    @PutMapping("/{id}/avatar")
-    public ResponseEntity<Void> changePhoto(@PathVariable Integer id, MultipartFile file) {
+    @PostMapping("/{id}/avatar")
+    public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
+                                            @PathVariable Integer id) {
         userService.createAvatar(file, id);
         return new ResponseEntity<>(OK);
     }
