@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
@@ -105,7 +106,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse readById(Integer id) {
-        return courseConverter.of(getById(id));
+        Course course = getById(id);
+        if (course.getDisabled()) {
+            throw new DisabledObjectException("Course is disabled");
+        }
+        return courseConverter.of(course);
     }
 
     @Override

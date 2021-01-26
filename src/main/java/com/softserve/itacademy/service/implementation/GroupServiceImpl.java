@@ -110,7 +110,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse findById(Integer id) {
-        return groupConverter.of(getById(id));
+        Group group = getById(id);
+        if (group.getDisabled()) {
+            throw new DisabledObjectException("Group is disabled");
+        }
+        return groupConverter.of(group);
     }
 
     private Group getById(Integer id) {
