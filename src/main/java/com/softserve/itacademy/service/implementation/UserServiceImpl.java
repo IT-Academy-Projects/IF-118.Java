@@ -58,17 +58,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-
     @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with such id was not found"));
     }
 
     @Override
-    public void updateProfileInfo(Integer id, String name, String email) {
-        if (userRepository.updateProfileInfo(id, name, email) == 0)
-            throw new NotFoundException("User with such id was not found");
+    public int updateName(String name, Integer id) {
+        return userRepository.updateName(name, id);
+    }
+
+    @Override
+    public int updateEmail(String email, Integer id) {
+        return userRepository.updateEmail(email, id);
     }
 
     @Override

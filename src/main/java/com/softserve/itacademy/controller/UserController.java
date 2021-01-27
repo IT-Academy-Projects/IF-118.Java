@@ -5,6 +5,8 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.request.UserEmailUpdateRequest;
+import com.softserve.itacademy.request.UserNameUpdateRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
 import com.softserve.itacademy.response.IsAuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
@@ -84,10 +86,17 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
-    @PatchMapping("/{id}/profile")
-    public ResponseEntity<Void> updateProfileInfo(@PathVariable Integer id, @RequestParam String name,
-                                                  @RequestParam String email) {
-        userService.updateProfileInfo(id, name, email);
+    @PatchMapping("/{id}/profile/email")
+    public ResponseEntity<Void> updateUserEmail(@AuthenticationPrincipal User user,
+                                                  @RequestBody UserEmailUpdateRequest request) {
+        userService.updateEmail(request.getEmail(), user.getId());
+        return new ResponseEntity<>(OK);
+    }
+
+    @PatchMapping("/{id}/profile/name")
+    public ResponseEntity<Void> updateUserName(@AuthenticationPrincipal User user,
+                                                  @RequestBody UserNameUpdateRequest request) {
+        userService.updateName(request.getName(), user.getId());
         return new ResponseEntity<>(OK);
     }
 
