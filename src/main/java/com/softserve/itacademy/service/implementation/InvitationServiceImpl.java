@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -43,11 +44,11 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public InvitationResponse approveByLink(String email, String code) {
+    public void approveByLink(String email, String code) {
         Invitation invitation = getInvitationByCode(code);
         log.info("approving invitation");
         userRepository.updateInvite(code, email);
-        return approveCourseOrGroup(invitation);
+        approveCourseOrGroup(invitation);
     }
 
     @Override
@@ -116,7 +117,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
+                .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
         mailSender.send(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }

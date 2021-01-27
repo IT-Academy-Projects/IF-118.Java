@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/assignments")
+@RequestMapping(API_V1 + "assignments")
 public class AssignmentController {
 
     private final AssignmentService assignmentService;

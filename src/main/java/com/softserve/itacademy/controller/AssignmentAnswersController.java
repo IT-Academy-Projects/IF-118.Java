@@ -2,6 +2,7 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
@@ -33,7 +34,7 @@ import java.nio.charset.StandardCharsets;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/assignment-answers")
+@RequestMapping(API_V1 + "assignment-answers")
 public class AssignmentAnswersController {
 
     private final AssignmentAnswersService assignmentAnswersService;

@@ -26,12 +26,8 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "invitation")
-public class Invitation{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Integer id;
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+public class Invitation extends BasicEntity {
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)

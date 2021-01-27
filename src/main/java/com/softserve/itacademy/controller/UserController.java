@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
@@ -29,7 +30,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(API_V1 + "users")
 public class UserController {
 
     private final UserService userService;

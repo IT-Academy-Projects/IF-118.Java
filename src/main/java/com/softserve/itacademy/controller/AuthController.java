@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(API_V1)
 public class AuthController {
 
     private final RegistrationService registrationService;

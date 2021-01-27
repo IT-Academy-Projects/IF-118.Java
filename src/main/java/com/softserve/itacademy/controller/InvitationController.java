@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/v1/invitation")
+@RequestMapping(API_V1 + "invitation")
 public class InvitationController {
     private final InvitationService invitationService;
     @Value("${application.address}")
