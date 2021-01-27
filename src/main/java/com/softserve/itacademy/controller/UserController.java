@@ -63,7 +63,7 @@ public class UserController {
     @PutMapping("/{id}/avatar")
     public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
                                             @PathVariable Integer id) {
-        userService.createAvatar(file, id);
+        userService.setAvatar(file, id);
         return new ResponseEntity<>(OK);
     }
 

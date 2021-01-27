@@ -1,8 +1,6 @@
 package com.softserve.itacademy.entity;
 
 import com.softserve.itacademy.entity.security.Role;
-import com.softserve.itacademy.projection.UserFullTinyProjection;
-import com.softserve.itacademy.projection.UserTinyProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Controller;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -65,8 +63,9 @@ public class User extends BasicEntity {
     @Column
     private String invitationCode;
 
-    @Column
-    private byte[] avatar;
+    @OneToOne
+    @JoinColumn(name = "image_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_users_images_image_id"))
+    private Image avatar;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)

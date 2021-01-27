@@ -1,13 +1,14 @@
 package com.softserve.itacademy.service.implementation;
 
+import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
+import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.UserConverter;
@@ -15,9 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,12 +26,14 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final InvitationService invitationService;
+    private final ImageService imageService;
 
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService) {
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, ImageService imageService) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.passwordEncoder = passwordEncoder;
         this.invitationService = invitationService;
+        this.imageService = imageService;
     }
 
     @Override
@@ -57,7 +58,6 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User with such id was not found");
         }
     }
-
 
 
     @Override
@@ -93,18 +93,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createAvatar(MultipartFile file, Integer id) {
-        Optional<User> user = userRepository.findById(id);
-        try {
-            if (user.isPresent()) {
-                user.get().setAvatar(file.getBytes());
-                userRepository.save(user.get());
-            } else {
-                throw new NotFoundException("User was not found");
-            }
-        } catch (IOException e) {
-            throw new FileProcessingException("Cannot get bytes from avatar file for course");
+    public void setAvatar(MultipartFile file, Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        Image avatar = user.getAvatar();
+        byte[] compressedFile = imageService.compress(file);
+
+        if (avatar != null) {
+            avatar.setFile(compressedFile);
+        } else {
+            user.setAvatar(imageService.save(compressedFile));
         }
+        userRepository.save(user);
     }
 
     @Override
