@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/api/v1/chat")
 public class ChatController {
 
-    private final static int PAGE_SIZE = 50;
+    public final static int CHAT_PAGE_SIZE = 50;
 
     private final ChatMessageService chatMessageService;
 
@@ -48,6 +48,6 @@ public class ChatController {
             @PathVariable int chatId,
             @PathVariable int pageNo) {
 
-        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, PAGE_SIZE, chatId), HttpStatus.OK);
+        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, CHAT_PAGE_SIZE, chatId), HttpStatus.OK);
     }
 }
