@@ -25,7 +25,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public final static String LOGIN_PAGE = "/login";
+    public static final String LOGIN_PAGE = "/login";
 
     private final OidcUserService oidcUserService;
     private final OAuthSuccessHandler oAuthSuccessHandler;

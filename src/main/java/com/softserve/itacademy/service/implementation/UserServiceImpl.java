@@ -1,5 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -37,12 +39,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullTinyProjection findById(Integer id) {
-        return userRepository.findProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
+        return userRepository.findProjectedById(id).orElseThrow(() -> new NotFoundException(USER_EMAIL_NOT_FOUND));
     }
 
     @Override
     public IdNameTupleProjection findUserNameById(Integer id) {
-        return userRepository.findUserProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
+        return userRepository.findUserProjectedById(id).orElseThrow(() -> new NotFoundException(USER_EMAIL_NOT_FOUND));
     }
 
     @Override
@@ -54,16 +56,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
         if (userRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException("User with such id was not found");
+            throw new NotFoundException(USER_ID_NOT_FOUND);
         }
     }
 
     @Override
     public User getById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with such id was not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
     }
 
     @Override
+
     public int updateName(String name, Integer id) {
         return userRepository.updateName(name, id);
     }
@@ -71,6 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateEmail(String email, Integer id) {
         return userRepository.updateEmail(email, id);
+
     }
 
     @Override
@@ -102,7 +106,7 @@ public class UserServiceImpl implements UserService {
                 user.get().setAvatar(file.getBytes());
                 userRepository.save(user.get());
             } else {
-                throw new NotFoundException("User was not found");
+                throw new NotFoundException(USER_ID_NOT_FOUND);
             }
         } catch (IOException e) {
             throw new FileProcessingException("Cannot get bytes from avatar file for course");

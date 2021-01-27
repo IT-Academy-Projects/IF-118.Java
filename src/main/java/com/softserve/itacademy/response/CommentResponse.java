@@ -13,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentResponse {
     private Integer id;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
     private String message;
     private Integer ownerId;
     private Integer materialId;

@@ -9,7 +9,7 @@ public interface InvitationService {
 
     InvitationResponse sendInvitation(InvitationRequest invitationRequest);
 
-    InvitationResponse approveByLink(String email, String code);
+    void approveByLink(String email, String code);
 
     List<InvitationResponse> findAllByEmail(String email);
 

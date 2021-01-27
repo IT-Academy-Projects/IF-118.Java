@@ -2,6 +2,7 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DescriptionRequest;
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/courses")
+@RequestMapping(API_V1 + "courses")
 public class CourseController {
 
     private final CourseService courseService;

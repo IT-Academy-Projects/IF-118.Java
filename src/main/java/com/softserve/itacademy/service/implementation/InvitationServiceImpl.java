@@ -1,8 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.exception.InvitationServiceException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
@@ -44,17 +44,16 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
-    public InvitationResponse approveByLink(String email, String code) {
-        Invitation invitation = invitationRepository.findByCode(code).get();
+    public void approveByLink(String email, String code) {
+        Invitation invitation = getInvitationByCode(code);
         log.info("approving invitation");
         userRepository.updateInvite(code, email);
-        return approveCourseOrGroup(invitation);
+        approveCourseOrGroup(invitation);
     }
 
     @Override
     public InvitationResponse findByCode(String code) {
-        return invitationConverter.of(invitationRepository.findByCode(code)
-                .orElseThrow(() -> new InvitationServiceException("No such invitation")));
+        return invitationConverter.of(getInvitationByCode(code));
     }
 
     @Override
@@ -90,16 +89,21 @@ public class InvitationServiceImpl implements InvitationService {
             if (invitation.getGroup() != null && canBeApproved(invitation)) {
                 approve(invitation);
                 invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
-                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             } else {
                 approve(invitation);
                 invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
-                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             }
         }
         return InvitationResponse.builder()
                 .approved(false)
                 .build();
+    }
+
+    private Invitation getInvitationByCode(String code) {
+        return invitationRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Invitation with such code was not found"));
     }
 
     private boolean canBeApproved(Invitation invitation) {
@@ -113,7 +117,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
+                .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
         mailSender.send(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
