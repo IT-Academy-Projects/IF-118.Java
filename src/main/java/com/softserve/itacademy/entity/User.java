@@ -108,11 +108,6 @@ public class User extends BasicEntity {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    public void addGroup(Group group) {
-        group.getUsers().add(this);
-        this.groups.add(group);
-    }
-
     public void addRole(Role role) {
         this.roles.add(role);
     }

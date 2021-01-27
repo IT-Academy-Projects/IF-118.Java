@@ -37,8 +37,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse create(CommentRequest commentRequest) {
         log.info("Creating comment {}", commentRequest);
-        Material material = materialRepository.findById(commentRequest.getMaterialId()).get();
-        User owner = userRepository.findById(commentRequest.getOwnerId()).get();
+        Material material = materialRepository.findById(commentRequest.getMaterialId())
+                .orElseThrow(() -> new NotFoundException("Material with such id was not found"));
+        User owner = userRepository.findById(commentRequest.getOwnerId())
+                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
         Comment comment = commentConverter.of(commentRequest, material, owner);
         Comment saved = commentRepository.save(comment);
         return commentConverter.of(saved);

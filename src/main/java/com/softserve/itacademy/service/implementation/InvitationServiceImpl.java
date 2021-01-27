@@ -2,7 +2,6 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.exception.InvitationServiceException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
@@ -45,7 +44,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse approveByLink(String email, String code) {
-        Invitation invitation = invitationRepository.findByCode(code).get();
+        Invitation invitation = getInvitationByCode(code);
         log.info("approving invitation");
         userRepository.updateInvite(code, email);
         return approveCourseOrGroup(invitation);
@@ -53,8 +52,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse findByCode(String code) {
-        return invitationConverter.of(invitationRepository.findByCode(code)
-                .orElseThrow(() -> new InvitationServiceException("No such invitation")));
+        return invitationConverter.of(getInvitationByCode(code));
     }
 
     @Override
@@ -90,16 +88,21 @@ public class InvitationServiceImpl implements InvitationService {
             if (invitation.getGroup() != null && canBeApproved(invitation)) {
                 approve(invitation);
                 invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
-                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             } else {
                 approve(invitation);
                 invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
-                return invitationConverter.of(invitationRepository.findByCode(invitation.getCode()).get());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             }
         }
         return InvitationResponse.builder()
                 .approved(false)
                 .build();
+    }
+
+    private Invitation getInvitationByCode(String code) {
+        return invitationRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Invitation with such code was not found"));
     }
 
     private boolean canBeApproved(Invitation invitation) {
