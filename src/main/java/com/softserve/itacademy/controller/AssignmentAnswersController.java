@@ -58,7 +58,7 @@ public class AssignmentAnswersController {
     @StudentRolePermission
     @PatchMapping
     public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
-                                                            @RequestPart(value = "answerId") String id) throws JsonProcessingException {
+                                                            @RequestPart(value = "answerId") String id) {
         assignmentAnswersService.update(file, Integer.valueOf(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }
