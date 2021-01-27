@@ -17,11 +17,8 @@ public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
 
-    private final RoleService roleService;
-
     public CustomOidcUserService(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
     }
 
     @Transactional

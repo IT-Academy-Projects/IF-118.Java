@@ -2,6 +2,8 @@ package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,12 +20,12 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @Table(name = "courses")

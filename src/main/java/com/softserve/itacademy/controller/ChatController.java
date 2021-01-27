@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/api/v1/chat")
 public class ChatController {
 
-    private final int PAGE_SIZE = 50;
+    private final static int PAGE_SIZE = 50;
 
     private final ChatMessageService chatMessageService;
 

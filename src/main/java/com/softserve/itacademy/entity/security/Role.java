@@ -29,9 +29,6 @@ public class Role extends BasicEntity {
 
     private String name;
 
-//    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-//    private Set<User> users = new HashSet<>();
-
     @Singular
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

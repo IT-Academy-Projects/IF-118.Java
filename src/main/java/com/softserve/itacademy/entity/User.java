@@ -3,6 +3,8 @@ package com.softserve.itacademy.entity;
 import com.softserve.itacademy.entity.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,12 +28,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Getter
-@Setter
 @Builder
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Table(name = "users")
 public class User extends BasicEntity {
@@ -79,15 +81,11 @@ public class User extends BasicEntity {
         Set<GrantedAuthority> authorities = this.roles.stream()
                 .map(Role::getAuthorities)
                 .flatMap(Set::stream)
-                .map(authority -> {
-                    return new SimpleGrantedAuthority(authority.getName());
-                })
+                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toSet());
 
         authorities.addAll(this.roles.stream()
-                .map(role -> {
-                    return new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase());
-                })
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
                 .collect(Collectors.toSet()));
 
         return authorities;
