@@ -2,11 +2,10 @@ package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -15,8 +14,8 @@ import javax.persistence.Table;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Table(name = "assignment_answers")
 @Entity
@@ -25,6 +24,8 @@ public class AssignmentAnswers extends BasicEntity {
     private Integer ownerId;
 
     private String fileReference;
+
+    private Boolean isSubmitted;
 
     private Integer grade;
 

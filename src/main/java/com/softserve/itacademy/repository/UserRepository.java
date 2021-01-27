@@ -56,6 +56,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query("update User u set u.invitationCode = null where u.id=?1")
     void deleteInvitation(Integer id);
+
+    byte[] getAvatarById(Integer id);
 }
 
 

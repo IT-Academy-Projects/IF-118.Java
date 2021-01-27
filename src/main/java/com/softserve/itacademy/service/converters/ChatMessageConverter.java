@@ -3,7 +3,6 @@ package com.softserve.itacademy.service.converters;
 import com.softserve.itacademy.entity.ChatMessage;
 import com.softserve.itacademy.projection.UserTinyProjection;
 import com.softserve.itacademy.response.ChatMessageResponse;
-import com.softserve.itacademy.response.CourseResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.projection.ProjectionFactory;
@@ -11,7 +10,6 @@ import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

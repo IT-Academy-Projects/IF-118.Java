@@ -1,10 +1,9 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.Invitation;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
 import com.softserve.itacademy.response.IsAuthenticatedResponse;
@@ -21,7 +20,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,13 +47,24 @@ public class UserController {
         return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(true).userId(user.getId()).build(), OK);
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponse> getUserProfile(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.getUserById(user.getId()), OK);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
-
         if (user == null) {
             throw new NotFoundException("user was not found");
         }
         return new ResponseEntity<>(userService.findById(user.getId()), OK);
+    }
+
+    @PutMapping("/{id}/avatar")
+    public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
+                                            @PathVariable Integer id) {
+        userService.createAvatar(file, id);
+        return new ResponseEntity<>(OK);
     }
 
     @GetMapping

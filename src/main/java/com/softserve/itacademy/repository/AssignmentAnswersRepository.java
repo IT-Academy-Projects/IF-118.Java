@@ -12,8 +12,13 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
 
     @Modifying
     @Transactional
-    @Query(value = "update assignment_answers set file_reference=:fileRef where id=:id", nativeQuery = true)
+    @Query(value = "update assignment_answers set file_reference=:fileRef, is_submitted=false where id=:id", nativeQuery = true)
     void update(String fileRef, Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update assignment_answers set is_submitted=true where id=:id", nativeQuery = true)
+    Integer submit(Integer id);
 
     @Modifying
     @Transactional

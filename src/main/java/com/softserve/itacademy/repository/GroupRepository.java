@@ -1,8 +1,6 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.projection.GroupFullTinyProjection;
-import com.softserve.itacademy.projection.GroupTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

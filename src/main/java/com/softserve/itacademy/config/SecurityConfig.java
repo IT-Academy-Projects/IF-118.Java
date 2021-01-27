@@ -25,10 +25,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    public final static String LOGIN_PAGE = "/login";
+
     private final OidcUserService oidcUserService;
-
     private final OAuthSuccessHandler oAuthSuccessHandler;
-
     private final AuthenticationProvider authenticationProvider;
 
     public SecurityConfig(OidcUserService oidcUserService, OAuthSuccessHandler oAuthSuccessHandler, AuthenticationProvider authenticationProvider) {
@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public OwnAuthFilter ownAuthFilter(AuthenticationManager authenticationManager) {
-        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()));
+        OwnAuthFilter filter = new OwnAuthFilter(new AntPathRequestMatcher(LOGIN_PAGE, HttpMethod.POST.name()));
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .oauth2Login()
-                    .loginPage("/login").permitAll()
+                    .loginPage(LOGIN_PAGE).permitAll()
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService)
                 .and()
@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.GET.name()))
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl(LOGIN_PAGE)
                         .permitAll()
                 .and()
                     .rememberMe();

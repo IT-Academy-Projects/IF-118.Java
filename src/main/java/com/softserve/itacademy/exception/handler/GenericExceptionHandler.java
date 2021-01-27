@@ -1,5 +1,6 @@
 package com.softserve.itacademy.exception.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileHasNoExtensionException;
 import com.softserve.itacademy.exception.FileProcessingException;
@@ -16,6 +17,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
@@ -74,7 +77,7 @@ public class GenericExceptionHandler {
 
         ObjectError error = exception.getAllErrors().get(0);
 
-        String message = exception.getFieldError().getField() + " " + error.getDefaultMessage();
+        String message = Objects.requireNonNull(exception.getFieldError()).getField() + " " + error.getDefaultMessage();
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(message)
@@ -131,6 +134,18 @@ public class GenericExceptionHandler {
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(exception.getMessage())
                 .status(HttpStatus.FORBIDDEN.value())
+                .error(exception.getClass().getSimpleName())
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({JsonProcessingException.class})
+    public ResponseEntity<BasicExceptionResponse> handleJsonProcessingException(JsonProcessingException exception) {
+
+        BasicExceptionResponse dto = BasicExceptionResponse.builder()
+                .message(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .error(exception.getClass().getSimpleName())
                 .build();
 

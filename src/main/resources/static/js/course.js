@@ -65,29 +65,31 @@ function getMaterials(materialIds) {
             }
             $('#materials').append(`
                 <div class="material-info">
-                    <div>
-                        <div class="material-name"><a href="/material?id=${materialId}">${material.name}</a></div>
-                        <div class="material-description">${material.description}</div>
-                        <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
-                        <div>
-                            <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${materialId});">View comments</button>
-                            <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
-                                data-toggle="modal" data-target="#create-comment-modal" onclick="setMaterialId(${materialId})">Write comment
-                            </button> 
-                        </div>
-                        <div id="material-${materialId}-comments" style="display: none">
-                            <section>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="material-${materialId}-comments-body">
-                                        </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="material-name"><a href="/material?id=${materialId}">${material.name}</a></div>
+                                <div class="material-description">${material.description}</div>
+                                <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                                ${deleteBtn}
+                            </div>
+                            <div class="col-lg-4">
+                                <div>
+                                    <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${materialId});">View comments</button>
+                                    <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
+                                        data-toggle="modal" data-target="#create-comment-modal" onclick="setMaterialId(${materialId})">Write comment
+                                    </button> 
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="material-${materialId}-comments" style="display: none">
+                                    <div id="material-${materialId}-comments-body">
                                     </div>
                                 </div>
-                            </section>
+                            </div>
                         </div>
-                        </br>
+                        
                     </div>
-                    ${deleteBtn}
                 </div>
             `);
         });

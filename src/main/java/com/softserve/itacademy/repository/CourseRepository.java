@@ -1,14 +1,12 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
 

@@ -6,9 +6,15 @@
     <meta name="description" content="Study and learn with SoftClass">
 
     <!-- Bootstrap, jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 
     <!-- Custom styles and scripts -->
     <link rel="stylesheet" href="css/profile.css">
@@ -16,12 +22,14 @@
     <script>
         $(function () {
             $("#navbar").load("navbar.html");
+            $('#change-photo-modal').load('change-photo-modal.html');
         });
     </script>
 </head>
 
 <body>
 <div id="navbar"></div>
+<div id="change-photo-modal" class="modal fade" role="dialog"></div>
 <div class="container">
     <div class="col">
         <div class="row">
@@ -34,7 +42,8 @@
                                     <div class="mx-auto" style="width: 140px;">
                                         <div class="d-flex justify-content-center align-items-center rounded"
                                              style="height: 140px; background-color: rgb(233, 236, 239);">
-                                            <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                                            <span id="avatar-placeholder" style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
+                                            <img id="user-avatar" alt="140x140" width="140" height="140">
                                         </div>
                                     </div>
                                 </div>
@@ -44,7 +53,9 @@
                                         <div>Email: <span id="user-email"></span></div>
 
                                         <div class="mt-2">
-                                            <button class="button success outline rounded">Change Photo</button>
+                                            <button class="button success outline rounded" type="button" data-toggle="modal"
+                                                    data-target="#change-photo-modal">Change Photo
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -63,8 +74,11 @@
                                                         <div class="form-group">
                                                             <label>Username</label>
                                                             <input class="form-control" type="text" id="update-name"
-                                                                   placeholder="johnny.s" onchange="checkEmailNameCompatible()">
-                                                            <small id="sameNameError" class="form-text text-muted error-label" style="display: none">
+                                                                   placeholder="johnny.s"
+                                                                   onchange="checkEmailNameCompatible()">
+                                                            <small id="sameNameError"
+                                                                   class="form-text text-muted error-label"
+                                                                   style="display: none">
                                                                 It is your current name</small>
                                                         </div>
                                                     </div>
@@ -74,8 +88,11 @@
                                                         <div class="form-group">
                                                             <label>Email</label>
                                                             <input class="form-control" type="text" id="update-email"
-                                                                   placeholder="user@example.com" onchange="checkEmailNameCompatible()">
-                                                            <small id="sameEmailError" class="form-text text-muted error-label" style="display: none">
+                                                                   placeholder="user@example.com"
+                                                                   onchange="checkEmailNameCompatible()">
+                                                            <small id="sameEmailError"
+                                                                   class="form-text text-muted error-label"
+                                                                   style="display: none">
                                                                 It is your current email</small>
                                                         </div>
                                                     </div>
@@ -86,7 +103,8 @@
                                         <div class="row">
                                             <div class="col d-flex justify-content-end">
 
-                                                <button id="save-chg-btn" class="button success outline rounded" type="submit" disabled
+                                                <button id="save-chg-btn" class="button success outline rounded"
+                                                        type="submit" disabled
                                                         onclick=saveChanges()>Save changes
                                                 </button>
                                             </div>
@@ -102,7 +120,9 @@
                                                             <label>Current Password</label>
                                                             <input class="form-control" type="password" id="old-pass"
                                                                    placeholder="••••••">
-                                                            <small id="currentPasswordError" class="form-text text-muted error-label" style="display: none">
+                                                            <small id="currentPasswordError"
+                                                                   class="form-text text-muted error-label"
+                                                                   style="display: none">
                                                                 Password is incorrect</small>
                                                         </div>
                                                     </div>
@@ -112,9 +132,12 @@
                                                         <div class="form-group">
                                                             <label>New Password</label>
 
-                                                            <input class="form-control" type="password" id="new-pass1" onchange="checkPasswordsCompatible()"
+                                                            <input class="form-control" type="password" id="new-pass1"
+                                                                   onchange="checkPasswordsCompatible()"
                                                                    placeholder="••••••">
-                                                            <small id="passwordHelp" class="form-text text-muted error-label" style="display: none">
+                                                            <small id="passwordHelp"
+                                                                   class="form-text text-muted error-label"
+                                                                   style="display: none">
                                                                 Passwords do not match</small>
                                                         </div>
                                                     </div>
@@ -125,7 +148,8 @@
                                                             <label>Confirm <span
                                                                     class="d-none d-xl-inline">Password</span></label>
 
-                                                            <input class="form-control" type="password" id="new-pass2" onchange="checkPasswordsCompatible()"
+                                                            <input class="form-control" type="password" id="new-pass2"
+                                                                   onchange="checkPasswordsCompatible()"
                                                                    placeholder="••••••"></div>
                                                     </div>
                                                 </div>
@@ -133,7 +157,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col d-flex justify-content-end">
-                                                <button id="save-pass-btn" class="button success outline rounded" type="submit" disabled
+                                                <button id="save-pass-btn" class="button success outline rounded"
+                                                        type="submit" disabled
                                                         onclick=savePasswordChanges()>Save changes
                                                 </button>
                                             </div>
@@ -150,6 +175,7 @@
         </div>
 
     </div>
+
 </div>
 </body>
 </html>

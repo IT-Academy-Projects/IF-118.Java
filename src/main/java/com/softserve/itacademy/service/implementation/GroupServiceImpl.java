@@ -7,7 +7,6 @@ import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.projection.GroupTinyProjection;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.GroupRequest;
@@ -110,7 +109,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse findById(Integer id) {
-        return groupConverter.of(getById(id));
+        Group group = getById(id);
+        if (group.getDisabled()) {
+            throw new DisabledObjectException("Group is disabled");
+        }
+        return groupConverter.of(group);
     }
 
     private Group getById(Integer id) {

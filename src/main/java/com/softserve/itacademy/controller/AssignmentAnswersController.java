@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,5 +87,12 @@ public class AssignmentAnswersController {
     @GetMapping("/{id}")
     public ResponseEntity<AssignmentAnswersResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(assignmentAnswersService.findById(id), HttpStatus.OK);
+    }
+
+    @UserRolePermission
+    @PatchMapping("/{id}/submit")
+    public ResponseEntity<Void> submit(@PathVariable Integer id) {
+        assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

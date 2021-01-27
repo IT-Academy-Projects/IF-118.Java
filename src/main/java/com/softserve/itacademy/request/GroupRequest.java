@@ -1,6 +1,5 @@
 package com.softserve.itacademy.request;
 
-import com.softserve.itacademy.response.CourseResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
