@@ -2,7 +2,6 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.ChatMessage;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.projection.ChatMessageProjection;
 import com.softserve.itacademy.repository.ChatMessageRepository;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
@@ -20,10 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

@@ -2,7 +2,6 @@ package com.softserve.itacademy.controller;
 
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.projection.ChatMessageProjection;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
 import com.softserve.itacademy.service.ChatMessageService;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/chat")

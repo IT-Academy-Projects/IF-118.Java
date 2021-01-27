@@ -1,11 +1,9 @@
 package com.softserve.itacademy.service;
 
 
-
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
-import org.springframework.transaction.annotation.Transactional;
 import com.softserve.itacademy.response.UserResponse;
 import org.springframework.web.multipart.MultipartFile;
 

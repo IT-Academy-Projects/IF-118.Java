@@ -1,7 +1,6 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.ChatMessage;
-import com.softserve.itacademy.projection.ChatMessageProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

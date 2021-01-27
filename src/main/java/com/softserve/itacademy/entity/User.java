@@ -1,8 +1,6 @@
 package com.softserve.itacademy.entity;
 
 import com.softserve.itacademy.entity.security.Role;
-import com.softserve.itacademy.projection.UserFullTinyProjection;
-import com.softserve.itacademy.projection.UserTinyProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +9,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Controller;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

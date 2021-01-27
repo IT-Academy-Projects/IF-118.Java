@@ -2,8 +2,6 @@ package com.softserve.itacademy.tools.security;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
-import com.softserve.itacademy.service.RoleService;
-import com.softserve.itacademy.tools.security.WithMockOwnUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

@@ -7,7 +7,6 @@ import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.projection.GroupTinyProjection;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.request.GroupRequest;

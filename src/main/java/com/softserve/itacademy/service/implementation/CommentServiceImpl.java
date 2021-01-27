@@ -12,12 +12,10 @@ import com.softserve.itacademy.response.CommentResponse;
 import com.softserve.itacademy.service.CommentService;
 import com.softserve.itacademy.service.converters.CommentConverter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
