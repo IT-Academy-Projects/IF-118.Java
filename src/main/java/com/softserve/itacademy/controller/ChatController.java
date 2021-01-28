@@ -1,6 +1,7 @@
 package com.softserve.itacademy.controller;
 
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
@@ -21,10 +22,10 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/chat")
+@RequestMapping(API_V1 + "chat")
 public class ChatController {
 
-    public final static int CHAT_PAGE_SIZE = 50;
+    public static final int CHAT_PAGE_SIZE = 50;
 
     private final ChatMessageService chatMessageService;
 

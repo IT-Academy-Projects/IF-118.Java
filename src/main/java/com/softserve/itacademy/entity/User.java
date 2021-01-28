@@ -3,7 +3,6 @@ package com.softserve.itacademy.entity;
 import com.softserve.itacademy.entity.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -107,11 +106,6 @@ public class User extends BasicEntity {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Comment> comments;
-
-    public void addGroup(Group group) {
-        group.getUsers().add(this);
-        this.groups.add(group);
-    }
 
     public void addRole(Role role) {
         this.roles.add(role);

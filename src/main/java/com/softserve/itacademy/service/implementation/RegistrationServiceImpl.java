@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -86,7 +87,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with " + userId + " id was not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
 
         if (!user.getIsPickedRole()) {
 

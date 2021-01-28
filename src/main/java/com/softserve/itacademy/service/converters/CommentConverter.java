@@ -17,8 +17,8 @@ public class CommentConverter {
 
     public CommentResponse of(Comment comment) {
         CommentResponse commentResponse = mapper.map(comment, CommentResponse.class);
-        commentResponse.setCreated_at(comment.getCreatedAt().toString());
-        commentResponse.setUpdated_at(comment.getUpdatedAt().toString());
+        commentResponse.setCreatedAt(comment.getCreatedAt().toString());
+        commentResponse.setUpdatedAt(comment.getUpdatedAt().toString());
         commentResponse.setOwnerId(comment.getOwner().getId());
         commentResponse.setMaterialId(comment.getMaterial().getId());
         return commentResponse;
