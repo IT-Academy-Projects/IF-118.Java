@@ -7,7 +7,7 @@ import com.softserve.itacademy.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +33,8 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             return;
         }
 
-        DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-        Map<String, Object> attributes = oidcUser.getAttributes();
+        DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("user was not found"));
