@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SoftClass</title>
+    <meta name="description" content="Study and learn with SoftClass">
+
+    <!-- Bootstrap, jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles and scripts -->
+    <script src="js/create-group.js"></script>
+    <script>
+        $(function(){
+            $("#header").load("navbar.html");
+        });
+    </script>
+</head>
+<body>
+<div class="container" style="width: 50%">
+    <form>
+        <div class="form-group">
+            <label for="name">Group Name:</label>
+            <input type="text" class="form-control" id="name" placeholder="Name">
+        </div>
+        <button type="button" class="my-btn btn btn-outline-dark show" onclick="createGroup();">Create</button>
+    </form>
+</div>
+</body>
+</html>

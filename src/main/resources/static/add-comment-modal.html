@@ -1,0 +1,25 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Create commentary</h5>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="commentary-message">Type message here...</label>
+                    <textarea class="form-control" id="commentary-message" rows="3"></textarea>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="is-private">
+                    <label class="form-check-label" for="is-private">Make comment private (for teacher only)</label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="write-comment-button" type="button" class="btn btn-outline-success show" onclick="">
+                Send
+            </button>
+            <button id="close-comment-modal" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

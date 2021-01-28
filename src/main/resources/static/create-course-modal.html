@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Create course</h5>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" class="form-control" id="courseName" placeholder="Type name of course...">
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Course description:</label>
+                    <textarea class="form-control" id="courseDescription" placeholder="Type description for course..." rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="course-avatar">Course preview:</label>
+                    <input type="file" accept="image/jpeg, image/png" class="form-control" id="course-avatar" placeholder="Select jpg or png 280x280">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success show" onclick="createCourse();">
+                Create
+            </button>
+            <button id="close-course-modal" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

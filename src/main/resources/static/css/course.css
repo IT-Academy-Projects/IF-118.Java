@@ -1,0 +1,68 @@
+.wrapper {
+    font-size: 18px;
+}
+
+.content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px;
+}
+
+.course-description {
+    display: flex;
+}
+.edit-course-description-block {
+    margin-left: 10px;
+}
+
+.course-title {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.info {
+    width: 1000px;
+    margin-bottom: 24px;
+}
+
+#teacher-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.material-title {
+    display: flex;
+}
+
+.materials {
+    display: flex;
+    flex-direction: column;
+    width: 1000px;
+}
+
+.material-info {
+    display: flex;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.material {
+    margin-bottom: 24px;
+    display: flex;
+}
+
+.material-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.material-input {
+    margin-top: 5px;
+}
+
+.delete-material {
+    margin-left: 50px;
+}
+

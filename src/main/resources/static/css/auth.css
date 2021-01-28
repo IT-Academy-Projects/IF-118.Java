@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
+    height: 100%;
+    font-family: 'Numans', sans-serif;
+}
+
+.container {
+    height: 80%;
+    align-content: center;
+}
+
+.card {
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 450px;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.social {
+    position: absolute;
+    right: 20px;
+    top: -45px;
+}
+
+.social span {
+    font-size: 60px;
+    margin-left: 10px;
+    color: #FFC312;
+}
+
+.social span:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.social span a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-header h3 {
+    height: fit-content;
+    color: white;
+}
+
+.input-group-prepend span {
+    width: 40px;
+    background-color: #FFC312;
+    color: black;
+    border: 0 !important;
+}
+
+input:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 0 !important;
+}
+
+#error-label {
+    color: #FFC312;
+}
+
+.remember {
+    color: white;
+}
+
+.remember input {
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.login_btn {
+    color: black;
+    background-color: #FFC312;
+    width: 100px;
+}
+
+.login_btn:hover {
+    color: black;
+    background-color: white;
+}
+
+.links {
+    color: white;
+}
+
+.links a {
+    margin-left: 4px;
+}

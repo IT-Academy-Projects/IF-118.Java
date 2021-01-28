@@ -1,0 +1,13 @@
+.navigation-item {
+    padding: 15px 20px;
+    margin: 0 5px;
+    border-bottom: 5px solid transparent;
+    font-size: 20px;
+}
+.navigation-item:hover {
+    border-color: orange;
+    text-decoration: none;
+}
+.active {
+    border-color: orange;
+}

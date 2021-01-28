@@ -1,0 +1,37 @@
+version: "3"
+services:
+  softclass-mysql-server:
+    image: mysql
+    networks:
+      - softclass-app-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=postgres
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_HOST=%
+
+  softclass-application:
+    image: softclass-application
+    ports:
+      - "8080:8080"
+    networks:
+      - softclass-app-mysql
+    depends_on:
+      - softclass-mysql-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://softclass-mysql-server:3306/db
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_PROTOCOL=${MAIL_PROTOCOL}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - S3_ACCESSKEY=${S3_ACCESSKEY}
+      - S3_SECRETKEY=${S3_SECRETKEY}
+      - OAUTH2_GOOGLE_ID=${OAUTH2_GOOGLE_ID}
+      - OAUTH2_GOOGLE_SECRET=${OAUTH2_GOOGLE_SECRET}
+      - APP_ADDRESS=${APP_ADDRESS}
+    entrypoint: ["./wait-for-it.sh", "softclass-mysql-server:3306", "-t", "20", "--", "java","-jar","app.jar"]
+
+networks:
+  softclass-app-mysql:
