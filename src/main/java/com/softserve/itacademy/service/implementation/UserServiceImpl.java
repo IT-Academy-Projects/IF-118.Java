@@ -1,6 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Image;
+import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
@@ -41,12 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullTinyProjection findById(Integer id) {
-        return userRepository.findProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
+        return userRepository.findProjectedById(id).orElseThrow(() -> new NotFoundException(USER_EMAIL_NOT_FOUND));
     }
 
     @Override
     public IdNameTupleProjection findUserNameById(Integer id) {
-        return userRepository.findUserProjectedById(id).orElseThrow(() -> new NotFoundException("User with such email was not found"));
+        return userRepository.findUserProjectedById(id).orElseThrow(() -> new NotFoundException(USER_EMAIL_NOT_FOUND));
     }
 
     @Override
@@ -58,20 +60,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateDisabled(Integer id, Boolean disabled) {
         if (userRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException("User with such id was not found");
+            throw new NotFoundException(USER_ID_NOT_FOUND);
         }
     }
 
-
     @Override
     public User getById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User with such id was not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
     }
 
     @Override
-    public void updateProfileInfo(Integer id, String name, String email) {
-        if (userRepository.updateProfileInfo(id, name, email) == 0)
-            throw new NotFoundException("User with such id was not found");
+    public int updateName(String name, Integer id) {
+        return userRepository.updateName(name, id);
+    }
+
+    @Override
+    public int updateEmail(String email, Integer id) {
+        return userRepository.updateEmail(email, id);
     }
 
     @Override

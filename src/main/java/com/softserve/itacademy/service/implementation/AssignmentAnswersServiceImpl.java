@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.AssignmentAnswers;
 import com.softserve.itacademy.exception.DisabledObjectException;
@@ -81,20 +82,20 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public void grade(Integer id, Integer grade) {
         if(assignmentAnswersRepository.updateGrade(id, grade) == 0){
-            throw new NotFoundException("Assignment answer not found");
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         }
     }
 
     @Override
     public AssignmentAnswers getById(Integer id) {
         return assignmentAnswersRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Assignment answer not found"));
+                .orElseThrow(() -> new NotFoundException(ANSWER_ID_NOT_FOUND));
     }
 
     @Override
     public void update(MultipartFile file, Integer id) {
         String oldFileRef = assignmentAnswersRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Assignment answer " + id + " not found"))
+                .orElseThrow(() -> new NotFoundException(ANSWER_ID_NOT_FOUND))
                 .getFileReference();
         amazonS3ClientService.delete(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, oldFileRef);
         String fileRef = amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file);
@@ -104,7 +105,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public void submit(Integer id) {
         if (assignmentAnswersRepository.submit(id) == 0) {
-            throw new NotFoundException("Assignment answer " + id + " not found");
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         }
     }
 }

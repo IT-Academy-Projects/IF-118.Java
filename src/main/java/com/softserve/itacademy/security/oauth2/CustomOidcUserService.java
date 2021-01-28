@@ -2,7 +2,6 @@ package com.softserve.itacademy.security.oauth2;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.UserRepository;
-import com.softserve.itacademy.service.RoleService;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,11 +16,8 @@ public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
 
-    private final RoleService roleService;
-
-    public CustomOidcUserService(UserRepository userRepository, RoleService roleService) {
+    public CustomOidcUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
     }
 
     @Transactional

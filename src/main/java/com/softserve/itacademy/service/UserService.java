@@ -1,11 +1,9 @@
 package com.softserve.itacademy.service;
 
 
-
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
-import org.springframework.transaction.annotation.Transactional;
 import com.softserve.itacademy.response.UserResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +22,9 @@ public interface UserService {
 
     User getById(Integer id);
 
-    void updateProfileInfo(Integer id, String name, String email);
+    int updateName(String name, Integer id);
+
+    int updateEmail(String email, Integer id);
 
     List<UserResponse> findByGroupId(Integer id);
 

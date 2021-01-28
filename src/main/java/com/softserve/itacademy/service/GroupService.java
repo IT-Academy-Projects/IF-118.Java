@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import org.springframework.web.multipart.MultipartFile;

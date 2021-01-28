@@ -2,6 +2,7 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/groups")
+@RequestMapping(API_V1 + "groups")
 public class GroupController {
 
     private final GroupService groupService;

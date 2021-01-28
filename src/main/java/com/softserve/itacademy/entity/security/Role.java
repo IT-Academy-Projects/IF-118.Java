@@ -1,7 +1,6 @@
 package com.softserve.itacademy.entity.security;
 
 import com.softserve.itacademy.entity.BasicEntity;
-import com.softserve.itacademy.projection.RoleProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -29,9 +28,6 @@ import java.util.Set;
 public class Role extends BasicEntity {
 
     private String name;
-
-//    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-//    private Set<User> users = new HashSet<>();
 
     @Singular
     @ManyToMany(fetch = FetchType.LAZY)

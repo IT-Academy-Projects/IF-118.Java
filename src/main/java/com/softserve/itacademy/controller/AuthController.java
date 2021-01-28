@@ -1,7 +1,7 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.exception.dto.BasicExceptionResponse;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
@@ -11,9 +11,7 @@ import com.softserve.itacademy.service.RegistrationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(API_V1)
 public class AuthController {
 
     private final RegistrationService registrationService;

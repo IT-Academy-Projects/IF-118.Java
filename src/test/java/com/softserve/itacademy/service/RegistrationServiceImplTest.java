@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class RegistrationServiceImplTest {
+class RegistrationServiceImplTest {
 
     @InjectMocks
     private RegistrationServiceImpl registrationService;
@@ -120,8 +120,9 @@ public class RegistrationServiceImplTest {
     @Test
     void testActivationInvalidCode() {
 
-        when(userRepository.findByActivationCode(user.getActivationCode())).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> registrationService.activateUser(user.getActivationCode()));
+        String code = user.getActivationCode();
+        when(userRepository.findByActivationCode(code)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> registrationService.activateUser(code));
     }
 
     @Test

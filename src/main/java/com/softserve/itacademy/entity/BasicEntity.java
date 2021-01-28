@@ -1,6 +1,5 @@
 package com.softserve.itacademy.entity;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

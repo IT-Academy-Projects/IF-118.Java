@@ -1,14 +1,13 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CommentRequest;
 import com.softserve.itacademy.response.CommentResponse;
 import com.softserve.itacademy.security.perms.CommentReadPermission;
-import com.softserve.itacademy.security.perms.CommentReadPrivatePermission;
 import com.softserve.itacademy.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comments")
+@RequestMapping(API_V1 + "comments")
 public class CommentController {
 
     private final CommentService commentService;

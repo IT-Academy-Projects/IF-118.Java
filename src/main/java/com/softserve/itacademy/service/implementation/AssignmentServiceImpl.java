@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -68,7 +69,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment getById(Integer id) {
         return assignmentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Answer to assignment " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException(ANSWER_ID_NOT_FOUND));
     }
 
 }

@@ -2,13 +2,12 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DescriptionRequest;
 import com.softserve.itacademy.request.DisableRequest;
-import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.CourseResponse;
-import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
@@ -18,7 +17,6 @@ import com.softserve.itacademy.service.CourseService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,14 +32,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/v1/courses")
+@RequestMapping(API_V1 + "courses")
 public class CourseController {
 
     private final CourseService courseService;

@@ -1,9 +1,19 @@
 package com.softserve.itacademy.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -13,12 +23,8 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "invitation")
-public class Invitation{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Integer id;
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+public class Invitation extends BasicEntity {
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)

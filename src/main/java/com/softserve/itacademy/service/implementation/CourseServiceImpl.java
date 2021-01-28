@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.Material;
@@ -87,22 +88,20 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (courseRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException("Course with such id was not found");
+            throw new NotFoundException(COURSE_ID_NOT_FOUND);
         }
     }
 
     @Override
     public void updateDescription(Integer id, String description) {
         if (courseRepository.updateDescription(id, description) == 0) {
-            throw new NotFoundException("Course was not found");
+            throw new NotFoundException(COURSE_ID_NOT_FOUND);
         }
     }
 
     @Override
     public byte[] getAvatarById(Integer id) {
-        if (!courseRepository.existsById(id)) {
-            throw new NotFoundException("Course doesn't exist");
-        }
+        if (!courseRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
         byte[] avatar = courseRepository.getAvatarById(id);
         if (avatar == null) {
             throw new NotFoundException("Avatar doesn't exist for this course");
@@ -125,7 +124,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     public Course getById(Integer id) {
-        return courseRepository.findById(id).orElseThrow(() -> new NotFoundException("Course with such id was not found"));
+        return courseRepository.findById(id).orElseThrow(() -> new NotFoundException(COURSE_ID_NOT_FOUND));
     }
 
 }

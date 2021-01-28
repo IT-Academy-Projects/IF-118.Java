@@ -3,6 +3,7 @@ package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +20,9 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Builder
 @Entity
 public class Material extends BasicEntity {

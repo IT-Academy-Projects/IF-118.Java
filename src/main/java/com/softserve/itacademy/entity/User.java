@@ -3,6 +3,7 @@ package com.softserve.itacademy.entity;
 import com.softserve.itacademy.entity.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,20 +28,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Getter
 @Setter
-@Builder
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Accessors(chain = true)
 @Table(name = "users")
 public class User extends BasicEntity {
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private String name;
 
     @Column(nullable = false, unique = true)
+    @EqualsAndHashCode.Include
     private String email;
 
     @Column
@@ -81,15 +85,11 @@ public class User extends BasicEntity {
         Set<GrantedAuthority> authorities = this.roles.stream()
                 .map(Role::getAuthorities)
                 .flatMap(Set::stream)
-                .map(authority -> {
-                    return new SimpleGrantedAuthority(authority.getName());
-                })
+                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toSet());
 
         authorities.addAll(this.roles.stream()
-                .map(role -> {
-                    return new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase());
-                })
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
                 .collect(Collectors.toSet()));
 
         return authorities;
@@ -108,11 +108,6 @@ public class User extends BasicEntity {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Comment> comments;
-
-    public void addGroup(Group group) {
-        group.getUsers().add(this);
-        this.groups.add(group);
-    }
 
     public void addRole(Role role) {
         this.roles.add(role);

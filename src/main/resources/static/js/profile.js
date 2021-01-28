@@ -8,51 +8,69 @@ function init() {
     })
 }
 
-function saveChanges() {
-    const obj = {
-        name: '', email: ''
-    }
-    let name = $('#update-name').val();
-    let email = $('#update-email').val();
-    if (name !== "") {
-        obj.name = name;
-    } else {
-        obj.name = user.name;
-    }
-    if (email !== "") {
-        obj.email = email;
-    } else {
-        obj.email = user.email;
+function saveName() {
+    const userNameUpdateRequest = {
+        name: $('#update-name').val()
     }
 
     $.ajax({
-        url: `/api/v1/users/${user.id}/profile?` + $.param(obj),
-        type: 'PATCH'
+        url: `/api/v1/users/${user.id}/profile/name`,
+        type: 'PATCH',
+        data: JSON.stringify(userNameUpdateRequest),
+        contentType: "application/json; charset=utf-8",
+    })
+}
+
+function saveEmail() {
+    const userEmailUpdateRequest = {
+        email: $('#update-email').val()
+    }
+
+    $.ajax({
+        url: `/api/v1/users/${user.id}/profile/email`,
+        type: 'PATCH',
+        data: JSON.stringify(userEmailUpdateRequest),
+        contentType: "application/json; charset=utf-8",
     })
 
 }
 
-function checkEmailNameCompatible() {
-
+function checkNameCompatible() {
     let name = $('#update-name').val();
-    let email = $('#update-email').val();
-
     let isNameSame = name === user.name;
-    let isEmailSame = email === user.email;
-
     let isNameEmpty = name === '';
-    let isEmailEmpty = email === '';
 
-    if (isEmailEmpty || isNameEmpty) {
-        $('#save-chg-btn').attr('disabled', true);
+    if (isNameEmpty) {
+        $('#save-name-btn').attr('disabled', true);
     }
 
     if (isNameSame) {
-        $('#save-chg-btn').attr('disabled', true);
+        $('#save-name-btn').attr('disabled', true);
         $('#sameNameError').show()
     } else {
         $('#sameNameError').hide()
     }
+
+    if (!isNameSame && !isNameEmpty) {
+        $('#save-name-btn').removeAttr('disabled');
+    }
+}
+
+function checkEmailCompatible() {
+
+
+    let email = $('#update-email').val();
+
+
+    let isEmailSame = email === user.email;
+
+
+    let isEmailEmpty = email === '';
+
+    if (isEmailEmpty) {
+        $('#save-chg-btn').attr('disabled', true);
+    }
+
 
     if (isEmailSame) {
         $('#save-chg-btn').attr('disabled', true);
@@ -61,7 +79,7 @@ function checkEmailNameCompatible() {
         $('#sameEmailError').hide()
     }
 
-    if ((!isNameSame && !isEmailSame) && (!isEmailEmpty || !isNameEmpty)) {
+    if (!isEmailSame && !isEmailEmpty || !isNameEmpty) {
         $('#save-chg-btn').removeAttr('disabled');
     }
 
@@ -74,16 +92,17 @@ function savePasswordChanges() {
         newPassword: $('#new-pass1').val(),
     }
 
-        $.ajax({
-            type: "PUT",
-            url: `/api/v1/users/${user.id}/updatePass`,
-            data: JSON.stringify(userPasswordRequest),
-            contentType: "application/json; charset=utf-8",
-        }).then(
-            res => {},
-            err => {
-                $('#currentPasswordError').show();
-            })
+    $.ajax({
+        type: "PUT",
+        url: `/api/v1/users/${user.id}/updatePass`,
+        data: JSON.stringify(userPasswordRequest),
+        contentType: "application/json; charset=utf-8",
+    }).then(
+        res => {
+        },
+        err => {
+            $('#currentPasswordError').show();
+        })
 }
 
 

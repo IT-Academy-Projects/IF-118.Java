@@ -2,11 +2,11 @@ package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -17,6 +17,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Builder
 @Table(name = "assignment_answers")
 @Entity

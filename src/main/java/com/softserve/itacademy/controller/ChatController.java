@@ -1,8 +1,8 @@
 package com.softserve.itacademy.controller;
 
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.projection.ChatMessageProjection;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
 import com.softserve.itacademy.service.ChatMessageService;
@@ -21,13 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping("/api/v1/chat")
+@RequestMapping(API_V1 + "chat")
 public class ChatController {
 
-    private final int PAGE_SIZE = 50;
+    public static final int CHAT_PAGE_SIZE = 50;
 
     private final ChatMessageService chatMessageService;
 
@@ -51,6 +49,6 @@ public class ChatController {
             @PathVariable int chatId,
             @PathVariable int pageNo) {
 
-        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, PAGE_SIZE, chatId), HttpStatus.OK);
+        return new ResponseEntity<>(chatMessageService.findPaginatedByChatRoomId(pageNo, CHAT_PAGE_SIZE, chatId), HttpStatus.OK);
     }
 }

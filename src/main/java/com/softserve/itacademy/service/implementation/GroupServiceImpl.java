@@ -1,5 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
@@ -89,7 +91,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public byte[] getAvatarById(Integer id) {
-        if (!groupRepository.existsById(id)) { throw new NotFoundException("Course doesn't exist"); }
+        if (!groupRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
         byte[] avatar = groupRepository.getAvatarById(id);
         if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
         return avatar;
@@ -98,14 +100,14 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void updateGroup(Integer groupId, GroupRequest groupRequest) {
         Group group = groupRepository.findByIdAndOwnerId(groupId, groupRequest.getOwnerId())
-                .orElseThrow(() -> new NotFoundException("Group with such id was not found"));
+                .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
         group.setName(groupRequest.getName());
     }
 
     @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (groupRepository.updateDisabled(id, disabled) == 0) {
-            throw new NotFoundException("Group with such id is not found");
+            throw new NotFoundException(GROUP_ID_NOT_FOUND);
         }
     }
 
@@ -120,6 +122,6 @@ public class GroupServiceImpl implements GroupService {
 
     private Group getById(Integer id) {
         return groupRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Group with such id was not found"));
+                .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
     }
 }

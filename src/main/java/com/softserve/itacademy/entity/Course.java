@@ -2,10 +2,10 @@ package com.softserve.itacademy.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.CascadeType;
@@ -19,15 +19,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Builder
 @Table(name = "courses")

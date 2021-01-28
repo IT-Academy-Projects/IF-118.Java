@@ -18,6 +18,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Objects;
+
 @Slf4j
 @ControllerAdvice
 public class GenericExceptionHandler {
@@ -75,7 +77,7 @@ public class GenericExceptionHandler {
 
         ObjectError error = exception.getAllErrors().get(0);
 
-        String message = exception.getFieldError().getField() + " " + error.getDefaultMessage();
+        String message = Objects.requireNonNull(exception.getFieldError()).getField() + " " + error.getDefaultMessage();
 
         BasicExceptionResponse dto = BasicExceptionResponse.builder()
                 .message(message)

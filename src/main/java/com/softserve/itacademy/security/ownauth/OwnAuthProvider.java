@@ -2,11 +2,9 @@ package com.softserve.itacademy.security.ownauth;
 
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

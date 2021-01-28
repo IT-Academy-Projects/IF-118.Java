@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Builder
@@ -15,8 +13,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class CommentResponse {
     private Integer id;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
     private String message;
     private Integer ownerId;
     private Integer materialId;
