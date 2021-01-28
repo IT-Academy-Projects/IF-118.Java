@@ -6,6 +6,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
+import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.ImageService;
@@ -27,13 +28,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final InvitationService invitationService;
     private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, ImageService imageService) {
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, ImageService imageService, ImageRepository imageRepository) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.passwordEncoder = passwordEncoder;
         this.invitationService = invitationService;
         this.imageService = imageService;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -101,7 +104,8 @@ public class UserServiceImpl implements UserService {
         if (avatar != null) {
             avatar.setFile(compressedFile);
         } else {
-            user.setAvatar(imageService.save(compressedFile));
+            Image image = new Image(compressedFile);
+            user.setAvatar(imageRepository.save(image));
         }
         userRepository.save(user);
     }

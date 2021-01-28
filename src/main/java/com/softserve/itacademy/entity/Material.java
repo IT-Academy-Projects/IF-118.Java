@@ -30,7 +30,6 @@ public class Material extends BasicEntity {
     @Column(name = "owner_id")
     private Integer ownerId;
 
-    @Column(name = "file_reference")
     private String fileReference;
     private String description;
 

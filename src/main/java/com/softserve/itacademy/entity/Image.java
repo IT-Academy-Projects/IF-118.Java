@@ -14,6 +14,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @Builder
+@Table(name = "images")
 @Entity
 public class Image extends BasicEntity {
 

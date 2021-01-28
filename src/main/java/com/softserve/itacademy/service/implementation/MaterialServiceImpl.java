@@ -68,7 +68,7 @@ public class MaterialServiceImpl implements MaterialService {
         Material material = getById(id);
         String extension = FilenameUtils.getExtension(material.getFileReference());
         return DownloadFileResponse.builder()
-                .file(amazonS3ClientService.download(BUCKET_NAME, MATERIALS_FOLDER, material.getFileReference()))
+                .file(amazonS3ClientService.download(BUCKET_NAME, material.getFileReference()))
                 .fileName(material.getName() + "." + extension)
                 .build();
     }

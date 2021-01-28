@@ -33,11 +33,6 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.findFileById(id);
     }
 
-    @Override
-    public Image save(byte[] file) {
-        return imageRepository.save(new Image(file));
-    }
-
     public byte[] compress(MultipartFile file) {
         try {
 

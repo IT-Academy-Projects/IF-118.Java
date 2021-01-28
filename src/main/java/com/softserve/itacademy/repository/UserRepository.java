@@ -58,6 +58,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteInvitation(Integer id);
 
     byte[] getAvatarById(Integer id);
+
+    @Query(value = "SELECT `name` FROM users WHERE id = :id ", nativeQuery = true)
+    String findNameById(Integer id);
 }
 
 

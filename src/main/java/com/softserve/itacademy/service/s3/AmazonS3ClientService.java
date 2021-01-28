@@ -48,17 +48,17 @@ public class AmazonS3ClientService {
 
     public String upload(String bucketName, String folder, MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String fileReference = UUID.randomUUID().toString().toLowerCase() + "." + extension;
+        String fileReference = folder + "/" + UUID.randomUUID().toString().toLowerCase() + "." + extension;
         try {
-            s3client.putObject(bucketName, folder + "/" + fileReference, file.getInputStream(), new ObjectMetadata());
+            s3client.putObject(bucketName, fileReference, file.getInputStream(), new ObjectMetadata());
         } catch (IOException e) {
             throw new FileProcessingException("Cannot write file");
         }
         return fileReference;
     }
 
-    public byte[] download(String bucketName, String folder, String fileReference) {
-        S3Object s3object = s3client.getObject(bucketName, folder + "/" + fileReference);
+    public byte[] download(String bucketName, String fileReference) {
+        S3Object s3object = s3client.getObject(bucketName, fileReference);
         try {
             return s3object.getObjectContent().readAllBytes();
         } catch (IOException e) {

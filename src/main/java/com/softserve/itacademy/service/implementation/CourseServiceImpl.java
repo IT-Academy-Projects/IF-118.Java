@@ -1,10 +1,12 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
@@ -30,13 +32,15 @@ public class CourseServiceImpl implements CourseService {
     private final CourseConverter courseConverter;
     private final MaterialRepository materialRepository;
     private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository, ImageService imageService) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository, ImageService imageService, ImageRepository imageRepository) {
         this.courseRepository = courseRepository;
         this.userService = userService;
         this.courseConverter = courseConverter;
         this.materialRepository = materialRepository;
         this.imageService = imageService;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -53,7 +57,8 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseConverter.of(courseRequest, materials);
 
         if (file != null) {
-            course.setAvatar(imageService.save(imageService.compress(file)));
+            Image image = new Image(imageService.compress(file));
+            course.setAvatar(imageRepository.save(image));
         }
 
         Course savedCourse = courseRepository.save(course);

@@ -3,11 +3,13 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
@@ -32,14 +34,16 @@ public class GroupServiceImpl implements GroupService {
     private final ChatRoomService chatRoomService;
     private final CourseRepository courseRepository;
     private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
         this.chatRoomService = chatRoomService;
         this.courseRepository = courseRepository;
         this.imageService = imageService;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -59,7 +63,8 @@ public class GroupServiceImpl implements GroupService {
             courses.forEach(course -> course.getGroups().add(newGroup));
         }
         if (file != null) {
-            newGroup.setAvatar(imageService.save(imageService.compress(file)));
+            Image image = new Image(imageService.compress(file));
+            newGroup.setAvatar(imageRepository.save(image));
         }
 
         ChatRoom chat = chatRoomService.create();
