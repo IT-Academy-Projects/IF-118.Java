@@ -60,17 +60,21 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-
     @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
     }
 
     @Override
-    public void updateProfileInfo(Integer id, String name, String email) {
-        if (userRepository.updateProfileInfo(id, name, email) == 0)
-            throw new NotFoundException(USER_ID_NOT_FOUND);
+
+    public int updateName(String name, Integer id) {
+        return userRepository.updateName(name, id);
+    }
+
+    @Override
+    public int updateEmail(String email, Integer id) {
+        return userRepository.updateEmail(email, id);
+
     }
 
     @Override

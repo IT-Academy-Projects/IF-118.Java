@@ -6,12 +6,15 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.request.DisableRequest;
+import com.softserve.itacademy.request.UserEmailUpdateRequest;
+import com.softserve.itacademy.request.UserNameUpdateRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
 import com.softserve.itacademy.response.IsAuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +23,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(API_V1 + "users")
@@ -85,10 +85,17 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
-    @PatchMapping("/{id}/profile")
-    public ResponseEntity<Void> updateProfileInfo(@PathVariable Integer id, @RequestParam String name,
-                                                  @RequestParam String email) {
-        userService.updateProfileInfo(id, name, email);
+    @PatchMapping("/{id}/profile/email")
+    public ResponseEntity<Void> updateUserEmail(@AuthenticationPrincipal User user,
+                                                  @RequestBody UserEmailUpdateRequest request) {
+        userService.updateEmail(request.getEmail(), user.getId());
+        return new ResponseEntity<>(OK);
+    }
+
+    @PatchMapping("/{id}/profile/name")
+    public ResponseEntity<Void> updateUserName(@AuthenticationPrincipal User user,
+                                                  @RequestBody UserNameUpdateRequest request) {
+        userService.updateName(request.getName(), user.getId());
         return new ResponseEntity<>(OK);
     }
 
