@@ -1,8 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Image;
-import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
@@ -21,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 
 @Service
 public class UserServiceImpl implements UserService {

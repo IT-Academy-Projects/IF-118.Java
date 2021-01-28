@@ -2,14 +2,11 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.request.AssignmentAnswersRequest;
-import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
-import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import com.softserve.itacademy.service.AssignmentService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+
+import static com.softserve.itacademy.config.Constance.API_V1;
 
 @RestController
 @RequestMapping(API_V1 + "assignments")

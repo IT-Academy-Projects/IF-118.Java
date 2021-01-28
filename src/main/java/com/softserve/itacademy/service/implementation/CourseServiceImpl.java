@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.Material;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
 
 @Service
 @Slf4j

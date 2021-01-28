@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.AssignmentAnswers;
 import com.softserve.itacademy.exception.DisabledObjectException;
@@ -19,6 +18,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 

@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.ImageRepository;

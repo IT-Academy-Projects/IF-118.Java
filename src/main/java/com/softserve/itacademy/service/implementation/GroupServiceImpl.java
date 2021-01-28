@@ -1,7 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
@@ -26,6 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 
 @Service
 public class GroupServiceImpl implements GroupService {
