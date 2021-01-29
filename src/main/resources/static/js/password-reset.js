@@ -3,7 +3,7 @@ function handlePasswordReset() {
 
     if (email === '') {
         $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showError("Enter email");
+        showInfo("Enter email");
     } else {
         passwordResetRequest({
             "email": email,
@@ -20,18 +20,18 @@ function passwordResetRequest(data) {
         type: 'POST',
         url: "/api/v1/password-reset",
         data: JSON.stringify(data),
-        dataType: 'json',
 
         success: function () {
-            showError("Message have been send")
+            showInfo("Reset link have been send to your email");
+            $('#reset-btn').prop('disabled', true);
         },
 
         error: function (request) {
-            showError(request.responseJSON.message);
+            showInfo(request.responseJSON.message);
         },
     });
 }
 
-function showError(text) {
-    $("#error-label").text(text);
+function showInfo(text) {
+    $("#info-label").text(text);
 }

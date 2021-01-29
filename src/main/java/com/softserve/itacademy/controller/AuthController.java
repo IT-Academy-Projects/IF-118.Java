@@ -8,7 +8,8 @@ import com.softserve.itacademy.security.dto.ResetPasswordRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.AuthService;
+import com.softserve.itacademy.service.PasswordResetService;
+import com.softserve.itacademy.service.RegistrationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,23 +31,25 @@ import static com.softserve.itacademy.config.Constance.API_V1;
 @RequestMapping(API_V1)
 public class AuthController {
 
-    private final AuthService authService;
+    private final RegistrationService registrationService;
+    private final PasswordResetService passwordResetService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(RegistrationService registrationService, PasswordResetService passwordResetService) {
+        this.registrationService = registrationService;
+        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<SuccessRegistrationResponse> register(
             @Valid @RequestBody RegistrationRequest dto) {
-        return new ResponseEntity<>(authService.registerUser(dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(registrationService.registerUser(dto), HttpStatus.CREATED);
     }
 
     @PatchMapping("/role-pick")
     public ResponseEntity<RolePickResponse> rolePick(
             @Valid @RequestBody RolePickRequest dto,
             @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(authService.pickRole(user.getId(), dto), HttpStatus.OK);
+        return new ResponseEntity<>(registrationService.pickRole(user.getId(), dto), HttpStatus.OK);
     }
 
     @GetMapping("/activation/{code}")
@@ -55,20 +58,20 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/login"));
 
-        return new ResponseEntity<>(authService.activateUser(code), headers, HttpStatus.MOVED_PERMANENTLY);
+        return new ResponseEntity<>(registrationService.activateUser(code), headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @PostMapping("/password-reset")
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
 
-        authService.resetPassword(resetPasswordRequest);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        passwordResetService.resetPassword(resetPasswordRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/password-reset/new")
-    public ResponseEntity<Void> setPasswordByToken(@Valid PasswordByTokenRequest dto) {
+    public ResponseEntity<Void> setPasswordByToken(@Valid @RequestBody PasswordByTokenRequest dto) {
 
-        authService.setPasswordByToken(dto);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        passwordResetService.setPasswordByToken(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

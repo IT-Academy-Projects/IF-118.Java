@@ -10,7 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.implementation.AuthServiceImpl;
+import com.softserve.itacademy.service.implementation.RegistrationServiceImpl;
 import com.softserve.itacademy.tools.security.WithMockOwnStudent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class AuthServiceImplTest {
+class RegistrationServiceImplTest {
 
     @InjectMocks
-    private AuthServiceImpl registrationService;
+    private RegistrationServiceImpl registrationService;
 
     @Mock
     PasswordEncoder passwordEncoder;

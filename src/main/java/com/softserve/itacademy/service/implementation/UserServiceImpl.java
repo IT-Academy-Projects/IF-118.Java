@@ -71,6 +71,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_EMAIL_NOT_FOUND));
+    }
+
+    @Override
     public User getUserByPasswordResetToken(String token) {
         PasswordResetToken myToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Token not found"));
         return getById(myToken.getUser().getId());
@@ -137,7 +142,6 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserById(Integer id) {
         return userConverter.of(getById(id));
     }
-
 
 
 }

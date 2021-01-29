@@ -22,6 +22,8 @@ public interface UserService {
 
     User getById(Integer id);
 
+    User getByEmail(String email);
+
     User getUserByPasswordResetToken(String token);
 
     int updateName(String name, Integer id);

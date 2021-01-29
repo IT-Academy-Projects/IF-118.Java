@@ -1,15 +1,13 @@
 package com.softserve.itacademy.service;
 
 import com.softserve.itacademy.security.dto.ActivationResponse;
-import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
-import com.softserve.itacademy.security.dto.ResetPasswordRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface AuthService {
+public interface RegistrationService {
 
     @Transactional
     SuccessRegistrationResponse registerUser(RegistrationRequest dto);
@@ -17,8 +15,4 @@ public interface AuthService {
     ActivationResponse activateUser(String code);
 
     RolePickResponse pickRole(Integer userId, RolePickRequest request);
-
-    void resetPassword(ResetPasswordRequest resetPasswordRequest);
-
-    void setPasswordByToken(PasswordByTokenRequest dto);
 }

@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class PasswordResetToken extends BasicEntity {
 
-    private static final int EXPIRATION = 30;
+    public static final int EXPIRATION = 15;
 
     private String token;
 
@@ -32,5 +32,6 @@ public class PasswordResetToken extends BasicEntity {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
+    @Builder.Default
     private LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(EXPIRATION);
 }
