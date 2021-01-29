@@ -22,7 +22,9 @@ public interface UserService {
 
     User getById(Integer id);
 
-    void updateProfileInfo(Integer id, String name, String email);
+    int updateName(String name, Integer id);
+
+    int updateEmail(String email, Integer id);
 
     List<UserResponse> findByGroupId(Integer id);
 

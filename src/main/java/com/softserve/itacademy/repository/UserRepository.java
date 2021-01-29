@@ -6,7 +6,6 @@ import com.softserve.itacademy.projection.UserFullTinyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +26,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "update users set users.name=:name, users.email=:email where users.id=:id", nativeQuery = true)
-    int updateProfileInfo(@Param("id") Integer id, @Param("name") String name, @Param("email") String email);
+    @Query(value = "update users u set u.email = ?1 where u.id = ?2", nativeQuery = true)
+    int updateEmail(String email, Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update users u set u.name = ?1 where u.id = ?2", nativeQuery = true)
+    int updateName(String name, Integer id);
 
     @Modifying
     @Transactional
