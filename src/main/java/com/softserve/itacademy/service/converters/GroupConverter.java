@@ -32,7 +32,9 @@ public class GroupConverter {
                 .map(userConverter::of)
                 .collect(Collectors.toSet()));
 
-        map.setHasAvatar(group.getAvatar() != null);
+        if (group.getAvatar() != null) {
+            map.setImageId(group.getAvatar().getId());
+        }
 
         map.setChatRoom(chatRoomConverter.of(group.getChatRoom()));
 

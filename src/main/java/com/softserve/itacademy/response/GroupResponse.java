@@ -19,7 +19,7 @@ public class GroupResponse {
     private String name;
     private Integer ownerId;
     private Boolean disabled;
-    private Boolean hasAvatar;
+    private Integer imageId;
 
     private Set<CourseResponse> courses;
 
