@@ -10,7 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.implementation.RegistrationServiceImpl;
+import com.softserve.itacademy.service.implementation.AuthServiceImpl;
 import com.softserve.itacademy.tools.security.WithMockOwnStudent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class RegistrationServiceImplTest {
+class AuthServiceImplTest {
 
     @InjectMocks
-    private RegistrationServiceImpl registrationService;
+    private AuthServiceImpl registrationService;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -62,9 +62,9 @@ class RegistrationServiceImplTest {
     public void setup() {
         when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments()[0]);
         when(passwordEncoder.encode(Mockito.anyString())).thenReturn("ENCODED_PASSWORD");
-        when(roleService.findByNameIgnoreCase("TEACHER")).thenReturn(Role.builder().name("TEACHER").build());
-        when(roleService.findByNameIgnoreCase("STUDENT")).thenReturn(Role.builder().name("STUDENT").build());
-        when(roleService.findByNameIgnoreCase("USER")).thenReturn(Role.builder().name("USER").build());
+        when(roleService.getByNameIgnoreCase("TEACHER")).thenReturn(Role.builder().name("TEACHER").build());
+        when(roleService.getByNameIgnoreCase("STUDENT")).thenReturn(Role.builder().name("STUDENT").build());
+        when(roleService.getByNameIgnoreCase("USER")).thenReturn(Role.builder().name("USER").build());
 
         user = User.builder()
                 .email("test@example.com")

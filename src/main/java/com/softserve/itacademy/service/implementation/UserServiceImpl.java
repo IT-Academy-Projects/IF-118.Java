@@ -1,14 +1,14 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.entity.security.PasswordResetToken;
 import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.repository.security.PasswordResetTokenRepository;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.UserService;
@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,12 +32,14 @@ public class UserServiceImpl implements UserService {
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final InvitationService invitationService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService) {
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.passwordEncoder = passwordEncoder;
         this.invitationService = invitationService;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
     @Override
@@ -66,7 +71,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByPasswordResetToken(String token) {
+        PasswordResetToken myToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Token not found"));
+        return getById(myToken.getUser().getId());
+    }
 
+    @Override
     public int updateName(String name, Integer id) {
         return userRepository.updateName(name, id);
     }
@@ -88,8 +98,13 @@ public class UserServiceImpl implements UserService {
     public void changePass(Integer id, String oldPass, String newPass) {
 
         if (passwordEncoder.matches(oldPass, getById(id).getPassword())) {
-            userRepository.updatePass(id, passwordEncoder.encode(newPass));
+            setPassword(id, newPass);
         } else throw new OperationNotAllowedException("wrong current password");
+    }
+
+    @Override
+    public void setPassword(Integer id, String password) {
+        userRepository.updatePass(id, passwordEncoder.encode(password));
     }
 
     @Override
@@ -122,6 +137,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserById(Integer id) {
         return userConverter.of(getById(id));
     }
+
 
 
 }

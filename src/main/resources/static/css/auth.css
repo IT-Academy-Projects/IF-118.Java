@@ -74,13 +74,13 @@ input:focus {
     margin-right: 5px;
 }
 
-.login_btn {
+.auth_btn {
     color: black;
     background-color: #FFC312;
     width: 100px;
 }
 
-.login_btn:hover {
+.auth_btn:hover {
     color: black;
     background-color: white;
 }

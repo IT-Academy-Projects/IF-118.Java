@@ -1,19 +1,23 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.entity.security.PasswordResetToken;
 import com.softserve.itacademy.entity.security.Role;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.RoleAlreadyPickedException;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.repository.security.PasswordResetTokenRepository;
 import com.softserve.itacademy.security.dto.ActivationResponse;
+import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
+import com.softserve.itacademy.security.dto.ResetPasswordRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
+import com.softserve.itacademy.service.AuthService;
 import com.softserve.itacademy.service.MailSender;
-import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
+import com.softserve.itacademy.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,28 +27,32 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 
 @Service
 @Slf4j
-public class RegistrationServiceImpl implements RegistrationService {
+public class AuthServiceImpl implements AuthService {
 
     @Value("${application.address}")
     private String address;
 
     private final RoleService roleService;
-
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final MailSender mailSender;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final UserService userService;
 
-    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+    public AuthServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender, PasswordResetTokenRepository passwordResetTokenRepository, UserService userService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.userService = userService;
     }
 
     @Transactional
@@ -61,7 +69,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         setPickedRole(dto.getPickedRole(), user);
         addUser(user);
-        sendActivationMessage(user);
+        sendActivationEmail(user);
 
         return SuccessRegistrationResponse.builder()
                 .email(user.getEmail())
@@ -109,14 +117,56 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new RoleAlreadyPickedException("Account " + userId + " already picked a role");
     }
 
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+
+        User user = userRepository.findByEmail(resetPasswordRequest.getEmail()).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+
+        //TODO: Check if token already exists
+
+        if (!user.getActivated()) {
+            throw new BadCredentialsException("Email is not confirmed");
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        sendPasswordResetEmail(createPasswordResetTokenForUser(user, token));
+    }
+
+    @Override
+    public void setPasswordByToken(PasswordByTokenRequest dto) {
+        if (validatePasswordResetToken(dto.getToken())) {
+            User user = userService.getUserByPasswordResetToken(dto.getToken());
+            userService.setPassword(user.getId(), dto.getNewPassword());
+        }
+    }
+
+
+    private boolean validatePasswordResetToken(String token) {
+
+        PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Token " + token + " not found"));
+        if (passToken.getExpirationDate().isAfter(LocalDateTime.now())) {
+            throw new BadCredentialsException("Token " + token + "has been expired");
+        }
+        return true;
+    }
+
+    private PasswordResetToken createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = PasswordResetToken.builder()
+                .user(user)
+                .token(token)
+                .build();
+        return passwordResetTokenRepository.save(myToken);
+    }
+
     private void setPickedRole(String role, User user) {
 
         if (!(role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("TEACHER"))) {
             throw new BadCredentialsException("User " + user.getId() + "picked forbidden registration role " + role);
         }
 
-        Role userRole = roleService.findByNameIgnoreCase("USER");
-        Role pickedRole = roleService.findByNameIgnoreCase(role);
+        Role userRole = roleService.getByNameIgnoreCase("USER");
+        Role pickedRole = roleService.getByNameIgnoreCase(role);
 
         user.addRole(userRole);
         user.addRole(pickedRole);
@@ -134,7 +184,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
     }
 
-    private void sendActivationMessage(User user) {
+    private void sendActivationEmail(User user) {
         if (!user.getEmail().isBlank()) {
             String message = String.format(
                     "Hello, %s! \n" + "Your activation link: %s/api/v1/activation/%s",
@@ -146,6 +196,18 @@ public class RegistrationServiceImpl implements RegistrationService {
             mailSender.send(user.getEmail(), "SoftClass activation", message);
         }
     }
+
+    private void sendPasswordResetEmail(PasswordResetToken token) {
+        String message = String.format(
+                "Hello, %s! \n" + "Your password reset link: %s/password-reset?token=%s",
+                token.getUser().getName(),
+                address,
+                token.getToken()
+        );
+
+        mailSender.send(token.getUser().getEmail(), "SoftClass password reset", message);
+    }
 }
+
 
 
