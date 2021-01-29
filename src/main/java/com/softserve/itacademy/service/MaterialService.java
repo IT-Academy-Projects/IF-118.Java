@@ -6,6 +6,8 @@ import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 public interface MaterialService {
 
     MaterialResponse findById(Integer id);
@@ -13,5 +15,6 @@ public interface MaterialService {
     Material getById(Integer id);
     DownloadFileResponse downloadById(Integer id);
     void delete(Integer id, Integer currentUserId);
+    void updateDueDateTime(Integer id, LocalDateTime dueDateTime);
 
 }

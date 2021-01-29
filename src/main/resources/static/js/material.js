@@ -28,9 +28,12 @@ function getMaterial(id) {
             let role = user.roles.find(role => role.name === "TEACHER");
             if (role !== null && role !== undefined && user.id === material.ownerId) {
                 canEdit = true;
+                $('#due-date').attr('min', getToday());
+                $('#due-time').attr('min', getCurrentTime());
             } else {
                 canEdit = false;
                 $('#add-assignment-btn').hide();
+                $('#set-due-date-time-form').hide();
             }
 
             $('#materials').append(`
@@ -40,6 +43,11 @@ function getMaterial(id) {
                     <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
                 </div>
             `);
+            if(material.dueDateTime !== null) {
+                $('.material-description').append(
+                    `<div class="material-due-date-time">Finish this lection by <span id="due-date-time">${material.dueDateTime}</span></div>`
+                );
+            }
 
             material.assignments.forEach(assignment => {
 
@@ -154,6 +162,29 @@ function showAnswers(assignment) {
             });
         }
     });
+}
+
+function setDueDateTime() {
+    let dueDateTime = $('#due-date').val() + "T" + $('#due-time').val();
+    $('#due-date-time').text(dueDateTime);
+
+    patchRequest(`/api/v1/materials/` + materialId + `/duedate`, dueDateTime);
+}
+
+function getToday() {
+    let d = new Date();
+
+    let month = d.getMonth()+1;
+    let day = d.getDate();
+
+    return d.getFullYear() + '-' +
+        (month<10 ? '0' : '') + month + '-' +
+        (day<10 ? '0' : '') + day;
+}
+
+function getCurrentTime() {
+    let d = new Date();
+    return d.getHours() + ":" + d.getMinutes();
 }
 
 function toggleAnswers(id) {

@@ -47,6 +47,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id", nativeQuery = true)
     List<User> findByGroupId(Integer id);
 
+    @Query(value = "SELECT * FROM users u join groups_users gu on u.id = gu.user_id where gu.group_id in (:groupIds)", nativeQuery = true)
+    List<User> findAllByGroupIds(List<Integer> groupIds);
+
     @Modifying
     @Transactional
     @Query("update User u set u.password = ?2 where u.id = ?1")

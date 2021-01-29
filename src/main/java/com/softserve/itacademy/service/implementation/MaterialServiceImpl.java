@@ -16,6 +16,8 @@ import com.softserve.itacademy.service.s3.S3Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
 
@@ -80,6 +82,13 @@ public class MaterialServiceImpl implements MaterialService {
         }
         s3Utils.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
         materialRepository.delete(material);
+    }
+
+    @Override
+    public void updateDueDateTime(Integer id, LocalDateTime dueDateTime) {
+        Material material = getById(id);
+        material.setDueDateTime(dueDateTime);
+        materialRepository.save(material);
     }
 
     @Override
