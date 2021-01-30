@@ -8,7 +8,6 @@ import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
-import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
