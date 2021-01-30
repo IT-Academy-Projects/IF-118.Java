@@ -1,27 +1,28 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.AssignmentAnswers;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentAnswersRepository;
+import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
-import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.AssignmentAnswersService;
 import com.softserve.itacademy.service.AssignmentService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
-import com.softserve.itacademy.service.s3.S3Utils;
+import com.softserve.itacademy.service.s3.AmazonS3ClientService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
+import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
+import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 
 @Service
@@ -30,19 +31,21 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     private final AssignmentService assignmentService;
     private final AssignmentAnswersRepository assignmentAnswersRepository;
     private final AssignmentAnswersConverter assignmentAnswersConverter;
-    private final S3Utils s3Utils;
+    private final AmazonS3ClientService amazonS3ClientService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public AssignmentAnswersServiceImpl(AssignmentService assignmentService,
                                         AssignmentAnswersRepository assignmentAnswersRepository,
                                         AssignmentAnswersConverter assignmentAnswersConverter,
-                                        S3Utils s3Utils,
-                                        UserService userService) {
+                                        AmazonS3ClientService amazonS3ClientService,
+                                        UserService userService, UserRepository userRepository) {
         this.assignmentService = assignmentService;
         this.assignmentAnswersRepository = assignmentAnswersRepository;
         this.assignmentAnswersConverter = assignmentAnswersConverter;
-        this.s3Utils = s3Utils;
+        this.amazonS3ClientService = amazonS3ClientService;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         AssignmentAnswers assignmentAnswers = AssignmentAnswers.builder()
                 .ownerId(assignmentAnswersRequest.getOwnerId())
                 .assignment(assignment)
-                .fileReference(s3Utils.saveFile(file, BUCKET_NAME, ASSIGNMENTS_FOLDER))
+                .fileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file))
                 .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
@@ -77,9 +80,12 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public DownloadFileResponse downloadById(Integer id) {
         AssignmentAnswers assignmentAnswers = getById(id);
+        String userName = userRepository.findNameById(assignmentAnswers.getOwnerId());
+        String assignmentName = assignmentAnswers.getAssignment().getName();
+        String fileName = assignmentName + "_" + userName + "_answer" + "." + FilenameUtils.getExtension(assignmentAnswers.getFileReference());
         return DownloadFileResponse.builder()
-                .file(s3Utils.downloadFile(assignmentAnswers.getFileReference(), BUCKET_NAME, ASSIGNMENTS_FOLDER))
-                .fileName(assignmentAnswers.getFileReference())
+                .file(amazonS3ClientService.download(BUCKET_NAME, assignmentAnswers.getFileReference()))
+                .fileName(fileName)
                 .build();
     }
 
@@ -101,8 +107,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         String oldFileRef = assignmentAnswersRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ANSWER_ID_NOT_FOUND))
                 .getFileReference();
-        s3Utils.delete(BUCKET_NAME, oldFileRef);
-        String fileRef = s3Utils.saveFile(file, BUCKET_NAME, ASSIGNMENTS_FOLDER);
+        amazonS3ClientService.delete(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, oldFileRef);
+        String fileRef = amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file);
         assignmentAnswersRepository.update(fileRef, id);
     }
 

@@ -32,7 +32,7 @@ public interface UserService {
 
     void deleteInvitation(Integer userId, Integer invitationId);
 
-    void createAvatar(MultipartFile file, Integer id);
+    void setAvatar(MultipartFile file, Integer id);
 
     byte[] getAvatar(Integer id);
 

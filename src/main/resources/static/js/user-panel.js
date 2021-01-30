@@ -98,11 +98,12 @@ function showTeacherGroups() {
 }
 
 function addGroupCard(group) {
-    let avatar = group.hasAvatar ? `/api/v1/groups/${group.id}/avatar` : `img/group-placeholder.jpg`;
+    let avatar = group.imageId !== null  ? `/api/v1/images/${group.imageId}` : `img/group-placeholder.jpg`;
     $('#groups-wrapper').prepend(`
                 <div class="card custom-card">
                     <a class="custom-link" href="/group?id=${group.id}">
-                        <img class="card-img-top" src="${avatar}" alt="Course image" height="280">
+                        <img class="card-img-top" src="${avatar}" alt="Course image" height="
+                        ">
                     </a>
                     <div class="card-body">
                        <h5 class="card-title">${group.name}</h5>
@@ -113,7 +114,7 @@ function addGroupCard(group) {
 }
 
 function addCourseCard(course) {
-    let avatar = course.hasAvatar ? `/api/v1/courses/${course.id}/avatar` : `img/course-placeholder.jpg`;
+    let avatar = course.imageId !== null ? `/api/v1/images/${course.imageId}` : `img/course-placeholder.jpg`;
     $('#courses-wrapper').prepend(`
         <div class="card custom-card">
             <a class="custom-link" href="/course?id=${course.id}">

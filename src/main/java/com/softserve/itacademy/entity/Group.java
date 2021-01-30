@@ -41,7 +41,9 @@ public class Group extends BasicEntity {
     @Column(nullable = false)
     private Boolean disabled;
 
-    private byte[] avatar;
+    @OneToOne
+    @JoinColumn(name = "image_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_student_groups_images_image_id"))
+    private Image avatar;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
