@@ -8,6 +8,7 @@ import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
+import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -90,10 +92,30 @@ public class AssignmentAnswersController {
         return new ResponseEntity<>(assignmentAnswersService.findById(id), HttpStatus.OK);
     }
 
+    @CourseReadPermission
+    @GetMapping
+    public ResponseEntity<List<AssignmentAnswersResponse>> findAllByOwnerId(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(assignmentAnswersService.findAllByOwnerId(user.getId()), HttpStatus.OK);
+    }
+
     @UserRolePermission
     @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/review")
+    public ResponseEntity<Void> reviewByTeacher(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByTeacher(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @StudentRolePermission
+    @PatchMapping("/{id}/grade-review")
+    public ResponseEntity<Void> reviewByStudent(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByStudent(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

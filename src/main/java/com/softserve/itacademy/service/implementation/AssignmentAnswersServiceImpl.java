@@ -9,6 +9,7 @@ import com.softserve.itacademy.repository.AssignmentAnswersRepository;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
+import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.AssignmentAnswersService;
 import com.softserve.itacademy.service.AssignmentService;
 import com.softserve.itacademy.service.UserService;
@@ -16,6 +17,9 @@ import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
 import com.softserve.itacademy.service.s3.S3Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
@@ -44,6 +48,13 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public AssignmentAnswersResponse findById(Integer id) {
         return assignmentAnswersConverter.of(getById(id));
+    }
+
+    @Override
+    public List<AssignmentAnswersResponse> findAllByOwnerId(Integer id) {
+        return assignmentAnswersRepository.findAllByOwnerId(id).stream()
+                .map(assignmentAnswersConverter::of)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -98,6 +109,20 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public void submit(Integer id) {
         if (assignmentAnswersRepository.submit(id) == 0) {
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void reviewByTeacher(Integer id) {
+        if (assignmentAnswersRepository.reviewByTeacher(id) == 0) {
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void reviewByStudent(Integer id) {
+        if (assignmentAnswersRepository.reviewByStudent(id) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         }
     }

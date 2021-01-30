@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAnswers, Integer> {
 
@@ -26,4 +28,16 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
                    "set assignment_answers.grade = :grade " +
                    "where assignment_answers.id = :id", nativeQuery = true)
     int updateGrade(Integer id, Integer grade);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update assignment_answers set is_reviewed_by_teacher=true where id=:id", nativeQuery = true)
+    Integer reviewByTeacher(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update assignment_answers set is_student_saw_grade=true where id=:id", nativeQuery = true)
+    Integer reviewByStudent(Integer id);
+
+    List<AssignmentAnswers> findAllByOwnerId(Integer id);
 }

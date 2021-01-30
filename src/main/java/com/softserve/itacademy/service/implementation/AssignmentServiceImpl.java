@@ -6,11 +6,15 @@ import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
+import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.service.AssignmentService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -29,6 +33,13 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public AssignmentResponse findById(Integer id) {
         return assignmentConverter.of(getById(id));
+    }
+
+    @Override
+    public List<AssignmentResponse> findAllByOwnerId(Integer id) {
+        return assignmentRepository.findAllByOwnerId(id).stream()
+                .map(assignmentConverter::of)
+                .collect(Collectors.toList());
     }
 
     @Override
