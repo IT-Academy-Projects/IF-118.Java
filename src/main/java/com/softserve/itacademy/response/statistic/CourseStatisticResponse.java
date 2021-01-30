@@ -10,12 +10,9 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class GroupStatisticResponse {
-
-    private String id;
-    private String name;
-
+public class CourseStatisticResponse {
+    private Set<MaterialResponse> materials;
 }

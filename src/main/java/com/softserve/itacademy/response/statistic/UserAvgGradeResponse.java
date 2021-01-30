@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserStatisticResponse {
-    private String id;
+public class UserAvgGradeResponse {
+    private Integer id;
     private String name;
-    private byte[] avatar;
-    Set<AssignmentResponse> assignments;
+    private double avgGrade;
 }
