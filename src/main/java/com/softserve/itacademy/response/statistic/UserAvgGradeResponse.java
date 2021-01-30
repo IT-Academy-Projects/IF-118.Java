@@ -1,4 +1,4 @@
-package com.softserve.itacademy.response;
+package com.softserve.itacademy.response.statistic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

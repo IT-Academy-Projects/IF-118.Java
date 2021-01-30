@@ -1,5 +1,6 @@
 package com.softserve.itacademy.response;
 
+import com.softserve.itacademy.response.statistic.AssignmentStatisticResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,5 @@ public class MaterialResponse {
     private String description;
     private Integer courseId;
     private Integer ownerId;
-    Set<AssignmentResponse> assignments;
+    private Set<AssignmentStatisticResponse> assignments;
 }

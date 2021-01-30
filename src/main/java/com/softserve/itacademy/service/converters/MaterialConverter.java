@@ -19,7 +19,7 @@ public class MaterialConverter {
         MaterialResponse map = mapper.map(material, MaterialResponse.class);
         if (material.getAssignments() != null) {
             map.setAssignments(material.getAssignments().stream()
-                    .map(assignmentConverter::of)
+                    .map(assignmentConverter::statisticOf)
                     .collect(Collectors.toSet()));
         }
         return map;

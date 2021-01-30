@@ -1,5 +1,6 @@
 package com.softserve.itacademy.repository;
 
+import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
@@ -30,4 +32,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     byte[] getAvatarById(Integer id);
 
     Optional<Group> findByChatRoomId(Integer id);
+
 }

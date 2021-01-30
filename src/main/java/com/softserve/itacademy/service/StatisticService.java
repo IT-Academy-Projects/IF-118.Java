@@ -1,11 +1,9 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.response.AssignmentResponse;
-import com.softserve.itacademy.response.UserStatisticResponse;
-
-import java.util.Set;
+import com.softserve.itacademy.response.statistic.GroupStatisticResponse;
+import com.softserve.itacademy.response.statistic.UserFullStatisticResponse;
 
 public interface StatisticService {
-    UserStatisticResponse getUserAnswersStatistic(Integer courseId, Integer userId);
-    Set<AssignmentResponse> getAssignments(Integer courseId, Integer userId);
+    UserFullStatisticResponse getUserAnswersStatistic(Integer courseId, Integer userId);
+    GroupStatisticResponse getGroupStatistic(Integer groupId);
 }

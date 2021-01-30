@@ -2,7 +2,8 @@ package com.softserve.itacademy.controller;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.response.UserStatisticResponse;
+import com.softserve.itacademy.response.statistic.GroupStatisticResponse;
+import com.softserve.itacademy.response.statistic.UserFullStatisticResponse;
 import com.softserve.itacademy.service.StatisticService;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,14 @@ public class StatisticController {
         this.statisticService = statisticService;
     }
 
-    @GetMapping("/{courseId}")
-    public ResponseEntity<UserStatisticResponse> getUserStatistic(@PathVariable Integer courseId,
-                                                                  @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(statisticService.getUserAnswersStatistic(courseId, user.getId()), OK);
+    @GetMapping("/user/{courseId}/{userId}")
+    public ResponseEntity<UserFullStatisticResponse> getUserStatistic(@PathVariable Integer courseId,
+                                                                      @PathVariable Integer userId) {
+        return new ResponseEntity<>(statisticService.getUserAnswersStatistic(courseId, userId), OK);
+    }
+
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<GroupStatisticResponse> getGroupStatistic(@PathVariable Integer groupId) {
+        return new ResponseEntity<>(statisticService.getGroupStatistic(groupId), OK);
     }
 }

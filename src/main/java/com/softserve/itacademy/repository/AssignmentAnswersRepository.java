@@ -1,13 +1,13 @@
 package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.AssignmentAnswers;
-import io.swagger.models.auth.In;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -32,4 +32,10 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
 
     @Query(value = "select * from assignment_answers aa where aa.owner_id = ?1 and aa.assignment_id = ?2", nativeQuery = true)
     Set<AssignmentAnswers> findByOwnerId(Integer ownerId, Integer assignmentId);
+
+    Set<AssignmentAnswers> findByAssignmentId(Integer assignmentId);
+
+    @Query(value = "select * from assignment_answers aa where aa.assignment_id = ?1 and aa.owner_id = ?2", nativeQuery = true)
+    Optional<AssignmentAnswers> findByOwnerAndAssignment(Integer assignmentId, Integer ownerId);
+
 }

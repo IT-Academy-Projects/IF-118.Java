@@ -2,7 +2,8 @@ package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.response.UserResponse;
-import com.softserve.itacademy.response.UserStatisticResponse;
+import com.softserve.itacademy.response.statistic.UserFullStatisticResponse;
+import com.softserve.itacademy.response.statistic.UserTinyStaticResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,11 @@ public class UserConverter {
         return map;
     }
 
-    public UserStatisticResponse statisticOf(User user) {
-        return mapper.map(user, UserStatisticResponse.class);
+    public UserFullStatisticResponse statisticOf(User user) {
+        return mapper.map(user, UserFullStatisticResponse.class);
+    }
+
+    public UserTinyStaticResponse tinyStaticOf(User user) {
+        return mapper.map(user, UserTinyStaticResponse.class);
     }
 }
