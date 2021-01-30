@@ -4,7 +4,6 @@ import com.softserve.itacademy.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.request.AssignmentRequest;
-import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
