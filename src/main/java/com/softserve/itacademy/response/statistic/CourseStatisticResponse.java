@@ -1,6 +1,5 @@
 package com.softserve.itacademy.response.statistic;
 
-import com.softserve.itacademy.response.MaterialResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +14,5 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CourseStatisticResponse {
-    private Set<MaterialResponse> materials;
+    private Set<MaterialStatisticResponse> materials;
 }

@@ -11,11 +11,12 @@ import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.AssignmentResponse;
-import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.response.statistic.AssignmentAnswerStatisticResponse;
 import com.softserve.itacademy.response.statistic.AssignmentStatisticResponse;
 import com.softserve.itacademy.response.statistic.CourseStatisticResponse;
+import com.softserve.itacademy.response.statistic.GroupAvgGradeResponse;
 import com.softserve.itacademy.response.statistic.GroupStatisticResponse;
+import com.softserve.itacademy.response.statistic.MaterialStatisticResponse;
 import com.softserve.itacademy.response.statistic.UserAnswerStatisticResponse;
 import com.softserve.itacademy.response.statistic.UserFullStatisticResponse;
 import com.softserve.itacademy.response.statistic.UserTinyStaticResponse;
@@ -28,6 +29,7 @@ import com.softserve.itacademy.service.converters.UserConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,6 +72,8 @@ public class StatisticServiceImpl implements StatisticService {
         UserFullStatisticResponse userStatisticResponse = userConverter.statisticOf(userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND)));
         userStatisticResponse.setAssignments(getAssignmentsByUser(courseId, userId));
+        userStatisticResponse.setAvg(getUserAvg(userStatisticResponse));
+
         return userStatisticResponse;
     }
 
@@ -85,21 +89,63 @@ public class StatisticServiceImpl implements StatisticService {
         return groupStatisticResponse;
     }
 
+    @Override
+    public GroupAvgGradeResponse getGroupAvgGrade(Integer groupId) {
+        GroupStatisticResponse groupStatistic = getGroupStatistic(groupId);
+        double avgGrade = groupStatistic.getCourses().parallelStream()
+                .map(CourseStatisticResponse::getMaterials)
+                .flatMap(Collection::stream)
+                .flatMap(materialResponse -> materialResponse.getAssignmentStatisticResponses().stream())
+                .flatMap(assignmentStatisticResponse -> assignmentStatisticResponse.getUsers().stream())
+                .mapToDouble(userAnswerStatisticResponse -> {
+                    AssignmentAnswerStatisticResponse answer = userAnswerStatisticResponse.getAnswer();
+                    if (answer != null) {
+                        return answer.getGrade();
+                    } else
+                        return 0.0;
+                })
+                .average().orElse(0.0);
+        return GroupAvgGradeResponse.builder()
+                .avg(avgGrade)
+                .build();
+    }
+
+    private double getUserAvg(UserFullStatisticResponse userStatisticResponse) {
+        double v = userStatisticResponse.getAssignments().stream()
+                .flatMap(assignmentResponse -> assignmentResponse.getAssignmentAnswers().stream())
+                .mapToDouble(answer -> {
+                    if (answer != null) {
+                        return answer.getGrade();
+                    } else
+                        return 0.0;
+                })
+                .average().orElse(0.0);
+        return v;
+    }
+
+
     private GroupStatisticResponse buildGroupStat(Integer groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
         return GroupStatisticResponse.builder()
                 .users(group.getUsers().stream()
-                        .map(userConverter::tinyStaticOf)
+                        .map(userConverter::tinyStatisticOf)
                         .collect(Collectors.toSet()))
                 .build();
     }
 
-    private void setAnswers(MaterialResponse materialResponse, GroupStatisticResponse groupStatisticResponse) {
+    private void setAnswers(MaterialStatisticResponse materialResponse, GroupStatisticResponse groupStatisticResponse) {
 
-        materialResponse.getAssignments()
+        setAssignmentStatisticResponses(materialResponse);
+        materialResponse.getAssignmentStatisticResponses()
                 .forEach(assignmentResponse ->
                         assignmentResponse.setUsers(getUserAnswers(assignmentResponse, groupStatisticResponse))
                 );
+    }
+
+    private void setAssignmentStatisticResponses(MaterialStatisticResponse materialResponse) {
+        materialResponse.setAssignmentStatisticResponses(materialResponse.getAssignments().stream()
+                .map(assignmentConverter::responseOf)
+                .collect(Collectors.toSet()));
     }
 
 
@@ -142,4 +188,6 @@ public class StatisticServiceImpl implements StatisticService {
                 })
                 .collect(Collectors.toSet());
     }
+
+
 }

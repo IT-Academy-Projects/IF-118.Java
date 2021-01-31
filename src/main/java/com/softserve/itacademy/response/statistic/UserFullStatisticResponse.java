@@ -17,5 +17,5 @@ import java.util.Set;
 public class UserFullStatisticResponse extends UserTinyStaticResponse {
     private byte[] avatar;
     private Set<AssignmentResponse> assignments;
-
+    private double avg;
 }

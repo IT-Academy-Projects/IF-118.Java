@@ -25,7 +25,7 @@ public class UserConverter {
         return mapper.map(user, UserFullStatisticResponse.class);
     }
 
-    public UserTinyStaticResponse tinyStaticOf(User user) {
+    public UserTinyStaticResponse tinyStatisticOf(User user) {
         return mapper.map(user, UserTinyStaticResponse.class);
     }
 }

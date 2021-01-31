@@ -35,4 +35,8 @@ public class AssignmentConverter {
     public AssignmentStatisticResponse statisticOf(Assignment assignment) {
         return mapper.map(assignment, AssignmentStatisticResponse.class);
     }
+
+    public AssignmentStatisticResponse responseOf(AssignmentResponse assignment) {
+        return mapper.map(assignment, AssignmentStatisticResponse.class);
+    }
 }

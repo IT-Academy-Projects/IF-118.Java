@@ -1,7 +1,7 @@
 package com.softserve.itacademy.response.statistic;
 
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssignmentAnswerStatisticResponse {
-    private Integer id;
-    private Integer grade;
+@Builder
+public class GroupAvgGradeResponse {
+    private double avg;
 }
