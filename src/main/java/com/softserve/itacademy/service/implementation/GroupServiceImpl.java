@@ -1,30 +1,32 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
-import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
 import com.softserve.itacademy.service.GroupService;
+import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -34,13 +36,17 @@ public class GroupServiceImpl implements GroupService {
     private final UserService userService;
     private final ChatRoomService chatRoomService;
     private final CourseRepository courseRepository;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
         this.chatRoomService = chatRoomService;
         this.courseRepository = courseRepository;
+        this.imageService = imageService;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -60,11 +66,8 @@ public class GroupServiceImpl implements GroupService {
             courses.forEach(course -> course.getGroups().add(newGroup));
         }
         if (file != null) {
-            try {
-                newGroup.setAvatar(file.getBytes());
-            } catch (IOException e) {
-                throw new FileProcessingException("Cannot get bytes from avatar file for group");
-            }
+            Image image = new Image(imageService.compress(file));
+            newGroup.setAvatar(imageRepository.save(image));
         }
 
         ChatRoom chat = chatRoomService.create();

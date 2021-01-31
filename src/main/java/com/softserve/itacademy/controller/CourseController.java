@@ -2,7 +2,6 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DescriptionRequest;
@@ -35,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
