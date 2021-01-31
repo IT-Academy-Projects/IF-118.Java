@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class GroupAvgGradeResponse {
-    private double avg;
+    private String avg;
 }

@@ -2,7 +2,6 @@ package com.softserve.itacademy.service.implementation;
 
 import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.AssignmentAnswers;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -11,6 +10,7 @@ import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.statistic.AssignmentAnswerStatisticResponse;
 import com.softserve.itacademy.response.statistic.AssignmentStatisticResponse;
@@ -25,7 +25,6 @@ import com.softserve.itacademy.service.StatisticService;
 import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
 import com.softserve.itacademy.service.converters.CourseConverter;
-import com.softserve.itacademy.service.converters.GroupConverter;
 import com.softserve.itacademy.service.converters.UserConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,14 +47,13 @@ public class StatisticServiceImpl implements StatisticService {
     private final CourseRepository courseRepository;
     private final CourseConverter courseConverter;
     private final AssignmentAnswersConverter assignmentAnswersConverter;
-    private final GroupConverter groupConverter;
     private final GroupRepository groupRepository;
 
     public StatisticServiceImpl(UserConverter userConverter, UserRepository userRepository,
                                 AssignmentRepository assignmentRepository, AssignmentAnswersRepository assignmentAnswersRepository,
                                 AssignmentConverter assignmentConverter, CourseRepository courseRepository,
                                 CourseConverter courseConverter, AssignmentAnswersConverter assignmentAnswersConverter,
-                                GroupConverter groupConverter, GroupRepository groupRepository) {
+                                GroupRepository groupRepository) {
         this.userConverter = userConverter;
         this.userRepository = userRepository;
         this.assignmentRepository = assignmentRepository;
@@ -64,7 +62,6 @@ public class StatisticServiceImpl implements StatisticService {
         this.courseRepository = courseRepository;
         this.courseConverter = courseConverter;
         this.assignmentAnswersConverter = assignmentAnswersConverter;
-        this.groupConverter = groupConverter;
         this.groupRepository = groupRepository;
     }
 
@@ -107,21 +104,23 @@ public class StatisticServiceImpl implements StatisticService {
                 })
                 .average().orElse(0.0);
         return GroupAvgGradeResponse.builder()
-                .avg(avgGrade)
+                .avg(String.format("%.2g%n", avgGrade).trim())
                 .build();
     }
 
-    private double getUserAvg(UserFullStatisticResponse userStatisticResponse) {
-        double v = userStatisticResponse.getAssignments().stream()
-                .flatMap(assignmentResponse -> assignmentResponse.getAssignmentAnswers().stream())
-                .mapToDouble(answer -> {
-                    if (answer != null) {
-                        return answer.getGrade();
-                    } else
+    private String getUserAvg(UserFullStatisticResponse userStatisticResponse) {
+
+        double avg = userStatisticResponse.getAssignments().stream()
+                .mapToDouble(assignmentResponse -> {
+                    Set<AssignmentAnswersResponse> assignmentAnswers = assignmentResponse.getAssignmentAnswers();
+                    if (!assignmentAnswers.isEmpty()) {
+                        return assignmentAnswers.stream().mapToDouble(AssignmentAnswersResponse::getGrade).sum();
+                    } else {
                         return 0.0;
+                    }
                 })
                 .average().orElse(0.0);
-        return v;
+        return String.format("%.2g%n", avg).trim();
     }
 
 

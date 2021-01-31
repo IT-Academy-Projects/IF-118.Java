@@ -23,5 +23,5 @@ public class AssignmentResponse {
     private String description;
     private Integer materialId;
     private String fileReference;
-    Set<AssignmentAnswersResponse> assignmentAnswers;
+    private Set<AssignmentAnswersResponse> assignmentAnswers;
 }
