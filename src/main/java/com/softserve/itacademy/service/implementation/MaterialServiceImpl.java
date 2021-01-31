@@ -12,7 +12,8 @@ import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
-import com.softserve.itacademy.service.s3.S3Utils;
+import com.softserve.itacademy.service.s3.AmazonS3ClientService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,16 +28,16 @@ public class MaterialServiceImpl implements MaterialService {
     private final MaterialRepository materialRepository;
     private final CourseService courseService;
     private final MaterialConverter materialConverter;
-    private final S3Utils s3Utils;
+    private final AmazonS3ClientService amazonS3ClientService;
 
     public MaterialServiceImpl(MaterialRepository materialRepository,
                                MaterialConverter materialConverter,
                                CourseService courseService,
-                               S3Utils s3Utils) {
+                               AmazonS3ClientService amazonS3ClientService) {
         this.materialRepository = materialRepository;
         this.materialConverter = materialConverter;
         this.courseService = courseService;
-        this.s3Utils = s3Utils;
+        this.amazonS3ClientService = amazonS3ClientService;
     }
 
 
@@ -57,7 +58,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .ownerId(materialRequest.getOwnerId())
                 .description(materialRequest.getDescription())
                 .course(course)
-                .fileReference(s3Utils.saveFile(file, BUCKET_NAME, MATERIALS_FOLDER))
+                .fileReference(amazonS3ClientService.upload(BUCKET_NAME, MATERIALS_FOLDER, file))
                 .build();
         material = materialRepository.save(material);
 
@@ -67,9 +68,9 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public DownloadFileResponse downloadById(Integer id) {
         Material material = getById(id);
-        String extension = s3Utils.getFileExtension(material.getFileReference());
+        String extension = FilenameUtils.getExtension(material.getFileReference());
         return DownloadFileResponse.builder()
-                .file(s3Utils.downloadFile(material.getFileReference(), BUCKET_NAME, MATERIALS_FOLDER))
+                .file(amazonS3ClientService.download(BUCKET_NAME, material.getFileReference()))
                 .fileName(material.getName() + "." + extension)
                 .build();
     }
@@ -80,7 +81,7 @@ public class MaterialServiceImpl implements MaterialService {
         if (!material.getOwnerId().equals(currentUserId)) {
             throw new OperationNotAllowedException("You are not owner of this course");
         }
-        s3Utils.delete(BUCKET_NAME, MATERIALS_FOLDER + "/" + material.getFileReference());
+        amazonS3ClientService.delete(BUCKET_NAME, MATERIALS_FOLDER, material.getFileReference());
         materialRepository.delete(material);
     }
 

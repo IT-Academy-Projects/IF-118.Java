@@ -55,6 +55,8 @@ function getMaterial(id) {
                     `<button type="button" id="answer-${assignment.id}-btn" class="btn btn-outline-success"
                         data-toggle="modal" data-target="#create-answer-modal" onclick="tempAssignmentId = ${assignment.id}">Answer</button>`;
 
+                let url = assignment.fileReference !== null ? `Download: <a href="/api/v1/assignments/${assignment.id}/file">${assignment.name}</a>` : '';
+
                 $('#assignments').append(`
                     <div class="assignment">
                         <button class="btn btn-primary btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
@@ -65,6 +67,7 @@ function getMaterial(id) {
                         <div class="collapse" id="collapse-${assignment.id}">
                             <div class="card card-body">
                                 <div class="assignment-description">${assignment.description}</div>
+                                <div class="assignment-description">${url}</div>
                                 <div style="margin-top: 10px">
                                      ${buttons}
                                 </div>
@@ -101,12 +104,18 @@ function createAssignment() {
         description: $('#assignment-description').val(),
         materialId: materialId
     }
-    postRequest(`/api/v1/assignments`, data).then(() => {
+
+    let formData = new FormData();
+    formData.append('assignment', JSON.stringify(data));
+    let file = $('#assignment-file').prop('files')[0];
+    if (file !== null) {
+        formData.append('file', file);
+    }
+    postFileRequest(`/api/v1/assignments`, formData, (res) => {
         $('#assignments').html('');
         $('#materials').html('');
-        getMaterial(materialId).then(() => {
-            $('#create-assignment-modal').modal('hide');
-        });
+        $('#create-assignment-modal').modal('hide');
+        getMaterial(materialId);
     })
 }
 
@@ -202,7 +211,7 @@ function createAnswer() {
     let formData = new FormData();
     formData.append('file', file);
     formData.append('assignmentAnswer', JSON.stringify(data));
-    postFileRequest(`/api/v1/assignment-answers`, formData).then(res => {
+    postFileRequest(`/api/v1/assignment-answers`, formData, res => {
         showMyAnswer(res, tempAssignmentId);
         $('#create-answer-modal').modal('hide');
     })
@@ -259,14 +268,18 @@ function postRequest(url, data) {
     });
 }
 
-function postFileRequest(url, data) {
+function postFileRequest(url, data, callback) {
     return $.ajax({
         url: url,
         type: 'POST',
         data: data,
         processData: false,
         contentType: false,
-        enctype: 'multipart/form-data'
+        enctype: 'multipart/form-data',
+        success: function(res) {
+            if (callback)
+                callback(res)
+        }
     });
 }
 

@@ -29,6 +29,7 @@ public class Assignment extends BasicEntity {
     private String name;
 
     private String description;
+    private String fileReference;
 
     @ManyToOne
     @JoinColumn(name = "material_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_material_assignment"))

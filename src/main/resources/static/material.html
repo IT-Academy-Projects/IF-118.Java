@@ -43,7 +43,7 @@
             </form>
         </div>
         <div class="assignment-title">
-            <h3 style="font-weight: bold">Assignments</h3>
+            <h3 style="font-weight: bold">Topics</h3>
             <div class="col-sm" id="add-assignment-btn">
                 <button id="create-assignment-button" type="button" class="btn btn-outline-success btn-sm"
                         data-toggle="modal" data-target="#create-assignment-modal">+
@@ -71,6 +71,8 @@
                             <input id="assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
                             <label for="assignment-description">Description:</label>
                             <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <label for="assignment-file">Assignment:</label>
+                            <input type="file" class="form-control" id="assignment-file">
                         </div>
                     </div>
                 </form>

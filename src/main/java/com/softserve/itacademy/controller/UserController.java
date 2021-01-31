@@ -1,6 +1,5 @@
 package com.softserve.itacademy.controller;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
@@ -14,7 +13,6 @@ import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.softserve.itacademy.config.Constance.API_V1;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(API_V1 + "users")
@@ -64,7 +65,7 @@ public class UserController {
     @PutMapping("/{id}/avatar")
     public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
                                             @PathVariable Integer id) {
-        userService.createAvatar(file, id);
+        userService.setAvatar(file, id);
         return new ResponseEntity<>(OK);
     }
 

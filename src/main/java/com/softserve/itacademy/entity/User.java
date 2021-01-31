@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -66,8 +67,9 @@ public class User extends BasicEntity {
     @Column
     private String invitationCode;
 
-    @Column
-    private byte[] avatar;
+    @OneToOne
+    @JoinColumn(name = "image_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_users_images_image_id"))
+    private Image avatar;
 
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
