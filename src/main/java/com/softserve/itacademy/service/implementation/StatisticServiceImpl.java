@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.implementation;
 
 import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
 import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
+import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.AssignmentAnswers;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -176,15 +177,19 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     private Set<AssignmentResponse> getAssignmentsByUser(Integer courseId, Integer userId) {
-        return assignmentRepository.findAllByCourse(courseId).stream()
-                .map(assignment -> {
+        Set<AssignmentResponse> allByCourse = assignmentRepository.findAllByCourse(courseId).stream()
+                .map(assignmentConverter::of)
+                .collect(Collectors.toSet());
+        return allByCourse.stream()
+                .peek(assignment -> {
                     Set<AssignmentAnswers> answers = assignmentAnswersRepository.findByOwnerId(userId, assignment.getId());
                     if (!answers.isEmpty()) {
-                        assignment.setAssignmentAnswers(answers);
+                        assignment.setAssignmentAnswers(answers.stream()
+                                .map(assignmentAnswersConverter::of)
+                                .collect(Collectors.toSet()));
                     } else {
                         assignment.setAssignmentAnswers(Collections.emptySet());
                     }
-                    return assignmentConverter.of(assignment);
                 })
                 .collect(Collectors.toSet());
     }
