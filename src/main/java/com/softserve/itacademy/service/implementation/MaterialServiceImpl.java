@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
@@ -86,10 +87,8 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public void updateDueDateTime(Integer id, LocalDateTime dueDateTime) {
-        Material material = getById(id);
-        material.setDueDateTime(dueDateTime);
-        materialRepository.save(material);
+    public void setExpirationDate(LocalDateTime expirationDate, Integer materialId, List<Integer> groupIds) {
+        materialRepository.setExpirationDate(expirationDate, materialId, groupIds);
     }
 
     @Override

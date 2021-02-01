@@ -50,7 +50,7 @@ public class GroupController {
     @GroupCreatePermission
     @PostMapping
     public ResponseEntity<GroupResponse> create(@RequestPart(value = "group") String group,
-                                                @RequestPart(value = "file",  required = false) MultipartFile file,
+                                                @RequestPart(value = "file", required = false) MultipartFile file,
                                                 @AuthenticationPrincipal User user) throws JsonProcessingException {
         GroupRequest groupRequest = objectMapper.readValue(group, GroupRequest.class);
         groupRequest.setOwnerId(user.getId());
@@ -58,7 +58,7 @@ public class GroupController {
     }
 
     @GroupReadPermission
-    @GetMapping(path = "/{id}/avatar", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
+    @GetMapping(path = "/{id}/avatar", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<Resource> downloadAvatarById(@PathVariable Integer id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] avatar = groupService.getAvatarById(id);
@@ -97,5 +97,10 @@ public class GroupController {
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
         groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
+    }
+
+    @GetMapping("/open/{materialId}")
+    public ResponseEntity<List<GroupResponse>> findGroupsWithClosedMaterial(@PathVariable Integer materialId) {
+        return new ResponseEntity<>(groupService.findGroupsWithClosedMaterial(materialId), OK);
     }
 }

@@ -46,7 +46,7 @@ public class Course extends BasicEntity {
     private String description;
 
     @OneToOne
-    @JoinColumn(name = "image_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_courses_images_image_id"))
+    @JoinColumn(name = "image_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_courses_images_image_id"))
     private Image avatar;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)

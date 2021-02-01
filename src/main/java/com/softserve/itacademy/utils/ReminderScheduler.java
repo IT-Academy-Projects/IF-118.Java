@@ -14,7 +14,7 @@ public class ReminderScheduler {
         this.mailReminder = mailReminder;
     }
 
-    @Scheduled(cron = "0 03 14 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void sendRemindByMail() {
         mailReminder.remind();
     }

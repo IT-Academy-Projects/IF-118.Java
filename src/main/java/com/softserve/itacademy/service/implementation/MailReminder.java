@@ -33,18 +33,19 @@ public class MailReminder implements Reminder {
 
     @Override
     public void remind() {
-        List<Material> collectedMaterials = materialRepository.findAllDueDateTimeExpiring();
-        log.info("Selected {} materials with expiring dueDate", collectedMaterials.size());
-        if (!collectedMaterials.isEmpty()) {
-            Set<Integer> courseIds = collectedMaterials.stream().map(material -> material.getCourse().getId()).collect(Collectors.toSet());
-            List<Group> groupsByCourseIds = groupRepository.findAllByCourseIds(courseIds);
-            if (!groupsByCourseIds.isEmpty()) {
-                List<Integer> groupIds = groupsByCourseIds.stream().map(BasicEntity::getId).collect(Collectors.toList());
+        List<Integer> groupIds = materialRepository.findAllDueDateTimeExpiring();
+        log.info("Selected {} groups with expiring date material", groupIds.size());
+        if (!groupIds.isEmpty()) {
+//            Set<Integer> courseIds = collectedMaterials.stream().map(material -> material.getCourse().getId()).collect(Collectors.toSet());
+//            List<Group> groupsByCourseIds = groupRepository.findAllByCourseIds(courseIds);
+//            if (!groupsByCourseIds.isEmpty()) {
+//                List<Integer> groupIds = groupsByCourseIds.stream().map(BasicEntity::getId).collect(Collectors.toList());
                 List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
                 if (!usersByGroupIds.isEmpty()) {
-                    usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "Lection Due Date!", "Finish"));
+                    usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "SoftClass Lection work time expiring",
+                            "Hello" + user.getName() + "! Check Your's courses on SoftClass. Looks like Your work time on some lections is expiring."));
                 }
-            }
+//            }
         }
     }
 }
