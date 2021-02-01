@@ -82,6 +82,10 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>${aws-java-sdk-s3.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
 
         <!-- DB validation -->
         <dependency>
