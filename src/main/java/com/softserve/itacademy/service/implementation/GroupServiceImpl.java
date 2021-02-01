@@ -1,6 +1,10 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.*;
+import com.softserve.itacademy.entity.ChatRoom;
+import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Image;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
@@ -17,7 +21,6 @@ import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -98,9 +101,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public byte[] getAvatarById(Integer id) {
-        if (!groupRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
+        if (!groupRepository.existsById(id)) {
+            throw new NotFoundException(COURSE_ID_NOT_FOUND);
+        }
         byte[] avatar = groupRepository.getAvatarById(id);
-        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
+        if (avatar == null) {
+            throw new NotFoundException("Avatar doesn't exist for this course");
+        }
         return avatar;
     }
 

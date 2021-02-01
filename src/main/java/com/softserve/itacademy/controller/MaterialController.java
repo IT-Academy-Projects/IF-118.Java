@@ -82,7 +82,7 @@ public class MaterialController {
     }
 
     @PatchMapping("/{materialId}/expiration")
-    public ResponseEntity<Void> setExpirationDate(@PathVariable Integer materialId, @RequestBody ExpirationRequest expirationRequest) throws JsonProcessingException {
+    public ResponseEntity<Void> setExpirationDate(@PathVariable Integer materialId, @RequestBody ExpirationRequest expirationRequest) {
         materialService.setExpirationDate(expirationRequest.getExpirationDate(), materialId, expirationRequest.getIds());
         return new ResponseEntity<>(OK);
     }
