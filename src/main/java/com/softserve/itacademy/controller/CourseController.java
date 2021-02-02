@@ -52,7 +52,7 @@ public class CourseController {
     @CourseCreatePermission
     @PostMapping
     public ResponseEntity<CourseResponse> create(@RequestPart(value = "course") String course,
-                                                 @RequestPart(value = "file",  required = false) MultipartFile file,
+                                                 @RequestPart(value = "file", required = false) MultipartFile file,
                                                  @AuthenticationPrincipal User currentUser) throws JsonProcessingException {
         CourseRequest courseRequest = objectMapper.readValue(course, CourseRequest.class);
         courseRequest.setOwnerId(currentUser.getId());
@@ -60,7 +60,7 @@ public class CourseController {
     }
 
     @CourseReadPermission
-    @GetMapping(path = "/{id}/avatar", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
+    @GetMapping(path = "/{id}/avatar", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<Resource> downloadAvatarById(@PathVariable Integer id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] avatar = courseService.getAvatarById(id);

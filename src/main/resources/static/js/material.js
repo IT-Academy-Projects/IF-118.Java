@@ -31,13 +31,31 @@ function getMaterial(id) {
             } else {
                 canEdit = false;
                 $('#add-assignment-btn').hide();
+                $('#expiration-date-block').hide();
+                $('#open-material-block').hide();
             }
-
             $('#materials').append(`
                 <div class="material">
-                    <div class="material-name">${material.name}</div>
-                    <div class="material-description">${material.description}</div>
-                    <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="material-name">${material.name}</div>
+                            <div class="material-description">${material.description}</div>
+                            <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                        </div>
+                        <div class="col-lg-4" id="expiration-date-block">
+                            <label for="expiration-date">Set expiration date for lection (by default 1 day)</label>
+                            <input id="expiration-date" type="date" min="`+getDayAfterToday(0)+`" value="`+getDefaultExpirationDate()+`">
+                        </div>
+                        <div class="col-lg-4" id="open-material-block">
+                            <form id="open-material">
+                                Open ${material.name} for groups:
+                                <div class="form-check" id="open-for-groups"></div>
+                                <button id="submit-expiration-date" type="button" class="btn btn-outline-success show"
+                                        onclick="openMaterial()">Submit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             `);
 
@@ -86,7 +104,7 @@ function getMaterial(id) {
             })
 
         });
-
+        showGroupsForSelect(id);
     })
 }
 
@@ -146,7 +164,7 @@ function showMyAnswer(answer, assignmentId) {
 }
 
 function showAnswers(assignment) {
-    let answerTable = "#answer-" + assignment.id+ "-table";
+    let answerTable = "#answer-" + assignment.id + "-table";
     $(answerTable).innerHTML = ''
     assignment.assignmentAnswers.forEach(answer => {
         if (answer.isSubmitted === true) {
@@ -165,6 +183,48 @@ function showAnswers(assignment) {
     });
 }
 
+function openMaterial() {
+    let checkedIds = []
+    $( "#open-for-groups input:checked" ).each(function(){checkedIds.push($(this).val());});
+    let data = {
+        expirationDate: $('#expiration-date').val() + 'T' + getCurrentTime(),
+        ids: checkedIds
+    }
+    patchRequest(`/api/v1/materials/${materialId}/expiration`, data);
+}
+
+function showGroupsForSelect(materialId) {
+    getRequest(`/api/v1/groups/open/${materialId}`).then(groups => {
+        for (let i=0; i<groups.length; i++){
+            $('#open-for-groups').append(`
+                <input class="form-check-input" type="checkbox" value="${groups[i].id}" id="group-${groups[i].id}">
+                <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
+        `)
+        }
+    })
+}
+
+function getDayAfterToday(days) {
+    let d = new Date();
+
+    let month = d.getMonth() + 1;
+    let day = d.getDate() + days;
+
+    return d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+}
+
+function getDefaultExpirationDate() {
+    return getDayAfterToday(1);
+}
+
+function getCurrentTime() {
+    let d = new Date();
+    let hours = new Date().getHours();
+    let minutes = new Date().getMinutes();
+    return (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
+}
 function toggleAnswers(id) {
     $(`#answer-${id}-review`).toggle();
 }
@@ -245,7 +305,7 @@ function postFileRequest(url, data, callback) {
         processData: false,
         contentType: false,
         enctype: 'multipart/form-data',
-        success: function(res) {
+        success: function (res) {
             if (callback)
                 callback(res)
         }

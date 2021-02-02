@@ -10,6 +10,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
+import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
@@ -38,8 +39,9 @@ public class GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
+    private final MaterialRepository materialRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -47,6 +49,7 @@ public class GroupServiceImpl implements GroupService {
         this.courseRepository = courseRepository;
         this.imageService = imageService;
         this.imageRepository = imageRepository;
+        this.materialRepository = materialRepository;
     }
 
     @Override
@@ -58,12 +61,14 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
+        Set<Integer> materialIds = null;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
             courses.forEach(course -> course.getGroups().add(newGroup));
+            materialIds = materialRepository.findByCourseIds(courseIds);
         }
         if (file != null) {
             Image image = new Image(imageService.compress(file));
@@ -74,7 +79,11 @@ public class GroupServiceImpl implements GroupService {
         chat.setType(ChatRoom.ChatType.GROUP);
         newGroup.setChatRoom(chat);
 
-        return groupConverter.of(groupRepository.save(newGroup));
+        Group savedGroup = groupRepository.save(newGroup);
+        if (materialIds != null) {
+            materialIds.forEach(id -> materialRepository.saveMaterialsGroups(id, savedGroup.getId()));
+        }
+        return groupConverter.of(savedGroup);
     }
 
     @Override
@@ -92,9 +101,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public byte[] getAvatarById(Integer id) {
-        if (!groupRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
+        if (!groupRepository.existsById(id)) {
+            throw new NotFoundException(COURSE_ID_NOT_FOUND);
+        }
         byte[] avatar = groupRepository.getAvatarById(id);
-        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
+        if (avatar == null) {
+            throw new NotFoundException("Avatar doesn't exist for this course");
+        }
         return avatar;
     }
 
@@ -103,6 +116,15 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findByIdAndOwnerId(groupId, groupRequest.getOwnerId())
                 .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
         group.setName(groupRequest.getName());
+    }
+
+    @Override
+    public List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId) {
+        List<Group> groupsByCourseId = groupRepository.findGroupsWithClosedMaterial(materialId);
+        if (groupsByCourseId.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return groupsByCourseId.stream().map(groupConverter::of).collect(Collectors.toList());
     }
 
     @Override
