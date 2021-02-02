@@ -69,11 +69,19 @@ function getMaterial(id) {
 
                 $('#assignments').append(`
                     <div class="assignment">
-                        <button class="btn btn-primary btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
-                            <span class="assignment-name">
-                                ${assignment.name}
-                            </span>
-                        </button>
+                        <div class="assignment-buttons">
+                            <button class="btn btn-primary btn-block text-left" style="margin-right: 10px" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
+                                <span class="assignment-name">
+                                    ${assignment.name}
+                                </span>
+                            </button>
+                            ${canEdit ? `<button class="btn btn-primary" style="margin-right: 10px" type="button" 
+                                                data-toggle="modal" data-target="#update-assignment-modal"
+                                                onclick="tempAssignmentId = ${assignment.id}; $('#new-assignment-name').val('${assignment.name}'); 
+                                                $('#new-assignment-description').val('${assignment.description}');checkAssignment()">Edit</button>
+                                         <button class="btn btn-primary" type="button" onclick="tempAssignmentId = ${assignment.id};
+                                         deleteAssignment()">Delete</button>` : ``}
+                        </div>
                         <div class="collapse" id="collapse-${assignment.id}">
                             <div class="card card-body">
                                 <div class="assignment-description">${assignment.description}</div>
@@ -129,6 +137,33 @@ function createAssignment() {
     })
 }
 
+function updateAssignment() {
+    let data = {
+        name: $('#new-assignment-name').val(),
+        description: $('#new-assignment-description').val(),
+        materialId: materialId
+    }
+
+    let formData = new FormData();
+    formData.append('assignment', JSON.stringify(data));
+    let file = $('#new-assignment-file').prop('files')[0];
+    if (file !== null) {
+        formData.append('file', file);
+    }
+    patchFileRequest(`/api/v1/assignments/${tempAssignmentId}`, formData, (res) => {
+        $('#assignments').html('');
+        $('#materials').html('');
+        $('#update-assignment-modal').modal('hide');
+        getMaterial(materialId);
+    })
+}
+
+function deleteAssignment() {
+    deleteRequest(`/api/v1/assignments/${tempAssignmentId}`, null, () => {
+        getMaterial(materialId);
+    })
+}
+
 function checkAnswerFile() {
     if ($('#answer-file').val().length > 0) {
         $('#create-answer-btn').removeAttr('disabled');
@@ -149,7 +184,7 @@ function showMyAnswer(answer, assignmentId) {
             <tr>
                 <td><span style="font-weight: bold" class="h3">${currentUser.name}</span></td>
                 <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
-                <td><span>${answer.grade}</span></td>
+                ${answer.status === 'REJECTED' ? `<td><span>Rejected</span></td>` : `<td><span>${answer.grade}</span></td>`}
                 <td><button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success"
                         data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button></td>
                 <td><button type="button" id="submit-${answer.id}-btn" class="btn btn-outline-success" 
@@ -157,7 +192,7 @@ function showMyAnswer(answer, assignmentId) {
             </tr>
         `);
     let submit = '#submit-' + answer.id + '-btn'
-    $(submit).attr('disabled', answer.isSubmitted)
+    $(submit).attr('disabled', answer.status === 'SUBMITTED')
 
     $(`#answer-${assignmentId}-review`).toggle();
     $(`#answer-${assignmentId}-btn`).hide();
@@ -167,7 +202,7 @@ function showAnswers(assignment) {
     let answerTable = "#answer-" + assignment.id + "-table";
     $(answerTable).innerHTML = ''
     assignment.assignmentAnswers.forEach(answer => {
-        if (answer.isSubmitted === true) {
+        if (answer.status === 'SUBMITTED') {
             getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
                 $(answerTable).append(`
                 <tr>
@@ -176,6 +211,8 @@ function showAnswers(assignment) {
                     <td><span id="grade-${answer.id}">${answer.grade}</span></td>
                     <td><button type="button" id="grade-${answer.id}-btn" class="btn btn-outline-success" 
                         data-toggle="modal" data-target="#grade-modal" onclick="assignmentAnswerId = ${answer.id}">Grade</button></td>
+                    <td><button type="button" id="reject-${answer.id}-btn" class="btn btn-outline-success" 
+                        onclick="reject(${answer.id})">Reject</button></td>
                 </tr>
                 `);
             });
@@ -252,8 +289,7 @@ function updateAnswer() {
 
     let formData = new FormData();
     formData.append('file', file);
-    formData.append('answerId', tempAnswerId);
-    patchFileRequest(`/api/v1/assignment-answers`, formData).then(res => {
+    patchFileRequest(`/api/v1/assignment-answers/${tempAnswerId}`, formData).then(res => {
         showMyAnswer(res, tempAssignmentId);
         $('#update-answer-modal').modal('hide');
         file = '';
@@ -278,10 +314,19 @@ function checkAssignment() {
     } else {
         $('#create-assignment-btn').attr('disabled', true);
     }
+    if ($('#new-assignment-name').val().length > 0 && $('#new-assignment-description').val().length > 0) {
+        $('#update-assignment-btn').removeAttr('disabled');
+    } else {
+        $('#update-assignment-btn').attr('disabled', true);
+    }
 }
 
 function submit(id) {
     patchRequest(`/api/v1/assignment-answers/${id}/submit`).then($('#submit-' + id + '-btn').attr('disabled', true));
+}
+
+function reject(id) {
+    patchRequest(`/api/v1/assignment-answers/${id}/reject`).then($('#reject-' + id + '-btn').attr('disabled', true))
 }
 
 function getRequest(url) {
@@ -312,22 +357,43 @@ function postFileRequest(url, data, callback) {
     });
 }
 
-function patchFileRequest(url, data) {
+function patchFileRequest(url, data, callback) {
     return $.ajax({
         url: url,
         type: 'PATCH',
         data: data,
         processData: false,
         contentType: false,
-        enctype: 'multipart/form-data'
+        enctype: 'multipart/form-data',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
     });
 }
 
-function patchRequest(url, data) {
+function patchRequest(url, data, callback) {
     return $.ajax({
         url: url,
         type: 'PATCH',
         data: JSON.stringify(data),
-        contentType: 'application/json; charset=utf-8'
+        contentType: 'application/json; charset=utf-8',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
+    })
+}
+
+function deleteRequest(url, data, callback) {
+    return $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
     })
 }

@@ -57,10 +57,10 @@ public class AssignmentAnswersController {
     }
 
     @StudentRolePermission
-    @PatchMapping
-    public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
-                                                            @RequestPart(value = "answerId") String id) {
-        assignmentAnswersService.update(file, Integer.valueOf(id));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AssignmentAnswersResponse> update(@PathVariable Integer id,
+                                                            @RequestPart(value = "file") MultipartFile file) {
+        assignmentAnswersService.update(file, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,6 +101,13 @@ public class AssignmentAnswersController {
     @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<Void> reject(@PathVariable Integer id) {
+        assignmentAnswersService.reject(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

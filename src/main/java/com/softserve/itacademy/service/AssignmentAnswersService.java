@@ -18,6 +18,7 @@ public interface AssignmentAnswersService {
     AssignmentAnswers getById(Integer id);
     void update(MultipartFile file, Integer id);
     void submit(Integer id);
+    void reject(Integer id);
     void reviewByTeacher(Integer id);
     void reviewByStudent(Integer id);
 }

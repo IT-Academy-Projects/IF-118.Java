@@ -71,6 +71,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .ownerId(assignmentAnswersRequest.getOwnerId())
                 .assignment(assignment)
                 .fileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file))
+                .status(AssignmentAnswers.AnswersStatus.NEW)
                 .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
@@ -109,12 +110,19 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .getFileReference();
         amazonS3ClientService.delete(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, oldFileRef);
         String fileRef = amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file);
-        assignmentAnswersRepository.update(fileRef, id);
+        assignmentAnswersRepository.update(fileRef, id, AssignmentAnswers.AnswersStatus.NEW.name());
     }
 
     @Override
     public void submit(Integer id) {
-        if (assignmentAnswersRepository.submit(id) == 0) {
+        if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void reject(Integer id) {
+        if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.REJECTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         }
     }
