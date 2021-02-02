@@ -1,5 +1,6 @@
 package com.softserve.itacademy.response;
 
+import com.softserve.itacademy.entity.AssignmentAnswers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class AssignmentAnswersResponse {
     private Integer id;
     private Integer assignmentId;
     private Integer ownerId;
-    private Boolean isSubmitted;
+    private AssignmentAnswers.AnswersStatus status;
     private Integer grade;
 }

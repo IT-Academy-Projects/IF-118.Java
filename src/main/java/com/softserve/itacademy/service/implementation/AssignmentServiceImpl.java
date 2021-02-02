@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.ASSIGNMENT_ID_NOT_FOUND;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 
@@ -66,9 +67,29 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
+    public void update(Integer id, AssignmentRequest assignmentRequest, MultipartFile file) {
+        if (assignmentRepository.update(id, assignmentRequest.getName(), assignmentRequest.getDescription()) == 0) {
+            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
+        }
+        if (file != null) {
+            String oldFileRef = assignmentRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException(ASSIGNMENT_ID_NOT_FOUND))
+                    .getFileReference();
+            amazonS3ClientService.delete(BUCKET_NAME, ASSIGNMENTS_FOLDER, oldFileRef);
+            String fileRef = amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_FOLDER, file);
+            assignmentRepository.updateFileRef(id, fileRef);
+        }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Assignment assignment = getById(id);
+        assignmentRepository.delete(assignment);
+    }
+
+    @Override
     public Assignment getById(Integer id) {
         return assignmentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ANSWER_ID_NOT_FOUND));
     }
-
 }

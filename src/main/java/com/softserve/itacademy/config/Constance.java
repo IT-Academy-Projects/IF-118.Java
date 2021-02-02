@@ -7,6 +7,7 @@ public class Constance {
     public static final String GROUP_ID_NOT_FOUND = "Group with such email was not found";
     public static final String MATERIAL_ID_NOT_FOUND = "Material with such id was not found";
     public static final String COMMENT_ID_NOT_FOUND = "Comment with such id was not found";
+    public static final String ASSIGNMENT_ID_NOT_FOUND = "Assignment with such id was not found";
     public static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
     public static final String API_V1 = "/api/v1/";
 }
