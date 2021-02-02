@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ApplicationScheduler {
+public class CleaningScheduler {
 
     private final InvitationService invitationService;
     private final PasswordResetService passwordResetService;
 
-    public ApplicationScheduler(InvitationService invitationService, PasswordResetService passwordResetService) {
+    public CleaningScheduler(InvitationService invitationService, PasswordResetService passwordResetService) {
         this.invitationService = invitationService;
         this.passwordResetService = passwordResetService;
     }

@@ -1,10 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.entity.security.PasswordResetToken;
-import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.entity.security.PasswordResetToken;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;

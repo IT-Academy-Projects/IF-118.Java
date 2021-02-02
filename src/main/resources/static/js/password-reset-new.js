@@ -31,7 +31,7 @@ function newPasswordRequest(data) {
             window.location.replace("/login");
         },
 
-        error: function () {
+        error: function (request) {
             showInfo(request.responseJSON.message);
         },
     });
