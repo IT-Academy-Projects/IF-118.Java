@@ -53,7 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .isPickedRole(false)
+                .pickedRole(false)
                 .activationCode(UUID.randomUUID().toString())
                 .build();
 
@@ -87,7 +87,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
 
-        if (!user.getIsPickedRole()) {
+        if (!user.getPickedRole()) {
 
             setPickedRole(request.getPickedRole(), user);
             userRepository.save(user);
@@ -119,7 +119,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         user.addRole(userRole);
         user.addRole(pickedRole);
-        user.setIsPickedRole(true);
+        user.setPickedRole(true);
     }
 
     private void addUser(User user) {

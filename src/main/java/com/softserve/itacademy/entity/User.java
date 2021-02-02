@@ -1,6 +1,7 @@
 package com.softserve.itacademy.entity;
 
 import com.softserve.itacademy.entity.security.Role;
+import com.softserve.itacademy.security.principal.PrincipalDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Accessors(chain = true)
 @Table(name = "users")
-public class User extends BasicEntity {
+public class User extends BasicEntity implements PrincipalDetails {
 
     @Column(nullable = false)
     @EqualsAndHashCode.Include
@@ -59,7 +60,7 @@ public class User extends BasicEntity {
     private Boolean activated = false;
 
     @Column
-    private Boolean isPickedRole;
+    private Boolean pickedRole;
 
     @Column
     private String activationCode;

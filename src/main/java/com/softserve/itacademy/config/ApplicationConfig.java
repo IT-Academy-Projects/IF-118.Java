@@ -2,6 +2,7 @@ package com.softserve.itacademy.config;
 
 import com.softserve.itacademy.repository.ChatRoomRepository;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.security.AccessManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,7 @@ public class ApplicationConfig {
     }
 
     @Bean(name="accessManager")
-    public AccessManager accessManager(GroupRepository groupRepository, ChatRoomRepository chatRoomRepository) {
-        return new AccessManager(groupRepository, chatRoomRepository);
+    public AccessManager accessManager(GroupRepository groupRepository, ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
+        return new AccessManager(groupRepository, chatRoomRepository, userRepository);
     }
 }
