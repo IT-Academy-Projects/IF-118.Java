@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()
                 .mvcMatchers("/","/api/v1/invitation/invite", "/registration", "/api/v1/invitation/approve/**", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
-                .antMatchers("/api/v1/users/is-authenticated", "/navbar.html", "/img/*").permitAll()
+                .mvcMatchers("/api/v1/users/is-authenticated", "/password-reset", "/password-reset-new", "/api/v1/password-reset", "/api/v1/password-reset/new", "/navbar.html", "/img/*").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()

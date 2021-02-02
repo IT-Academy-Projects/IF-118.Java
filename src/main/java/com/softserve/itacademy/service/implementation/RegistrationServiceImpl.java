@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -25,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
+
 @Service
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
@@ -33,11 +34,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private String address;
 
     private final RoleService roleService;
-
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final MailSender mailSender;
 
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
@@ -61,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         setPickedRole(dto.getPickedRole(), user);
         addUser(user);
-        sendActivationMessage(user);
+        sendActivationEmail(user);
 
         return SuccessRegistrationResponse.builder()
                 .email(user.getEmail())
@@ -109,14 +107,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new RoleAlreadyPickedException("Account " + userId + " already picked a role");
     }
 
+
     private void setPickedRole(String role, User user) {
 
         if (!(role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("TEACHER"))) {
             throw new BadCredentialsException("User " + user.getId() + "picked forbidden registration role " + role);
         }
 
-        Role userRole = roleService.findByNameIgnoreCase("USER");
-        Role pickedRole = roleService.findByNameIgnoreCase(role);
+        Role userRole = roleService.getByNameIgnoreCase("USER");
+        Role pickedRole = roleService.getByNameIgnoreCase(role);
 
         user.addRole(userRole);
         user.addRole(pickedRole);
@@ -134,7 +133,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
     }
 
-    private void sendActivationMessage(User user) {
+    private void sendActivationEmail(User user) {
         if (!user.getEmail().isBlank()) {
             String message = String.format(
                     "Hello, %s! \n" + "Your activation link: %s/api/v1/activation/%s",
@@ -147,5 +146,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 }
+
 
 
