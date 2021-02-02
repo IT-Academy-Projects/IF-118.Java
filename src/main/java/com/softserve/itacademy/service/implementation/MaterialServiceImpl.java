@@ -2,14 +2,17 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.repository.MaterialRepository;
+import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
+import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
@@ -30,15 +33,19 @@ public class MaterialServiceImpl implements MaterialService {
     private final CourseService courseService;
     private final MaterialConverter materialConverter;
     private final AmazonS3ClientService amazonS3ClientService;
+    private final MailSender mailSender;
+    private final UserRepository userRepository;
 
     public MaterialServiceImpl(MaterialRepository materialRepository,
                                MaterialConverter materialConverter,
                                CourseService courseService,
-                               AmazonS3ClientService amazonS3ClientService) {
+                               AmazonS3ClientService amazonS3ClientService, MailSender mailSender, UserRepository userRepository) {
         this.materialRepository = materialRepository;
         this.materialConverter = materialConverter;
         this.courseService = courseService;
         this.amazonS3ClientService = amazonS3ClientService;
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
     }
 
 
@@ -89,6 +96,11 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void setExpirationDate(LocalDateTime expirationDate, Integer materialId, List<Integer> groupIds) {
         materialRepository.setExpirationDate(expirationDate, materialId, groupIds);
+        List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
+        if (!usersByGroupIds.isEmpty()) {
+            usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "SoftClass Lection time",
+                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
+        }
     }
 
     @Override

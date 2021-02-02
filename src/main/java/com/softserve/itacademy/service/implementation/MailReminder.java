@@ -1,7 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.service.MailSender;

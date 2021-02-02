@@ -31,8 +31,8 @@ function getMaterial(id) {
             } else {
                 canEdit = false;
                 $('#add-assignment-btn').hide();
-                $('#expiration-date').hide();
-                $('#open-material').hide();
+                $('#expiration-date-block').hide();
+                $('#open-material-block').hide();
             }
             $('#materials').append(`
                 <div class="material">
@@ -42,11 +42,11 @@ function getMaterial(id) {
                             <div class="material-description">${material.description}</div>
                             <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" id="expiration-date-block">
                             <label for="expiration-date">Set expiration date for lection (by default 1 day)</label>
                             <input id="expiration-date" type="date" min="`+getDayAfterToday(0)+`" value="`+getDefaultExpirationDate()+`">
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" id="open-material-block">
                             <form id="open-material">
                                 Open ${material.name} for groups:
                                 <div class="form-check" id="open-for-groups"></div>
