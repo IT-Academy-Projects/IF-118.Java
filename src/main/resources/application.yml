@@ -10,7 +10,6 @@ spring:
     username: ${MYSQL_USERNAME}
   jpa:
     database: mysql
-#    show-sql=true
     hibernate:
       ddl-auto: none
     properties:
@@ -28,6 +27,9 @@ spring:
           google:
             client-id: ${OAUTH2_GOOGLE_ID}
             client-secret: ${OAUTH2_GOOGLE_SECRET}
+          facebook:
+            client-id: ${FACEBOOK_ID}
+            client-secret: ${FACEBOOK_SECRET}
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
