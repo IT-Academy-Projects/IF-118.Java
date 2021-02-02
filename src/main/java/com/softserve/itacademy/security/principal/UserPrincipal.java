@@ -52,8 +52,7 @@ public class UserPrincipal implements PrincipalDetails {
     }
 
     public static UserPrincipal of(User user) {
-        UserPrincipal principal = modelMapper.map(user, UserPrincipal.class);
-        return principal;
+         return modelMapper.map(user, UserPrincipal.class);
     }
 
 }

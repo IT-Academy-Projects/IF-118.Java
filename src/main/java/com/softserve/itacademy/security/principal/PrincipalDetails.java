@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface PrincipalDetails {
 
-    Collection<? extends GrantedAuthority> getAuthorities();
+    Collection<GrantedAuthority> getAuthorities();
 
     Integer getId();
 
