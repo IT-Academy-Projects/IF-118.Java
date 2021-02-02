@@ -19,6 +19,9 @@ import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
@@ -41,6 +44,12 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
+    public List<AssignmentResponse> findAllByOwnerId(Integer id) {
+        return assignmentRepository.findAllByOwnerId(id).stream()
+                .map(assignmentConverter::of)
+                .collect(Collectors.toList());
+    }
+
     public AssignmentResponse create(AssignmentRequest assignmentRequest, MultipartFile file) {
         Material material = materialService.getById(assignmentRequest.getMaterialId());
         Assignment assignment = Assignment.builder()

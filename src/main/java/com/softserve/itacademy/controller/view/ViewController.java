@@ -78,9 +78,9 @@ public class ViewController {
         return "material.html";
     }
 
-    @GetMapping(path = "/invite", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(path = "/notification", produces = MediaType.TEXT_HTML_VALUE)
     public String inviteView() {
-        return "invitation.html";
+        return "notification.html";
     }
 
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)

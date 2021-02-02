@@ -18,4 +18,6 @@ public class AssignmentAnswersResponse {
     private Integer ownerId;
     private Boolean isSubmitted;
     private Integer grade;
+    private Boolean isReviewedByTeacher;
+    private Boolean isStudentSawGrade;
 }
