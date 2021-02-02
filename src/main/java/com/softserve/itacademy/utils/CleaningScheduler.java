@@ -25,11 +25,4 @@ public class CleaningScheduler {
         int countOfDeleted = invitationService.deleteByExpirationDate();
         log.info("Invitation cleaning finished: " + countOfDeleted + " invitations have been cleaned");
     }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteExpiredPassResetTokens() {
-        log.info("Reset Tokens cleaner start:");
-        int countOfDeleted = passwordResetService.deleteExpiredTokens();
-        log.info("Reset Tokens cleaning finished: " + countOfDeleted + " tokens have been cleaned");
-    }
 }
