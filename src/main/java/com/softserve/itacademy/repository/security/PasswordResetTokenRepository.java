@@ -21,9 +21,9 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 
     @Transactional
     @Modifying
-    @Query(value = "delete from password_reset_token where user_id = ?", nativeQuery = true)
-    void deleteByUserId(Integer id);
+    @Query(value = "update password_reset_token set used = true where token = :token", nativeQuery = true)
+    void setUsedByToken(String token);
 
-    @Query(value = "select * from password_reset_token where user_id = ?", nativeQuery = true)
+    @Query(value = "select * from password_reset_token where user_id = :id", nativeQuery = true)
     Optional<PasswordResetToken> findByUserId(Integer id);
 }

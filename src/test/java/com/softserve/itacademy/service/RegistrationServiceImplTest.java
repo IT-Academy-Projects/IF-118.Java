@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
                 .email("test@example.com")
                 .name("tester")
                 .activated(false)
-                .isPickedRole(false)
+                .pickedRole(false)
                 .activationCode("testcode")
                 .build();
         user.setId(1);
@@ -149,7 +149,7 @@ class RegistrationServiceImplTest {
     @Test
     void pickRoleAlreadyPicked() {
 
-        user.setIsPickedRole(true);
+        user.setPickedRole(true);
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
 
         assertThrows(RoleAlreadyPickedException.class, () -> registrationService.pickRole(1, roleRequest));

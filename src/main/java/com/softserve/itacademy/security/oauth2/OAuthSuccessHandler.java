@@ -4,6 +4,7 @@ package com.softserve.itacademy.security.oauth2;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,10 +39,10 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String email = (String) attributes.get("email");
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("user was not found"));
-        Authentication token = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+        Authentication token = new UsernamePasswordAuthenticationToken(UserPrincipal.of(user), user.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(token);
-        if (!user.getIsPickedRole()) {
+        if (!user.getPickedRole()) {
             getRedirectStrategy().sendRedirect(request, response, "/role-pick");
         } else {
             getRedirectStrategy().sendRedirect(request, response, "/user");

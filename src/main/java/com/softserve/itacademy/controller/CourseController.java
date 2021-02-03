@@ -2,11 +2,11 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DescriptionRequest;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.response.CourseResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
@@ -53,9 +53,9 @@ public class CourseController {
     @PostMapping
     public ResponseEntity<CourseResponse> create(@RequestPart(value = "course") String course,
                                                  @RequestPart(value = "file", required = false) MultipartFile file,
-                                                 @AuthenticationPrincipal User currentUser) throws JsonProcessingException {
+                                                 @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
         CourseRequest courseRequest = objectMapper.readValue(course, CourseRequest.class);
-        courseRequest.setOwnerId(currentUser.getId());
+        courseRequest.setOwnerId(principal.getId());
         return new ResponseEntity<>(courseService.create(courseRequest, file), HttpStatus.CREATED);
     }
 
@@ -76,8 +76,8 @@ public class CourseController {
 
     @CourseReadPermission
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal User currentUser) {
-        return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);
+    public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal UserPrincipal principal) {
+        return new ResponseEntity<>(courseService.findByOwner(principal.getId()), HttpStatus.OK);
     }
 
     @AdminRolePermission

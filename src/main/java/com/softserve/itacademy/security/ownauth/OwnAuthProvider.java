@@ -3,6 +3,7 @@ package com.softserve.itacademy.security.ownauth;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -50,7 +51,7 @@ public class OwnAuthProvider implements AuthenticationProvider {
         log.debug("User " + email + " trying to authorize");
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(UserPrincipal.of(user), password, user.getAuthorities());
         } else {
             throw new BadCredentialsException("Wrong email or password");
         }

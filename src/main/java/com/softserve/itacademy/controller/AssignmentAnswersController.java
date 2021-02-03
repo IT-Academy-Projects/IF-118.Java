@@ -2,11 +2,11 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
@@ -50,9 +50,9 @@ public class AssignmentAnswersController {
     @PostMapping
     public ResponseEntity<AssignmentAnswersResponse> create(@RequestPart(value = "file") MultipartFile file,
                                                             @RequestPart(value = "assignmentAnswer") String data,
-                                                            @AuthenticationPrincipal User user) throws JsonProcessingException {
+                                                            @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
         AssignmentAnswersRequest assignmentAnswersRequest = objectMapper.readValue(data, AssignmentAnswersRequest.class);
-        assignmentAnswersRequest.setOwnerId(user.getId());
+        assignmentAnswersRequest.setOwnerId(principal.getId());
         return new ResponseEntity<>(assignmentAnswersService.create(file, assignmentAnswersRequest), HttpStatus.CREATED);
     }
 
@@ -93,8 +93,8 @@ public class AssignmentAnswersController {
 
     @CourseReadPermission
     @GetMapping
-    public ResponseEntity<List<AssignmentAnswersResponse>> findAllByOwnerId(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(assignmentAnswersService.findAllByOwnerId(user.getId()), HttpStatus.OK);
+    public ResponseEntity<List<AssignmentAnswersResponse>> findAllByOwnerId(@AuthenticationPrincipal UserPrincipal principal) {
+        return new ResponseEntity<>(assignmentAnswersService.findAllByOwnerId(principal.getId()), HttpStatus.OK);
     }
 
     @UserRolePermission
