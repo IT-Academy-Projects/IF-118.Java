@@ -2,10 +2,10 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.security.perms.GroupDeletePermission;
 import com.softserve.itacademy.security.perms.GroupReadPermission;
@@ -51,9 +51,9 @@ public class GroupController {
     @PostMapping
     public ResponseEntity<GroupResponse> create(@RequestPart(value = "group") String group,
                                                 @RequestPart(value = "file", required = false) MultipartFile file,
-                                                @AuthenticationPrincipal User user) throws JsonProcessingException {
+                                                @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
         GroupRequest groupRequest = objectMapper.readValue(group, GroupRequest.class);
-        groupRequest.setOwnerId(user.getId());
+        groupRequest.setOwnerId(principal.getId());
         return new ResponseEntity<>(groupService.create(groupRequest, file), HttpStatus.CREATED);
     }
 
@@ -86,8 +86,8 @@ public class GroupController {
 
     @GroupUpdatePermission
     @PatchMapping("/{groupId}")
-    public ResponseEntity<Void> update(@AuthenticationPrincipal User user, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
-        groupRequest.setOwnerId(user.getId());
+    public ResponseEntity<Void> update(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
+        groupRequest.setOwnerId(principal.getId());
         groupService.updateGroup(groupId, groupRequest);
         return new ResponseEntity<>(OK);
     }
