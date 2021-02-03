@@ -1,9 +1,12 @@
 package com.softserve.itacademy.service.implementation;
 
 import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
+import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
@@ -13,9 +16,12 @@ import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,24 +31,28 @@ public class InvitationServiceImpl implements InvitationService {
     private final InvitationConverter invitationConverter;
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     public InvitationServiceImpl(MailSender mailSender, InvitationConverter invitationConverter,
-                                 InvitationRepository invitationRepository, UserRepository userRepository) {
+                                 InvitationRepository invitationRepository, UserRepository userRepository,
+                                 GroupRepository groupRepository) {
         this.mailSender = mailSender;
         this.invitationConverter = invitationConverter;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
         log.info("sending invitation on email");
         Invitation invitation = invitationConverter.of(invitationRequest);
-            sendInvitationMail(invitation);
-            invitation.setLink(getLink(invitation));
+        sendInvitationMail(invitation);
+        invitation.setLink(getLink(invitation));
         return invitationConverter.of(invitationRepository.save(invitation));
     }
 
+    @Transactional
     @Override
     public void approveByLink(String email, String code) {
         Invitation invitation = getInvitationByCode(code);
@@ -62,6 +72,7 @@ public class InvitationServiceImpl implements InvitationService {
         invitationRepository.delete(getById(id));
     }
 
+    @Transactional
     @Override
     public void approveById(Integer id) {
         log.info("approving invitation");
@@ -79,11 +90,13 @@ public class InvitationServiceImpl implements InvitationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public int deleteByExpirationDate() {
         return invitationRepository.deleteByExpirationDate();
     }
 
+    //todo create groupRequest on front if invitation is on course and pass ownerId
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
         if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
             if (invitation.getGroup() != null && canBeApproved(invitation)) {
@@ -92,12 +105,22 @@ public class InvitationServiceImpl implements InvitationService {
                 return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             } else {
                 approve(invitation);
-                invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
+                groupRepository.save(getGroup(invitation));
                 return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             }
         }
         return InvitationResponse.builder()
                 .approved(false)
+                .build();
+    }
+
+    private Group getGroup(Invitation invitation) {
+        Set<Course> courses = new HashSet<>();
+        courses.add(invitation.getCourse());
+        return Group.builder()
+                .name(invitation.getUser().getName())
+                .ownerId(invitation.getOwnerId())
+                .courses(courses)
                 .build();
     }
 

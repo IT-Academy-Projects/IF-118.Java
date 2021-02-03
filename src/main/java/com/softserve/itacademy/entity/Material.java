@@ -40,8 +40,5 @@ public class Material extends BasicEntity {
     private Course course;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    private Set<Assignment> assignments;
-
-    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private List<Comment> comments;
 }

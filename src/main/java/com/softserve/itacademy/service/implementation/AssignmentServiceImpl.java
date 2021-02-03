@@ -52,11 +52,9 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     public AssignmentResponse create(AssignmentRequest assignmentRequest, MultipartFile file) {
-        Material material = materialService.getById(assignmentRequest.getMaterialId());
         Assignment assignment = Assignment.builder()
                 .name(assignmentRequest.getName())
                 .description(assignmentRequest.getDescription())
-                .material(material)
                 .build();
         if (file != null) {
             assignment.setFileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_FOLDER, file));

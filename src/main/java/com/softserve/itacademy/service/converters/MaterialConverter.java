@@ -13,16 +13,9 @@ import java.util.stream.Collectors;
 public class MaterialConverter {
 
     private final ModelMapper mapper;
-    private final AssignmentConverter assignmentConverter;
 
     public MaterialResponse of(Material material) {
-        MaterialResponse map = mapper.map(material, MaterialResponse.class);
-        if (material.getAssignments() != null) {
-            map.setAssignments(material.getAssignments().stream()
-                    .map(assignmentConverter::of)
-                    .collect(Collectors.toSet()));
-        }
-        return map;
+        return mapper.map(material, MaterialResponse.class);
     }
 
 }

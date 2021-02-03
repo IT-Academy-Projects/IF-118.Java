@@ -33,7 +33,9 @@ public class InvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<InvitationResponse> sendInvitation(@RequestBody InvitationRequest invitation) {
+    public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal User user,
+                                                             @RequestBody InvitationRequest invitation) {
+        invitation.setOwnerId(user.getId());
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
