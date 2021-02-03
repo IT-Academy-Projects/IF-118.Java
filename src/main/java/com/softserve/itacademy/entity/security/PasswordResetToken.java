@@ -34,4 +34,7 @@ public class PasswordResetToken extends BasicEntity {
 
     @Builder.Default
     private LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(EXPIRATION);
+
+    @Builder.Default
+    private Boolean used = false;
 }

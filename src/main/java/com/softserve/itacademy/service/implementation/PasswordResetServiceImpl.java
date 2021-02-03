@@ -55,7 +55,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         if (validateToken(dto.getToken())) {
             User user = userService.getUserByPasswordResetToken(dto.getToken());
             userService.setPassword(user.getId(), dto.getNewPassword());
-            tokenRepository.deleteByUserId(user.getId());
+            tokenRepository.setUsedByToken(dto.getToken());
         }
     }
 
@@ -67,23 +67,36 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private boolean validateToken(String token) {
 
         PasswordResetToken passToken = tokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Token " + token + " not found"));
+
         if (passToken.getExpirationDate().isBefore(LocalDateTime.now())) {
             throw new BadCredentialsException("Token " + token + " has been expired");
         }
+
+        if (passToken.getUsed()) {
+            throw new BadCredentialsException("Token " + token + " already been used");
+        }
+
         return true;
     }
 
     private PasswordResetToken getOrCreateToken(User user, String token) {
 
-        PasswordResetToken resetToken = tokenRepository.findByUserId(user.getId()).orElse(
-                PasswordResetToken.builder()
-                        .user(user)
-                        .token(token)
-                        .build()
-        );
+        PasswordResetToken resetToken = tokenRepository.findByUserId(user.getId()).orElse(createToken(user, token));
+
+        if (resetToken.getUsed()) {
+            resetToken = createToken(user, token);
+        }
 
         resetToken.setExpirationDate(LocalDateTime.now().plusMinutes(PasswordResetToken.EXPIRATION));
         return tokenRepository.save(resetToken);
+    }
+
+    private PasswordResetToken createToken(User user, String token) {
+
+        return PasswordResetToken.builder()
+                .user(user)
+                .token(token)
+                .build();
     }
 
     private void sendPasswordResetEmail(PasswordResetToken token) {
