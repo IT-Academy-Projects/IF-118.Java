@@ -78,12 +78,18 @@ public class ViewController {
         return "material.html";
     }
 
-    @GetMapping(path = "/invite", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(path = "/notification", produces = MediaType.TEXT_HTML_VALUE)
     public String inviteView() {
-        return "invitation.html";
+        return "notification.html";
     }
 
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
     @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #id)")
     public String chatView(@RequestParam int id) { return "group-chat.html"; }
+
+    @GetMapping(path = "/password-reset", produces = MediaType.TEXT_HTML_VALUE)
+    public String passwordResetView() { return "password-reset.html"; }
+
+    @GetMapping(path = "/password-reset-new", produces = MediaType.TEXT_HTML_VALUE)
+    public String newPasswordView(@RequestParam String token) { return "password-reset-new.html"; }
 }

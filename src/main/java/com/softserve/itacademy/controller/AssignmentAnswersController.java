@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
 import static org.springframework.http.HttpStatus.OK;
@@ -56,10 +57,10 @@ public class AssignmentAnswersController {
     }
 
     @StudentRolePermission
-    @PatchMapping
-    public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
-                                                            @RequestPart(value = "answerId") String id) {
-        assignmentAnswersService.update(file, Integer.valueOf(id));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AssignmentAnswersResponse> update(@PathVariable Integer id,
+                                                            @RequestPart(value = "file") MultipartFile file) {
+        assignmentAnswersService.update(file, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -90,10 +91,37 @@ public class AssignmentAnswersController {
         return new ResponseEntity<>(assignmentAnswersService.findById(id), HttpStatus.OK);
     }
 
+    @CourseReadPermission
+    @GetMapping
+    public ResponseEntity<List<AssignmentAnswersResponse>> findAllByOwnerId(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(assignmentAnswersService.findAllByOwnerId(user.getId()), HttpStatus.OK);
+    }
+
     @UserRolePermission
     @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<Void> reject(@PathVariable Integer id) {
+        assignmentAnswersService.reject(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/review")
+    public ResponseEntity<Void> reviewByTeacher(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByTeacher(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @StudentRolePermission
+    @PatchMapping("/{id}/grade-review")
+    public ResponseEntity<Void> reviewByStudent(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByStudent(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
