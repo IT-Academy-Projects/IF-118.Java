@@ -68,7 +68,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void delete(Integer id) {
-        log.info("disapproving invitation");
+        log.info("delete invitation");
         invitationRepository.delete(getById(id));
     }
 

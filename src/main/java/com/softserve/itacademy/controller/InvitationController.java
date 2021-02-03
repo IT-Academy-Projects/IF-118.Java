@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.security.principal.UserPrincipal;
@@ -7,6 +8,7 @@ import com.softserve.itacademy.service.InvitationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +35,9 @@ public class InvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal User user,
+    public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal UserPrincipal principal,
                                                              @RequestBody InvitationRequest invitation) {
-        invitation.setOwnerId(user.getId());
+        invitation.setOwnerId(principal.getId());
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
