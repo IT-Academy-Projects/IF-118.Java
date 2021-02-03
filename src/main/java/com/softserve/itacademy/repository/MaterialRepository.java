@@ -17,7 +17,7 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query(value = "select * from material where id IN (:ids)", nativeQuery = true)
     Set<Material> findByIds(Set<Integer> ids);
 
-    @Query(value = "select group_id from materials_groups where is_opened = 0 and expiration_date < now() + interval 1 day", nativeQuery = true)
+    @Query(value = "select group_id from material_expirations where opened = 0 and expiration_date < now() + interval 1 day", nativeQuery = true)
     List<Integer> findAllDueDateTimeExpiring();
 
     @Query(value = "select id from material where material.course_id IN (:ids)", nativeQuery = true)
@@ -25,11 +25,14 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO materials_groups (material_id, group_id, is_opened) values (:materialId, :groupId, 1); ", nativeQuery = true)
+    @Query(value = "INSERT INTO material_expirations (material_id, group_id, opened) values (:materialId, :groupId, 1); ", nativeQuery = true)
     void saveMaterialsGroups(Integer materialId, Integer groupId);
+
+    @Query(value = "select expiration_date from material_expirations where material_id = :materialId and group_id in (:groupIds)", nativeQuery = true)
+    LocalDateTime getExpirationDate(Integer materialId, List<Integer> groupIds);
 
     @Modifying
     @Transactional
-    @Query(value = "update materials_groups as mg set mg.start_date = now(), mg.expiration_date = :expirationDate, mg.is_opened = 0 where mg.material_id = :materialId and group_id in (:groupIds)", nativeQuery = true)
+    @Query(value = "update material_expirations as me set me.start_date = now(), me.expiration_date = :expirationDate, me.opened = 0 where me.material_id = :materialId and me.group_id in (:groupIds)", nativeQuery = true)
     void setExpirationDate(LocalDateTime expirationDate, Integer materialId, List<Integer> groupIds);
 }

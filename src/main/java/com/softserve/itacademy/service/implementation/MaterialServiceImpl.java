@@ -1,6 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
+import com.softserve.itacademy.entity.BasicEntity;
 import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
@@ -22,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
@@ -101,6 +105,15 @@ public class MaterialServiceImpl implements MaterialService {
             usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "SoftClass Lection time",
                     "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
         }
+    }
+
+    @Override
+    public LocalDateTime getExpirationDate(Integer materialId, Set<Group> groups) {
+        LocalDateTime expirationDate = materialRepository.getExpirationDate(materialId, groups.stream().map(BasicEntity::getId).collect(Collectors.toList()));
+        if (expirationDate == null) {
+            throw new NotFoundException("");
+        }
+        return expirationDate;
     }
 
     @Override

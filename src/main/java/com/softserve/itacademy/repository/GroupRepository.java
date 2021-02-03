@@ -35,6 +35,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(value = "select * from student_groups join groups_courses gc on student_groups.id = gc.group_id where gc.course_id in (:courseIds)", nativeQuery = true)
     List<Group> findAllByCourseIds(Set<Integer> courseIds);
 
-    @Query(value = "select * from student_groups sg join materials_groups mg on sg.id = mg.group_id where mg.material_id = :id and mg.is_opened = 1", nativeQuery = true)
+    @Query(value = "select * from student_groups sg join material_expirations me on sg.id = me.group_id where me.material_id = :id and me.opened = 1", nativeQuery = true)
     List<Group> findGroupsWithClosedMaterial(Integer id);
 }

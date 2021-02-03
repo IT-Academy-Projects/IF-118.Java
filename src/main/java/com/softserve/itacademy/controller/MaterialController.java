@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
 import static org.springframework.http.HttpStatus.OK;
@@ -79,6 +80,11 @@ public class MaterialController {
     public ResponseEntity<Void> delete(@AuthenticationPrincipal User currentUser, @PathVariable Integer id) {
         materialService.delete(id, currentUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{materialId}/expiration")
+    public ResponseEntity<LocalDateTime> getExpirationDate(@PathVariable Integer materialId, @AuthenticationPrincipal User currentUser) {
+        return new ResponseEntity<>(materialService.getExpirationDate(materialId, currentUser.getGroups()), OK);
     }
 
     @PatchMapping("/{materialId}/expiration")
