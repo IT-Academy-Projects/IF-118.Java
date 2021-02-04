@@ -2,9 +2,11 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.itacademy.request.ExpirationRequest;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
