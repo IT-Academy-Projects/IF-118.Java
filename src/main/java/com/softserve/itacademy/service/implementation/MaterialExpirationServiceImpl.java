@@ -4,13 +4,13 @@ import com.softserve.itacademy.entity.BasicEntity;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.repository.MaterialExpirationRepository;
 import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.MaterialExpirationRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
-import com.softserve.itacademy.service.ExpirationService;
+import com.softserve.itacademy.service.MaterialExpirationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.MaterialExpirationConverter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpirationServiceImpl implements ExpirationService {
+public class MaterialExpirationServiceImpl implements MaterialExpirationService {
     private final MaterialRepository materialRepository;
     private final UserRepository userRepository;
     private final MailSender mailSender;
@@ -30,7 +30,7 @@ public class ExpirationServiceImpl implements ExpirationService {
     private final MaterialExpirationRepository materialExpirationRepository;
     private final MaterialExpirationConverter materialExpirationConverter;
 
-    public ExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailSender mailSender, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
+    public MaterialExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailSender mailSender, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
         this.materialRepository = materialRepository;
         this.userRepository = userRepository;
         this.mailSender = mailSender;
@@ -52,22 +52,24 @@ public class ExpirationServiceImpl implements ExpirationService {
     }
 
     @Override
-    public MaterialExpirationResponse getMaterialExpiration(Integer materialId) {
+    public List<MaterialExpirationResponse> getMaterialExpiration(Integer materialId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Integer> groupIds;
         Optional<Material> material = materialRepository.findById(materialId);
-        MaterialExpirationResponse expiration;
+        List<MaterialExpirationResponse> responses;
         if (material.isPresent()) {
-            if(material.get().getOwnerId().equals(principal.getId())) {
+            if (material.get().getOwnerId().equals(principal.getId())) {
                 groupIds = groupRepository.findByOwnerId(principal.getId()).stream().map(BasicEntity::getId).collect(Collectors.toList());
             } else {
                 groupIds = groupRepository.findAllByUserId((principal).getId()).stream().map(BasicEntity::getId).collect(Collectors.toList());
             }
-            expiration = materialExpirationConverter.of(materialExpirationRepository.getMaterialExpiration(materialId, groupIds));
-            if (expiration == null) {
-                throw new NotFoundException("Expiration for this material for this group was not found");
+            responses = materialExpirationRepository.getMaterialExpirations(materialId, groupIds).stream()
+                    .map(materialExpirationConverter::of)
+                    .collect(Collectors.toList());
+            if (responses.isEmpty()) {
+                throw new NotFoundException("Expirations for this material for this/these group/s was not found");
             }
-            return expiration;
+            return responses;
         } else {
             throw new NotFoundException("Material with such id was not found");
         }

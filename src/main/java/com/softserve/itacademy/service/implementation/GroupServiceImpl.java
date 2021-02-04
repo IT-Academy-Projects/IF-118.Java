@@ -4,17 +4,19 @@ import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Image;
+import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.entity.MaterialExpiration;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
+import com.softserve.itacademy.repository.MaterialExpirationRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
-import com.softserve.itacademy.service.ExpirationService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
@@ -42,9 +44,9 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
-    private final ExpirationService expirationService;
+    private final MaterialExpirationRepository materialExpirationRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository, ExpirationService expirationService) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository, MaterialExpirationRepository materialExpirationRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -53,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
-        this.expirationService = expirationService;
+        this.materialExpirationRepository = materialExpirationRepository;
     }
 
     @Override
@@ -66,14 +68,14 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
-//        Set<Integer> materialIds = null;
+        Set<Material> materials = null;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
             courses.forEach(course -> course.getGroups().add(newGroup));
-//            materialIds = materialRepository.findByCourseIds(courseIds);
+            materials = materialRepository.findByCourseIds(courseIds);
         }
         if (file != null) {
             Image image = new Image(imageService.compress(file));
@@ -85,10 +87,14 @@ public class GroupServiceImpl implements GroupService {
         newGroup.setChatRoom(chat);
 
         Group savedGroup = groupRepository.save(newGroup);
-//        if (materialIds != null) {
-//            expirationService.create();
-//            materialIds.forEach(id -> materialRepository.saveMaterialsGroups(id, savedGroup.getId()));
-//        }
+        if (materials != null && !materials.isEmpty()) {
+            materials.forEach(material -> {
+                MaterialExpiration materialExpiration = new MaterialExpiration();
+                materialExpiration.setMaterial(material);
+                materialExpiration.setGroup(savedGroup);
+                materialExpirationRepository.save(materialExpiration);
+            });
+        }
         return groupConverter.of(savedGroup);
     }
 

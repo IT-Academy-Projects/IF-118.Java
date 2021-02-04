@@ -3,9 +3,11 @@ package com.softserve.itacademy.service;
 import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
 
-public interface ExpirationService {
+import java.util.List;
+
+public interface MaterialExpirationService {
 
     void setMaterialExpiration(MaterialExpirationRequest materialExpirationRequest);
 
-    MaterialExpirationResponse getMaterialExpiration(Integer materialId);
+    List<MaterialExpirationResponse> getMaterialExpiration(Integer materialId);
 }

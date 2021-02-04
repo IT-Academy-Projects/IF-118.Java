@@ -55,7 +55,7 @@ function getMaterial(id) {
                             Open ${material.name} for groups:
                             <div class="form-check" id="open-for-groups"></div>
                             <button id="submit-expiration-date" type="button" class="btn btn-outline-success show"
-                                    onclick="openMaterial()">Submit
+                                    onclick="openMaterial(${material.id})">Submit
                             </button>
                         </form>
                     </div>
@@ -224,12 +224,13 @@ function showAnswers(assignment) {
     });
 }
 
-function openMaterial() {
+function openMaterial(materialId) {
     let checkedIds = []
     $( "#open-for-groups input:checked" ).each(function(){checkedIds.push($(this).val());});
     let data = {
         expirationDate: $('#expiration-date').val() + 'T' + getCurrentTime(),
-        ids: checkedIds
+        groupIds: checkedIds,
+        materialId: materialId
     }
     patchRequest(`/api/v1/expiration/${materialId}`, data);
 }
@@ -246,8 +247,10 @@ function showGroupsForSelect(materialId) {
 }
 
 function showExpiration(materialId) {
-    getRequest(`/api/v1/expiration/${materialId}`).then(exp => {
-        $("#material-expiration").append(`<span>${exp}</span>`);
+    getRequest(`/api/v1/expiration/${materialId}`).then(expirations => {
+        expirations.forEach(expiration => {
+            $("#material-expiration").append(`<p>${expiration.expirationDate}</p>`);
+        })
     })
 }
 
