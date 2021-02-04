@@ -36,8 +36,9 @@ function getMaterial(id) {
                 <div class="material">
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="material-name">${material.name}</div>
-                            <div class="material-description">${material.description}</div>
+                            <div class="material-name">Title: ${material.name}</div>
+                            <div class="material-description">Description: ${material.description}</div>
+                            <div id="material-expiration">Expiration time: </div>
                             <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
                         </div>
                     </div>
@@ -59,6 +60,7 @@ function getMaterial(id) {
                         </form>
                     </div>
                 `)
+                showGroupsForSelect(id);
             }
 
             material.assignments.forEach(assignment => {
@@ -114,7 +116,7 @@ function getMaterial(id) {
             })
 
         });
-        showGroupsForSelect(id);
+        showExpiration(id);
     })
 }
 
@@ -229,7 +231,7 @@ function openMaterial() {
         expirationDate: $('#expiration-date').val() + 'T' + getCurrentTime(),
         ids: checkedIds
     }
-    patchRequest(`/api/v1/materials/${materialId}/expiration`, data);
+    patchRequest(`/api/v1/expiration/${materialId}`, data);
 }
 
 function showGroupsForSelect(materialId) {
@@ -240,6 +242,12 @@ function showGroupsForSelect(materialId) {
                 <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
         `)
         }
+    })
+}
+
+function showExpiration(materialId) {
+    getRequest(`/api/v1/expiration/${materialId}`).then(exp => {
+        $("#material-expiration").append(`<span>${exp}</span>`);
     })
 }
 

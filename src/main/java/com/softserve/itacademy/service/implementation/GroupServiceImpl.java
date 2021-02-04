@@ -14,11 +14,13 @@ import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
+import com.softserve.itacademy.service.ExpirationService;
 import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
@@ -40,8 +42,9 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
+    private final ExpirationService expirationService;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository, ExpirationService expirationService) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -50,9 +53,11 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
+        this.expirationService = expirationService;
     }
 
     @Override
+    @Transactional
     public GroupResponse create(GroupRequest groupRequest, MultipartFile file) {
         User owner = userService.getById(groupRequest.getOwnerId());
 
@@ -61,14 +66,14 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
-        Set<Integer> materialIds = null;
+//        Set<Integer> materialIds = null;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
             courses.forEach(course -> course.getGroups().add(newGroup));
-            materialIds = materialRepository.findByCourseIds(courseIds);
+//            materialIds = materialRepository.findByCourseIds(courseIds);
         }
         if (file != null) {
             Image image = new Image(imageService.compress(file));
@@ -80,9 +85,10 @@ public class GroupServiceImpl implements GroupService {
         newGroup.setChatRoom(chat);
 
         Group savedGroup = groupRepository.save(newGroup);
-        if (materialIds != null) {
-            materialIds.forEach(id -> materialRepository.saveMaterialsGroups(id, savedGroup.getId()));
-        }
+//        if (materialIds != null) {
+//            expirationService.create();
+//            materialIds.forEach(id -> materialRepository.saveMaterialsGroups(id, savedGroup.getId()));
+//        }
         return groupConverter.of(savedGroup);
     }
 

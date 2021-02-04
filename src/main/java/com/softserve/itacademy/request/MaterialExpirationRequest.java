@@ -12,7 +12,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExpirationRequest {
+public class MaterialExpirationRequest {
     private LocalDateTime expirationDate;
-    private List<Integer> ids;
+    private List<Integer> groupIds;
+    private Integer materialId;
 }

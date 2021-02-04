@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -23,16 +21,7 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query(value = "select id from material where material.course_id IN (:ids)", nativeQuery = true)
     Set<Integer> findByCourseIds(Set<Integer> ids);
 
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO material_expirations (material_id, group_id, opened) values (:materialId, :groupId, 1); ", nativeQuery = true)
-    void saveMaterialsGroups(Integer materialId, Integer groupId);
-
-    @Query(value = "select expiration_date from material_expirations where material_id = :materialId and group_id in (:groupIds)", nativeQuery = true)
-    LocalDateTime getExpirationDate(Integer materialId, List<Integer> groupIds);
-
-    @Modifying
-    @Transactional
-    @Query(value = "update material_expirations as me set me.start_date = now(), me.expiration_date = :expirationDate, me.opened = 0 where me.material_id = :materialId and me.group_id in (:groupIds)", nativeQuery = true)
-    void setExpirationDate(LocalDateTime expirationDate, Integer materialId, List<Integer> groupIds);
+//    @Modifying
+//    @Query(value = "INSERT INTO material_expirations (material_id, group_id, opened) values (:materialId, :groupId, 1); ", nativeQuery = true)
+//    void saveMaterialsGroups(Integer materialId, Integer groupId);
 }
