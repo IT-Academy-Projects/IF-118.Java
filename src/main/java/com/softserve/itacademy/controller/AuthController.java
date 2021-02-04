@@ -1,6 +1,6 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.User;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.dto.ActivationResponse;
 import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
@@ -48,8 +48,8 @@ public class AuthController {
     @PatchMapping("/role-pick")
     public ResponseEntity<RolePickResponse> rolePick(
             @Valid @RequestBody RolePickRequest dto,
-            @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(registrationService.pickRole(user.getId(), dto), HttpStatus.OK);
+            @AuthenticationPrincipal UserPrincipal principal) {
+        return new ResponseEntity<>(registrationService.pickRole(principal.getId(), dto), HttpStatus.OK);
     }
 
     @GetMapping("/activation/{code}")

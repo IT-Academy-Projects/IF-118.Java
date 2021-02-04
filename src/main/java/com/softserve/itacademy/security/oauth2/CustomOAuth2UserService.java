@@ -42,7 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userRepository.findByEmail(email).orElse(
                 User.builder()
                         .email(email)
-                        .isPickedRole(false)
+                        .pickedRole(false)
                         .activated(true)
                         .build());
 
