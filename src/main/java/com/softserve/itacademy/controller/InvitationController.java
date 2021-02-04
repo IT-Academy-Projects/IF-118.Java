@@ -38,6 +38,7 @@ public class InvitationController {
     public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal UserPrincipal principal,
                                                              @RequestBody InvitationRequest invitation) {
         invitation.setOwnerId(principal.getId());
+
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
@@ -60,7 +61,7 @@ public class InvitationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InvitationResponse>> findAllByEmail(UserPrincipal principal) {
+    public ResponseEntity<List<InvitationResponse>> findAllByEmail(@AuthenticationPrincipal UserPrincipal principal) {
         return new ResponseEntity<>(invitationService.findAllByEmail(principal.getEmail()), HttpStatus.OK);
     }
 

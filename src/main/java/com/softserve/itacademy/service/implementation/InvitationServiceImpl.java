@@ -96,10 +96,9 @@ public class InvitationServiceImpl implements InvitationService {
         return invitationRepository.deleteByExpirationDate();
     }
 
-    //todo create groupRequest on front if invitation is on course and pass ownerId
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
-        if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
-            if (invitation.getGroup() != null && canBeApproved(invitation)) {
+        if (canBeApproved(invitation)) {
+            if (invitation.getGroup() != null) {
                 approve(invitation);
                 invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
                 return invitationConverter.of(getInvitationByCode(invitation.getCode()));
@@ -117,10 +116,14 @@ public class InvitationServiceImpl implements InvitationService {
     private Group getGroup(Invitation invitation) {
         Set<Course> courses = new HashSet<>();
         courses.add(invitation.getCourse());
+        Set<User> users = new HashSet<>();
+        users.add(invitation.getUser());
         return Group.builder()
-                .name(invitation.getUser().getName())
+                .name(invitation.getCourse().getName() +"-" + invitation.getUser().getName())
                 .ownerId(invitation.getOwnerId())
                 .courses(courses)
+                .users(users)
+                .disabled(false)
                 .build();
     }
 

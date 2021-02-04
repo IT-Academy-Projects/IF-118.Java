@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.converters;
 
+import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.request.GroupRequest;
@@ -36,7 +37,10 @@ public class GroupConverter {
             map.setImageId(group.getAvatar().getId());
         }
 
-        map.setChatRoom(chatRoomConverter.of(group.getChatRoom()));
+        ChatRoom chatRoom = group.getChatRoom();
+        if (chatRoom != null) {
+            map.setChatRoom(chatRoomConverter.of(chatRoom));
+        }
 
         return map;
     }

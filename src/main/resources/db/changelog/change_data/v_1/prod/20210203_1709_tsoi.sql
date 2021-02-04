@@ -28,3 +28,7 @@ CREATE TABLE if not exists `groups_assignments`
 
 ALTER TABLE invitation
     ADD COLUMN owner_id int NOT NULL;
+
+-- changeSet Tsoi:drop_users_courses endDelimiter:; splitStatements:true
+
+DROP TABLE users_courses;
