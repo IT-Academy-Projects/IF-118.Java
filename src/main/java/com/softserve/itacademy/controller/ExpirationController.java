@@ -31,8 +31,8 @@ public class ExpirationController {
         return new ResponseEntity<>(materialExpirationService.getMaterialExpiration(materialId), OK);
     }
 
-    @PostMapping("/{materialId}")
-    public ResponseEntity<Void> create(@PathVariable Integer materialId, @RequestBody MaterialExpirationRequest materialExpirationRequest) {
+    @PostMapping("/")
+    public ResponseEntity<Void> create( @RequestBody MaterialExpirationRequest materialExpirationRequest) {
         materialExpirationService.setMaterialExpiration(materialExpirationRequest);
         return new ResponseEntity<>(OK);
     }
