@@ -18,9 +18,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
@@ -51,13 +48,6 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public AssignmentAnswersResponse findById(Integer id) {
         return assignmentAnswersConverter.of(getById(id));
-    }
-
-    @Override
-    public List<AssignmentAnswersResponse> findAllByOwnerId(Integer id) {
-        return assignmentAnswersRepository.findAllByOwnerId(id).stream()
-                .map(assignmentAnswersConverter::of)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -123,20 +113,6 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     @Override
     public void reject(Integer id) {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.REJECTED.name()) == 0) {
-            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        }
-    }
-
-    @Override
-    public void reviewByTeacher(Integer id) {
-        if (assignmentAnswersRepository.reviewByTeacher(id) == 0) {
-            throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        }
-    }
-
-    @Override
-    public void reviewByStudent(Integer id) {
-        if (assignmentAnswersRepository.reviewByStudent(id) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         }
     }

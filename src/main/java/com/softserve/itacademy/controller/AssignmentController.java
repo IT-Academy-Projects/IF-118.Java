@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.CourseUpdatePermission;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -87,11 +85,5 @@ public class AssignmentController {
         AssignmentRequest assignmentRequest = objectMapper.readValue(data, AssignmentRequest.class);
         assignmentService.update(id, assignmentRequest, file);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @CourseReadPermission
-    @GetMapping
-    public ResponseEntity<List<AssignmentResponse>> findAllByOwnerId(@AuthenticationPrincipal UserPrincipal principal) {
-        return new ResponseEntity<>(assignmentService.findAllByOwnerId(principal.getId()), HttpStatus.OK);
     }
 }

@@ -31,10 +31,6 @@ public class AssignmentAnswers extends BasicEntity {
 
     private Integer grade;
 
-    private Boolean isReviewedByTeacher; //in notifications
-
-    private Boolean isStudentSawGrade; //in notifications
-
     @ManyToOne
     @JoinColumn(name = "assignment_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_assignment_assignment_answers"))
     private Assignment assignment;
