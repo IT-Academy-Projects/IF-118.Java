@@ -41,6 +41,9 @@ public class Invitation extends BasicEntity {
     @Column(nullable = false, unique = true)
     private String code;
 
+    @Column(nullable = false)
+    private Integer ownerId;
+
     @ManyToOne
     @JoinColumn(name = "user_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_invitation"))
     private User user;

@@ -33,4 +33,17 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     Optional<Group> findByChatRoomId(Integer id);
 
+
+    @Query(value = "select * from student_groups join groups_courses gc on student_groups.id = gc.group_id where gc.course_id in (:courseIds)", nativeQuery = true)
+    List<Group> findAllByCourseIds(Set<Integer> courseIds);
+
+    @Query(value = "select * from student_groups where id in(:groupIds)", nativeQuery = true)
+    List<Group> findAllByIds(List<Integer> groupIds);
+
+    @Query(value = "select * from student_groups sg join groups_materials gm on sg.id = gm.group_id where gm.material_id = :id and gm.opened = 0", nativeQuery = true)
+    List<Group> findGroupsWithClosedMaterial(Integer id);
+
+    @Modifying
+    @Query(value = "insert into groups_assignments (group_id, assignment_id) VALUE (?1, ?2)", nativeQuery = true)
+    void submitAssignment(Integer groupId, Integer assignmentId);
 }

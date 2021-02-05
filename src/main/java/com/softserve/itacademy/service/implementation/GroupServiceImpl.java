@@ -1,15 +1,19 @@
 package com.softserve.itacademy.service.implementation;
 
+import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Image;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
+import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
@@ -18,6 +22,7 @@ import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
@@ -38,8 +43,14 @@ public class GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
+    private final MaterialRepository materialRepository;
+    private final AssignmentRepository assignmentRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
+                            UserService userService, ChatRoomService chatRoomService,
+                            CourseRepository courseRepository, ImageService imageService,
+                            ImageRepository imageRepository, MaterialRepository materialRepository,
+                            AssignmentRepository assignmentRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -47,9 +58,12 @@ public class GroupServiceImpl implements GroupService {
         this.courseRepository = courseRepository;
         this.imageService = imageService;
         this.imageRepository = imageRepository;
+        this.materialRepository = materialRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
+    @Transactional
     public GroupResponse create(GroupRequest groupRequest, MultipartFile file) {
         User owner = userService.getById(groupRequest.getOwnerId());
 
@@ -58,11 +72,14 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
+        Set<Material> materials;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
+            materials = materialRepository.findByCourseIds(courseIds);
+            newGroup.setMaterials(materials);
             courses.forEach(course -> course.getGroups().add(newGroup));
         }
         if (file != null) {
@@ -74,7 +91,8 @@ public class GroupServiceImpl implements GroupService {
         chat.setType(ChatRoom.ChatType.GROUP);
         newGroup.setChatRoom(chat);
 
-        return groupConverter.of(groupRepository.save(newGroup));
+        Group savedGroup = groupRepository.save(newGroup);
+        return groupConverter.of(savedGroup);
     }
 
     @Override
@@ -92,9 +110,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public byte[] getAvatarById(Integer id) {
-        if (!groupRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
+        if (!groupRepository.existsById(id)) {
+            throw new NotFoundException(COURSE_ID_NOT_FOUND);
+        }
         byte[] avatar = groupRepository.getAvatarById(id);
-        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
+        if (avatar == null) {
+            throw new NotFoundException("Avatar doesn't exist for this course");
+        }
         return avatar;
     }
 
@@ -103,6 +125,20 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findByIdAndOwnerId(groupId, groupRequest.getOwnerId())
                 .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
         group.setName(groupRequest.getName());
+    }
+
+    @Override
+    public List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId) {
+        List<Group> groups = groupRepository.findGroupsWithClosedMaterial(materialId);
+        if (groups.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return groups.stream().map(groupConverter::of).collect(Collectors.toList());
+    }
+
+    @Override
+    public void submitAssignment(Integer groupId, Integer assignmentId) {
+        groupRepository.submitAssignment(groupId, assignmentId);
     }
 
     @Override

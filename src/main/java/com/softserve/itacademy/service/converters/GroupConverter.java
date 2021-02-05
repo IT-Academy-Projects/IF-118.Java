@@ -1,5 +1,7 @@
 package com.softserve.itacademy.service.converters;
 
+import com.softserve.itacademy.entity.Assignment;
+import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.request.GroupRequest;
@@ -20,6 +22,7 @@ public class GroupConverter {
     private final CourseConverter courseConverter;
     private final UserConverter userConverter;
     private final ChatRoomConverter chatRoomConverter;
+    private final AssignmentConverter assignmentConverter;
 
     public GroupResponse of(Group group) {
         GroupResponse map = mapper.map(group, GroupResponse.class);
@@ -36,9 +39,17 @@ public class GroupConverter {
         if (group.getAvatar() != null) {
             map.setImageId(group.getAvatar().getId());
         }
+        ChatRoom chatRoom = group.getChatRoom();
+        if (chatRoom != null) {
+            map.setChatRoom(chatRoomConverter.of(chatRoom));
+        }
 
-        map.setChatRoom(chatRoomConverter.of(group.getChatRoom()));
-
+        Set<Assignment> assignments = group.getAssignments();
+        if (assignments != null) {
+            map.setAssignments(assignments.stream()
+                    .map(assignmentConverter::of)
+                    .collect(Collectors.toSet()));
+        }
         return map;
     }
 

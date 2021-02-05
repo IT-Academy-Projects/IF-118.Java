@@ -1,9 +1,8 @@
 package com.softserve.itacademy.controller;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CommentRequest;
 import com.softserve.itacademy.response.CommentResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CommentReadPermission;
 import com.softserve.itacademy.service.CommentService;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
+
 @RestController
 @RequestMapping(API_V1 + "comments")
 public class CommentController {
@@ -30,8 +31,8 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentResponse> create(@RequestBody CommentRequest commentRequest,
-                                                  @AuthenticationPrincipal User currentUser) {
-        commentRequest.setOwnerId(currentUser.getId());
+                                                  @AuthenticationPrincipal UserPrincipal currentPrincipal) {
+        commentRequest.setOwnerId(currentPrincipal.getId());
         return new ResponseEntity<>(commentService.create(commentRequest), HttpStatus.CREATED);
     }
 

@@ -36,6 +36,7 @@ public class InvitationConverter {
                 .courseOrGroupId(id)
                 .link(invitation.getLink())
                 .code(invitation.getCode())
+                .ownerId(invitation.getOwnerId())
                 .build();
 
     }
@@ -47,6 +48,7 @@ public class InvitationConverter {
                 .approved(false)
                 .link(address + "/api/v1/invitation/approve/")
                 .code(UUID.randomUUID().toString())
+                .ownerId(request.getOwnerId())
                 .user(userRepository.findByEmail(request.getEmail()).orElse(null))
                 .group(groupRepository.findById(request.getGroupId()).orElse(null))
                 .course(courseRepository.findById(request.getCourseId()).orElse(null))

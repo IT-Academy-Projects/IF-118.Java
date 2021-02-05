@@ -22,6 +22,10 @@ public interface UserService {
 
     User getById(Integer id);
 
+    User getByEmail(String email);
+
+    User getUserByPasswordResetToken(String token);
+
     int updateName(String name, Integer id);
 
     int updateEmail(String email, Integer id);
@@ -29,6 +33,8 @@ public interface UserService {
     List<UserResponse> findByGroupId(Integer id);
 
     void changePass(Integer id, String oldPass, String newPass);
+
+    void setPassword(Integer id, String password);
 
     void deleteInvitation(Integer userId, Integer invitationId);
 

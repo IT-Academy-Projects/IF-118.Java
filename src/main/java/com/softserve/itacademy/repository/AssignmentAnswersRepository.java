@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,13 +17,13 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
 
     @Modifying
     @Transactional
-    @Query(value = "update assignment_answers set file_reference=:fileRef, is_submitted=false where id=:id", nativeQuery = true)
-    void update(String fileRef, Integer id);
+    @Query(value = "update assignment_answers set file_reference=:fileRef, status=:status where id=:id", nativeQuery = true)
+    void update(String fileRef, Integer id, String status);
 
     @Modifying
     @Transactional
-    @Query(value = "update assignment_answers set is_submitted=true where id=:id", nativeQuery = true)
-    Integer submit(Integer id);
+    @Query(value = "update assignment_answers set status=:status where id=:id", nativeQuery = true)
+    int updateStatus(Integer id, String status);
 
     @Modifying
     @Transactional
@@ -38,4 +40,18 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
     @Query(value = "select * from assignment_answers aa where aa.assignment_id = ?1 and aa.owner_id = ?2", nativeQuery = true)
     Optional<AssignmentAnswers> findByOwnerAndAssignment(Integer assignmentId, Integer ownerId);
 
+
+    @Modifying
+    @Transactional
+    @Query(value = "update assignment_answers set is_reviewed_by_teacher=true where id=:id", nativeQuery = true)
+    Integer reviewByTeacher(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update assignment_answers set is_student_saw_grade=true where id=:id", nativeQuery = true)
+    Integer reviewByStudent(Integer id);
+
+    @Query(value = "select * from assignment_answers join groups_assignments ga" +
+            " on assignment_answers.assignment_id = ga.assignment_id where group_id = ?1", nativeQuery = true)
+    Set<AssignmentAnswers> findAllByOwnerId(Integer id);
 }

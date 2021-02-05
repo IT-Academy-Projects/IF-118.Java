@@ -62,15 +62,15 @@ class RegistrationServiceImplTest {
     public void setup() {
         when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments()[0]);
         when(passwordEncoder.encode(Mockito.anyString())).thenReturn("ENCODED_PASSWORD");
-        when(roleService.findByNameIgnoreCase("TEACHER")).thenReturn(Role.builder().name("TEACHER").build());
-        when(roleService.findByNameIgnoreCase("STUDENT")).thenReturn(Role.builder().name("STUDENT").build());
-        when(roleService.findByNameIgnoreCase("USER")).thenReturn(Role.builder().name("USER").build());
+        when(roleService.getByNameIgnoreCase("TEACHER")).thenReturn(Role.builder().name("TEACHER").build());
+        when(roleService.getByNameIgnoreCase("STUDENT")).thenReturn(Role.builder().name("STUDENT").build());
+        when(roleService.getByNameIgnoreCase("USER")).thenReturn(Role.builder().name("USER").build());
 
         user = User.builder()
                 .email("test@example.com")
                 .name("tester")
                 .activated(false)
-                .isPickedRole(false)
+                .pickedRole(false)
                 .activationCode("testcode")
                 .build();
         user.setId(1);
@@ -149,7 +149,7 @@ class RegistrationServiceImplTest {
     @Test
     void pickRoleAlreadyPicked() {
 
-        user.setIsPickedRole(true);
+        user.setPickedRole(true);
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
 
         assertThrows(RoleAlreadyPickedException.class, () -> registrationService.pickRole(1, roleRequest));

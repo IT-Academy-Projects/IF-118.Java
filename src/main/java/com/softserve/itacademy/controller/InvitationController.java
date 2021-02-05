@@ -1,9 +1,9 @@
 package com.softserve.itacademy.controller;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.InvitationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,10 @@ public class InvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<InvitationResponse> sendInvitation(@RequestBody InvitationRequest invitation) {
+    public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal UserPrincipal principal,
+                                                             @RequestBody InvitationRequest invitation) {
+        invitation.setOwnerId(principal.getId());
+
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
@@ -56,8 +59,8 @@ public class InvitationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InvitationResponse>> findAllByEmail(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(invitationService.findAllByEmail(user.getEmail()), HttpStatus.OK);
+    public ResponseEntity<List<InvitationResponse>> findAllByEmail(@AuthenticationPrincipal UserPrincipal principal) {
+        return new ResponseEntity<>(invitationService.findAllByEmail(principal.getEmail()), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

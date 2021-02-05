@@ -2,11 +2,11 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
 import static org.springframework.http.HttpStatus.OK;
@@ -49,17 +50,17 @@ public class AssignmentAnswersController {
     @PostMapping
     public ResponseEntity<AssignmentAnswersResponse> create(@RequestPart(value = "file") MultipartFile file,
                                                             @RequestPart(value = "assignmentAnswer") String data,
-                                                            @AuthenticationPrincipal User user) throws JsonProcessingException {
+                                                            @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
         AssignmentAnswersRequest assignmentAnswersRequest = objectMapper.readValue(data, AssignmentAnswersRequest.class);
-        assignmentAnswersRequest.setOwnerId(user.getId());
+        assignmentAnswersRequest.setOwnerId(principal.getId());
         return new ResponseEntity<>(assignmentAnswersService.create(file, assignmentAnswersRequest), HttpStatus.CREATED);
     }
 
     @StudentRolePermission
-    @PatchMapping
-    public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
-                                                            @RequestPart(value = "answerId") String id) {
-        assignmentAnswersService.update(file, Integer.valueOf(id));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AssignmentAnswersResponse> update(@PathVariable Integer id,
+                                                            @RequestPart(value = "file") MultipartFile file) {
+        assignmentAnswersService.update(file, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -90,10 +91,37 @@ public class AssignmentAnswersController {
         return new ResponseEntity<>(assignmentAnswersService.findById(id), HttpStatus.OK);
     }
 
+    @CourseReadPermission
+    @GetMapping
+    public ResponseEntity<List<AssignmentAnswersResponse>> findAllByOwnerId(@AuthenticationPrincipal UserPrincipal principal) {
+        return new ResponseEntity<>(assignmentAnswersService.findAllByOwnerId(principal.getId()), HttpStatus.OK);
+    }
+
     @UserRolePermission
     @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<Void> reject(@PathVariable Integer id) {
+        assignmentAnswersService.reject(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/review")
+    public ResponseEntity<Void> reviewByTeacher(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByTeacher(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @StudentRolePermission
+    @PatchMapping("/{id}/grade-review")
+    public ResponseEntity<Void> reviewByStudent(@PathVariable Integer id) {
+        assignmentAnswersService.reviewByStudent(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

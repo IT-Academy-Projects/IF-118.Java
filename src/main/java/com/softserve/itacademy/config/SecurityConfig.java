@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
@@ -30,11 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String LOGIN_PAGE = "/login";
 
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
+    private final OidcUserService oidcUserService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
     private final AuthenticationProvider authenticationProvider;
 
-    public SecurityConfig(OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService, OAuthSuccessHandler oAuthSuccessHandler, AuthenticationProvider authenticationProvider) {
+    public SecurityConfig(OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService, OidcUserService oidcUserService, OAuthSuccessHandler oAuthSuccessHandler, AuthenticationProvider authenticationProvider) {
         this.oAuth2UserService = oAuth2UserService;
+        this.oidcUserService = oidcUserService;
         this.oAuthSuccessHandler = oAuthSuccessHandler;
         this.authenticationProvider = authenticationProvider;
     }
@@ -58,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()
                 .mvcMatchers("/","/api/v1/invitation/invite", "/registration", "/api/v1/invitation/approve/**", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
-                .antMatchers("/api/v1/users/is-authenticated", "/navbar.html", "/img/*").permitAll()
+                .mvcMatchers("/api/v1/users/is-authenticated", "/password-reset", "/password-reset-new", "/api/v1/password-reset", "/api/v1/password-reset/new", "/navbar.html", "/img/*").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()
@@ -67,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage(LOGIN_PAGE).permitAll()
                     .userInfoEndpoint()
                     .userService(oAuth2UserService)
+                    .oidcUserService(oidcUserService)
                 .and()
                     .authorizationEndpoint()
                     .baseUri("/oauth2/authorize")

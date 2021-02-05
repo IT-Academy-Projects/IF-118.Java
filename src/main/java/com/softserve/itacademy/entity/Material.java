@@ -11,8 +11,10 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -40,8 +42,11 @@ public class Material extends BasicEntity {
     private Course course;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    private Set<Assignment> assignments;
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    private List<MaterialExpiration> expirations;
+
+    @ManyToMany(mappedBy = "materials", fetch = FetchType.LAZY)
+    private List<Group> groups;
 }
