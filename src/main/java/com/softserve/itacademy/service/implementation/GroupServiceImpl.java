@@ -5,14 +5,12 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.Material;
-import com.softserve.itacademy.entity.MaterialExpiration;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
-import com.softserve.itacademy.repository.MaterialExpirationRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
@@ -44,9 +42,8 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
-    private final MaterialExpirationRepository materialExpirationRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository, MaterialExpirationRepository materialExpirationRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -55,7 +52,6 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
-        this.materialExpirationRepository = materialExpirationRepository;
     }
 
     @Override
@@ -68,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
-        Set<Material> materials = null;
+        Set<Material> materials;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
@@ -88,14 +84,6 @@ public class GroupServiceImpl implements GroupService {
         newGroup.setChatRoom(chat);
 
         Group savedGroup = groupRepository.save(newGroup);
-        if (materials != null && !materials.isEmpty()) {
-            materials.forEach(material -> {
-                MaterialExpiration materialExpiration = new MaterialExpiration();
-                materialExpiration.setMaterial(material);
-                materialExpiration.setGroup(savedGroup);
-                materialExpirationRepository.save(materialExpiration);
-            });
-        }
         return groupConverter.of(savedGroup);
     }
 

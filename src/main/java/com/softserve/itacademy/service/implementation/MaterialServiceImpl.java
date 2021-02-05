@@ -3,11 +3,9 @@ package com.softserve.itacademy.service.implementation;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Material;
-import com.softserve.itacademy.entity.MaterialExpiration;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
-import com.softserve.itacademy.repository.MaterialExpirationRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
@@ -34,17 +31,15 @@ public class MaterialServiceImpl implements MaterialService {
     private final CourseService courseService;
     private final MaterialConverter materialConverter;
     private final AmazonS3ClientService amazonS3ClientService;
-    private final MaterialExpirationRepository materialExpirationRepository;
 
     public MaterialServiceImpl(MaterialRepository materialRepository,
                                MaterialConverter materialConverter,
                                CourseService courseService,
-                               AmazonS3ClientService amazonS3ClientService, MaterialExpirationRepository materialExpirationRepository) {
+                               AmazonS3ClientService amazonS3ClientService) {
         this.materialRepository = materialRepository;
         this.materialConverter = materialConverter;
         this.courseService = courseService;
         this.amazonS3ClientService = amazonS3ClientService;
-        this.materialExpirationRepository = materialExpirationRepository;
     }
 
 
@@ -68,20 +63,12 @@ public class MaterialServiceImpl implements MaterialService {
                 .groups(new ArrayList<>(course.getGroups()))
                 .fileReference(amazonS3ClientService.upload(BUCKET_NAME, MATERIALS_FOLDER, file))
                 .build();
-        material = materialRepository.save(material);
-        List<Group> groups = material.getGroups();
+        Set<Group> groups = course.getGroups();
         if (groups != null && !groups.isEmpty()) {
-            Material finalMaterial = material;
-            groups.forEach(group -> {
-                MaterialExpiration materialExpiration = new MaterialExpiration();
-                materialExpiration.setMaterial(finalMaterial);
-                materialExpiration.setGroup(group);
-                MaterialExpiration savedExpiration = materialExpirationRepository.save(materialExpiration);
-                finalMaterial.getExpirations().add(savedExpiration);
-            });
-            material = finalMaterial;
+            groups.forEach(group -> group.getMaterials().add(material));
         }
-        return materialConverter.of(material);
+        Material savedMaterial = materialRepository.save(material);
+        return materialConverter.of(savedMaterial);
     }
 
     @Override
