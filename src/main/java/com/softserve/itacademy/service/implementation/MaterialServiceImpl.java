@@ -16,9 +16,11 @@ import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
@@ -89,6 +91,12 @@ public class MaterialServiceImpl implements MaterialService {
         }
         amazonS3ClientService.delete(BUCKET_NAME, MATERIALS_FOLDER, material.getFileReference());
         materialRepository.delete(material);
+    }
+
+    @Transactional
+    @Override
+    public void open(Integer materialId, List<Integer> groupIds) {
+        materialRepository.openMaterial(materialId, groupIds);
     }
 
     @Override

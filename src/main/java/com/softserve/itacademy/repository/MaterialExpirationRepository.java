@@ -14,6 +14,6 @@ public interface MaterialExpirationRepository extends JpaRepository<MaterialExpi
     List<MaterialExpiration> getMaterialExpirations(Integer materialId, List<Integer> groupIds);
 
     @Modifying
-    @Query(value = "update material_expirations as me set me.start_date = now(), me.expiration_date = :expirationDate, me.opened = 0 where me.material_id = :materialId and me.group_id in (:groupIds)", nativeQuery = true)
+    @Query(value = "update material_expirations as me set me.start_date = now(), me.expiration_date = :expirationDate where me.material_id = :materialId and me.group_id in (:groupIds)", nativeQuery = true)
     void setMaterialExpiration(LocalDateTime expirationDate, Integer materialId, List<Integer> groupIds);
 }

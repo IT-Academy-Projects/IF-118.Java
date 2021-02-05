@@ -6,15 +6,14 @@ import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface MaterialService {
 
     MaterialResponse findById(Integer id);
-
     MaterialResponse create(MaterialRequest materialRequest, MultipartFile file);
-
     Material getById(Integer id);
-
     DownloadFileResponse downloadById(Integer id);
-
     void delete(Integer id, Integer currentUserId);
+    void open(Integer materialId, List<Integer> groupIds);
 }

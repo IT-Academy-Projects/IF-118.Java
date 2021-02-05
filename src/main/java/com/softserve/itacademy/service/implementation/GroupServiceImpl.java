@@ -121,11 +121,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId) {
-        List<Group> groupsByCourseId = groupRepository.findGroupsWithClosedMaterial(materialId);
-        if (groupsByCourseId.isEmpty()) {
+        List<Group> groups = groupRepository.findGroupsWithClosedMaterial(materialId);
+        if (groups.isEmpty()) {
             return Collections.emptyList();
         }
-        return groupsByCourseId.stream().map(groupConverter::of).collect(Collectors.toList());
+        return groups.stream().map(groupConverter::of).collect(Collectors.toList());
     }
 
     @Override

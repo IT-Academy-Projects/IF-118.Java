@@ -23,7 +23,7 @@ public class MaterialExpiration extends Expiration {
     @JoinColumn(name = "material_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_expiration_material"))
     private Material material;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_expiration_group"))
     private Group group;
 }

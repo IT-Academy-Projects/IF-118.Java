@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MaterialExpirationRequest {
+    private LocalDateTime startDate;
     private LocalDateTime expirationDate;
     private List<Integer> groupIds;
     private Integer materialId;

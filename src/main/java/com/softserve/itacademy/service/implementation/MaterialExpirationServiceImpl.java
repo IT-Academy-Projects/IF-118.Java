@@ -1,7 +1,9 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.BasicEntity;
+import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.entity.MaterialExpiration;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.GroupRepository;
@@ -10,6 +12,7 @@ import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.MaterialExpirationService;
 import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.MaterialExpirationConverter;
@@ -17,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +47,16 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     @Transactional
     public void setMaterialExpiration(MaterialExpirationRequest materialExpirationRequest) {
         List<Integer> groupIds = materialExpirationRequest.getGroupIds();
-        materialExpirationRepository.setMaterialExpiration(materialExpirationRequest.getExpirationDate(), materialExpirationRequest.getMaterialId(), groupIds);
+        materialExpirationRequest.setStartDate(LocalDateTime.now());
+        if (groupIds != null) {
+            List<Group> groups = groupRepository.findAllByIds(groupIds);
+            Optional<Material> material = materialRepository.findById(materialExpirationRequest.getMaterialId());
+            material.ifPresent(value -> groups.forEach(group -> {
+                MaterialExpiration materialExpiration = materialExpirationConverter.of(materialExpirationRequest, group, value);
+                materialExpirationRepository.save(materialExpiration);
+            }));
+        }
+
         List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
         if (!usersByGroupIds.isEmpty()) {
             usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "SoftClass Lection time",
@@ -53,7 +66,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
 
     @Override
     public List<MaterialExpirationResponse> getMaterialExpiration(Integer materialId) {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Integer> groupIds;
         Optional<Material> material = materialRepository.findById(materialId);
         List<MaterialExpirationResponse> responses;
