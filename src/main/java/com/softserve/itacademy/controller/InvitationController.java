@@ -1,6 +1,6 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.entity.User;
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.security.principal.UserPrincipal;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-
-import static com.softserve.itacademy.config.Constance.API_V1;
 
 @Controller
 @RequestMapping(API_V1 + "invitation")

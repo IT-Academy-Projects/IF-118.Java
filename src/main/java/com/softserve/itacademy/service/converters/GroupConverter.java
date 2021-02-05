@@ -36,7 +36,6 @@ public class GroupConverter {
         if (group.getAvatar() != null) {
             map.setImageId(group.getAvatar().getId());
         }
-
         ChatRoom chatRoom = group.getChatRoom();
         if (chatRoom != null) {
             map.setChatRoom(chatRoomConverter.of(chatRoom));
