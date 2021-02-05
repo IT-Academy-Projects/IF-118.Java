@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAnswers, Integer> {
@@ -39,5 +39,7 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
     @Query(value = "update assignment_answers set is_student_saw_grade=true where id=:id", nativeQuery = true)
     Integer reviewByStudent(Integer id);
 
-    List<AssignmentAnswers> findAllByOwnerId(Integer id);
+    @Query(value = "select * from assignment_answers join groups_assignments ga" +
+            " on assignment_answers.assignment_id = ga.assignment_id where group_id = ?1", nativeQuery = true)
+    Set<AssignmentAnswers> findAllByOwnerId(Integer id);
 }

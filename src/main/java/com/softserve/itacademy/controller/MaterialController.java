@@ -2,14 +2,14 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.request.ExpirationRequest;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseCreatePermission;
 import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
+import com.softserve.itacademy.security.perms.CourseUpdatePermission;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.MaterialService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -28,9 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.softserve.itacademy.config.Constance.API_V1;
-import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(API_V1 + "materials")
@@ -80,9 +80,10 @@ public class MaterialController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/{materialId}/expiration")
-    public ResponseEntity<Void> setExpirationDate(@PathVariable Integer materialId, @RequestBody ExpirationRequest expirationRequest) {
-        materialService.setExpirationDate(expirationRequest.getExpirationDate(), materialId, expirationRequest.getIds());
-        return new ResponseEntity<>(OK);
+    @CourseUpdatePermission
+    @PatchMapping("/open/{id}")
+    public ResponseEntity<Void> open (@PathVariable Integer id, @RequestBody List<Integer> groupIds) {
+        materialService.open(id, groupIds);
+        return ResponseEntity.ok().build();
     }
 }
