@@ -9,6 +9,7 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
   jpa:
+#    show-sql: true
     database: mysql
     hibernate:
       ddl-auto: none
@@ -16,6 +17,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
+        type: debag
         globally_quoted_identifiers: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml

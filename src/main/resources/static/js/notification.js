@@ -21,7 +21,7 @@ function getInvitations() {
                             <button type="button" class="btn btn-outline-danger" onclick="deleteInvitation(${invId})">Delete</button>
                          </div>`;
 
-            if( courseOrGroup == 'course'){
+            if( courseOrGroup === 'course'){
                 getRequest(`api/v1/courses/${invitation.courseOrGroupId}`).then(course => {
                     let courseName = course.name;
                     courseOrGroupTeacher = course.ownerId;

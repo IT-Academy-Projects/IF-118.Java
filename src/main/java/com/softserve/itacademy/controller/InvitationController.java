@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.security.principal.UserPrincipal;
@@ -7,6 +8,7 @@ import com.softserve.itacademy.service.InvitationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-
-import static com.softserve.itacademy.config.Constance.API_V1;
 
 @Controller
 @RequestMapping(API_V1 + "invitation")
@@ -33,7 +33,10 @@ public class InvitationController {
     }
 
     @PostMapping
-    public ResponseEntity<InvitationResponse> sendInvitation(@RequestBody InvitationRequest invitation) {
+    public ResponseEntity<InvitationResponse> sendInvitation(@AuthenticationPrincipal UserPrincipal principal,
+                                                             @RequestBody InvitationRequest invitation) {
+        invitation.setOwnerId(principal.getId());
+
         return new ResponseEntity<>(invitationService.sendInvitation(invitation), HttpStatus.OK);
     }
 
@@ -56,7 +59,7 @@ public class InvitationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InvitationResponse>> findAllByEmail(UserPrincipal principal) {
+    public ResponseEntity<List<InvitationResponse>> findAllByEmail(@AuthenticationPrincipal UserPrincipal principal) {
         return new ResponseEntity<>(invitationService.findAllByEmail(principal.getEmail()), HttpStatus.OK);
     }
 
