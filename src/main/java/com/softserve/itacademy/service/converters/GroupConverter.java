@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.converters;
 
+import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
@@ -41,6 +42,10 @@ public class GroupConverter {
             map.setChatRoom(chatRoomConverter.of(chatRoom));
         }
 
+        Set<Assignment> assignments = group.getAssignments();
+        if (assignments != null) {
+            map.setAssignments(assignments);
+        }
         return map;
     }
 

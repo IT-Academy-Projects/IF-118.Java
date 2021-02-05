@@ -19,4 +19,5 @@ public class MaterialResponse {
     private Integer courseId;
     private Integer ownerId;
     Set<AssignmentResponse> assignments;
+
 }

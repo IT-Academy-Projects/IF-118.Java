@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
@@ -26,4 +27,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             "join student_groups sg on assignment.group_id = sg.id " +
             "where sg.owner_id = :id", nativeQuery = true)
     List<Assignment> findAllByOwnerId(Integer id);
+
+    @Query(value = "select * from assignment join groups_assignments ga on assignment.id = ga.assignment_id" +
+            " where ga.group_id = ?1", nativeQuery = true)
+    Set<Assignment> findAllByGroupId(Integer id);
 }
