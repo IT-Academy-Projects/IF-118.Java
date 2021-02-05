@@ -14,6 +14,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
@@ -42,4 +43,8 @@ public class Assignment extends BasicEntity {
             joinColumns = {@JoinColumn(name = "assignment_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__assignments__groups__assignment_id"))},
                     inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__assignments__group_id"))})
     private Set<Group> groups;
+
+    @ManyToOne
+    @JoinColumn(name = "material_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_material_assignment"))
+    private Material material;
 }

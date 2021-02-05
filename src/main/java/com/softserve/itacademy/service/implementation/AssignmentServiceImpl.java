@@ -3,12 +3,16 @@ package com.softserve.itacademy.service.implementation;
 import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import static com.softserve.itacademy.config.Constance.ASSIGNMENT_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
+import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.service.AssignmentService;
+import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
@@ -17,18 +21,21 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
+    private final MaterialService materialService;
     private final AssignmentRepository assignmentRepository;
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;
 
-    public AssignmentServiceImpl (AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter,
-                                  AmazonS3ClientService amazonS3ClientService) {
+    public AssignmentServiceImpl(MaterialService materialService,
+                                 AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter, AmazonS3ClientService amazonS3ClientService) {
+        this.materialService = materialService;
         this.assignmentRepository = assignmentRepository;
         this.assignmentConverter = assignmentConverter;
         this.amazonS3ClientService = amazonS3ClientService;
@@ -47,9 +54,11 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     public AssignmentResponse create(AssignmentRequest assignmentRequest, MultipartFile file) {
+        Material material = materialService.getById(assignmentRequest.getMaterialId());
         Assignment assignment = Assignment.builder()
                 .name(assignmentRequest.getName())
                 .description(assignmentRequest.getDescription())
+                .material(material)
                 .build();
         if (file != null) {
             assignment.setFileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_FOLDER, file));
