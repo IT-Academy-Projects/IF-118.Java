@@ -45,9 +45,6 @@ public class Material extends BasicEntity {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    private Set<Assignment> assignments;
-
-    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private List<MaterialExpiration> expirations;
 
     @ManyToMany(mappedBy = "materials", fetch = FetchType.LAZY)

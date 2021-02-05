@@ -23,12 +23,14 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     @Query(value = "update assignment set file_reference=:fileRef where id=:id", nativeQuery = true)
     int updateFileRef(Integer id, String fileRef);
 
-    @Query(value = "select assignment.* from assignment " +
-            "join student_groups sg on assignment.group_id = sg.id " +
-            "where sg.owner_id = :id", nativeQuery = true)
+    @Query(value = "select a.* from assignment a " +
+            "join groups_assignments ga on a.id = ga.assignment_id " +
+            "join student_groups sg on sg.id = ga.group_id " +
+            "where sg.owner_id= ?1", nativeQuery = true)
     List<Assignment> findAllByOwnerId(Integer id);
 
-    @Query(value = "select * from assignment join groups_assignments ga on assignment.id = ga.assignment_id" +
+    @Query(value = "select * from assignment join groups_assignments ga on assignment.id = ga.assignment_id " +
             " where ga.group_id = ?1", nativeQuery = true)
     Set<Assignment> findAllByGroupId(Integer id);
+
 }

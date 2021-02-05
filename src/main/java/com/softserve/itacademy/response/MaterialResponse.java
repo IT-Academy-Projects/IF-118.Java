@@ -18,6 +18,4 @@ public class MaterialResponse {
     private String description;
     private Integer courseId;
     private Integer ownerId;
-    Set<AssignmentResponse> assignments;
-
 }

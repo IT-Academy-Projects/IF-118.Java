@@ -28,5 +28,5 @@ public class GroupResponse {
 
     private ChatRoomResponse chatRoom;
 
-    private Set<Assignment> assignments;
+    private Set<AssignmentResponse> assignments;
 }

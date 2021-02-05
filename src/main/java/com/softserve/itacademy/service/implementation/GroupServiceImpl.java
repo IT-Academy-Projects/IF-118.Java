@@ -137,6 +137,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public void submitAssignment(Integer groupId, Integer assignmentId) {
+        groupRepository.submitAssignment(groupId, assignmentId);
+    }
+
+    @Override
     public void updateDisabled(Integer id, boolean disabled) {
         if (groupRepository.updateDisabled(id, disabled) == 0) {
             throw new NotFoundException(GROUP_ID_NOT_FOUND);
@@ -148,10 +153,6 @@ public class GroupServiceImpl implements GroupService {
         Group group = getById(id);
         if (group.getDisabled()) {
             throw new DisabledObjectException("Group is disabled");
-        }
-        Set<Assignment> assignments = assignmentRepository.findAllByGroupId(id);
-        if (assignments != null) {
-            group.setAssignments(assignments);
         }
         return groupConverter.of(group);
     }

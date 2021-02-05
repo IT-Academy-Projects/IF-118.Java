@@ -40,6 +40,6 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
     Integer reviewByStudent(Integer id);
 
     @Query(value = "select * from assignment_answers join groups_assignments ga" +
-            " on assignment_answers.assignment_id = ga.assignment_id where owner_id = ?1", nativeQuery = true)
+            " on assignment_answers.assignment_id = ga.assignment_id where group_id = ?1", nativeQuery = true)
     Set<AssignmentAnswers> findAllByOwnerId(Integer id);
 }

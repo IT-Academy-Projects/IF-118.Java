@@ -22,4 +22,6 @@ public interface GroupService {
     void updateGroup(Integer groupId, GroupRequest groupRequest);
 
     List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId);
+
+    void submitAssignment(Integer groupId, Integer assignmentId);
 }

@@ -21,6 +21,7 @@ public class GroupConverter {
     private final CourseConverter courseConverter;
     private final UserConverter userConverter;
     private final ChatRoomConverter chatRoomConverter;
+    private final AssignmentConverter assignmentConverter;
 
     public GroupResponse of(Group group) {
         GroupResponse map = mapper.map(group, GroupResponse.class);
@@ -44,7 +45,9 @@ public class GroupConverter {
 
         Set<Assignment> assignments = group.getAssignments();
         if (assignments != null) {
-            map.setAssignments(assignments);
+            map.setAssignments(assignments.stream()
+                    .map(assignmentConverter::of)
+                    .collect(Collectors.toSet()));
         }
         return map;
     }
