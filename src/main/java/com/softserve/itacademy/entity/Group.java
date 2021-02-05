@@ -66,4 +66,12 @@ public class Group extends BasicEntity {
     @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
     private ChatRoom chatRoom;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "groups_materials",
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__materials__group_id"))},
+            inverseJoinColumns = {@JoinColumn(name = "material_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__materials__groups__material_id"))}
+    )
+    private Set<Material> materials = new HashSet<>();
+
 }

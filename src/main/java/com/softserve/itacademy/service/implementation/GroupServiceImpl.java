@@ -74,8 +74,9 @@ public class GroupServiceImpl implements GroupService {
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
-            courses.forEach(course -> course.getGroups().add(newGroup));
             materials = materialRepository.findByCourseIds(courseIds);
+            newGroup.setMaterials(materials);
+            courses.forEach(course -> course.getGroups().add(newGroup));
         }
         if (file != null) {
             Image image = new Image(imageService.compress(file));

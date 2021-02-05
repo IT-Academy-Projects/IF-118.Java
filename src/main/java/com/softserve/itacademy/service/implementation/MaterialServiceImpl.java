@@ -20,6 +20,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
@@ -63,18 +65,21 @@ public class MaterialServiceImpl implements MaterialService {
                 .ownerId(materialRequest.getOwnerId())
                 .description(materialRequest.getDescription())
                 .course(course)
+                .groups(new ArrayList<>(course.getGroups()))
                 .fileReference(amazonS3ClientService.upload(BUCKET_NAME, MATERIALS_FOLDER, file))
                 .build();
         material = materialRepository.save(material);
-        Set<Group> groups = course.getGroups();
+        List<Group> groups = material.getGroups();
         if (groups != null && !groups.isEmpty()) {
             Material finalMaterial = material;
             groups.forEach(group -> {
                 MaterialExpiration materialExpiration = new MaterialExpiration();
                 materialExpiration.setMaterial(finalMaterial);
                 materialExpiration.setGroup(group);
-                materialExpirationRepository.save(materialExpiration);
+                MaterialExpiration savedExpiration = materialExpirationRepository.save(materialExpiration);
+                finalMaterial.getExpirations().add(savedExpiration);
             });
+            material = finalMaterial;
         }
         return materialConverter.of(material);
     }

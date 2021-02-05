@@ -1,13 +1,12 @@
 -- liquibase formatted sql
 -- changeSet Yablon:table for expirationDate endDelimiter:; splitStatements:true
 
-CREATE TABLE `material_expirations` (
+CREATE TABLE if not exists `material_expirations` (
     `id` int NOT NULL AUTO_INCREMENT,
     `material_id` int NOT NULL,
     `group_id` int NOT NULL,
     `start_date` datetime DEFAULT NULL,
     `expiration_date` datetime DEFAULT NULL,
-    `opened` tinyint(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (`id`),
     KEY `fk_expiration_group_idx` (`group_id`),
     KEY `fk_expiration_material_idx` (`material_id`),

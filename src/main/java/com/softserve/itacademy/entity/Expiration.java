@@ -24,5 +24,4 @@ public class Expiration {
     private Integer id;
     private LocalDateTime expirationDate;
     private LocalDateTime startDate;
-    private Boolean opened;
 }
