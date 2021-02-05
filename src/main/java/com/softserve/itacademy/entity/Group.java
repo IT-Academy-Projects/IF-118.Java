@@ -16,9 +16,11 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Accessors(chain = true)
@@ -68,5 +70,16 @@ public class Group extends BasicEntity {
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private Set<Assignment> assignments;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "groups_materials",
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__groups__materials__group_id"))},
+            inverseJoinColumns = {@JoinColumn(name = "material_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__materials__groups__material_id"))}
+    )
+    private Set<Material> materials;
+
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
+    private List<MaterialExpiration> expirations;
 
 }
