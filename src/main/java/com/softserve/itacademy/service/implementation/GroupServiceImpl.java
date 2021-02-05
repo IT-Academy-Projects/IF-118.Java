@@ -4,6 +4,7 @@ import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Image;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -19,6 +20,7 @@ import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.GroupConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
@@ -53,6 +55,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public GroupResponse create(GroupRequest groupRequest, MultipartFile file) {
         User owner = userService.getById(groupRequest.getOwnerId());
 
@@ -61,14 +64,15 @@ public class GroupServiceImpl implements GroupService {
         }
         Set<Integer> courseIds = groupRequest.getCourseIds();
         Group newGroup;
-        Set<Integer> materialIds = null;
+        Set<Material> materials;
         if (courseIds == null) {
             newGroup = groupConverter.of(groupRequest, Collections.emptySet());
         } else {
             Set<Course> courses = courseRepository.findByIds(courseIds);
             newGroup = groupConverter.of(groupRequest, courses);
+            materials = materialRepository.findByCourseIds(courseIds);
+            newGroup.setMaterials(materials);
             courses.forEach(course -> course.getGroups().add(newGroup));
-            materialIds = materialRepository.findByCourseIds(courseIds);
         }
         if (file != null) {
             Image image = new Image(imageService.compress(file));
@@ -80,9 +84,6 @@ public class GroupServiceImpl implements GroupService {
         newGroup.setChatRoom(chat);
 
         Group savedGroup = groupRepository.save(newGroup);
-        if (materialIds != null) {
-            materialIds.forEach(id -> materialRepository.saveMaterialsGroups(id, savedGroup.getId()));
-        }
         return groupConverter.of(savedGroup);
     }
 
@@ -120,11 +121,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId) {
-        List<Group> groupsByCourseId = groupRepository.findGroupsWithClosedMaterial(materialId);
-        if (groupsByCourseId.isEmpty()) {
+        List<Group> groups = groupRepository.findGroupsWithClosedMaterial(materialId);
+        if (groups.isEmpty()) {
             return Collections.emptyList();
         }
-        return groupsByCourseId.stream().map(groupConverter::of).collect(Collectors.toList());
+        return groups.stream().map(groupConverter::of).collect(Collectors.toList());
     }
 
     @Override
