@@ -22,7 +22,7 @@ function inviteToGroup() {
   let group_id = parseInt(window.location.toString().split("id=")[1])
   let body = {
     email: document.getElementById("email").value,
-    groupId: group_id
+    groupId: group_id,
   };
   $.ajax({
     type: "POST",

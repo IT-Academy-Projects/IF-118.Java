@@ -99,14 +99,6 @@ public class User extends BasicEntity implements PrincipalDetails {
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_courses",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__users__courses__user_id"))},
-            inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__courses__users__course_id"))}
-    )
-    private Set<Course> courses = new HashSet<>();
-
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Comment> comments;
 

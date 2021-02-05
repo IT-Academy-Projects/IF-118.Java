@@ -66,4 +66,7 @@ public class Group extends BasicEntity {
     @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
     private ChatRoom chatRoom;
 
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
+    private Set<Assignment> assignments;
+
 }
