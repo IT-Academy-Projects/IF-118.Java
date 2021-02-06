@@ -2,7 +2,9 @@ package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.request.AssignmentRequest;
+import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.AssignmentResponse;
+import com.softserve.itacademy.response.statistic.AssignmentStatisticResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -28,5 +30,13 @@ public class AssignmentConverter {
 
     public Assignment of(AssignmentRequest assignmentRequest) {
         return mapper.map(assignmentRequest, Assignment.class);
+    }
+
+    public AssignmentStatisticResponse statisticOf(Assignment assignment) {
+        return mapper.map(assignment, AssignmentStatisticResponse.class);
+    }
+
+    public AssignmentStatisticResponse responseOf(AssignmentResponse assignment) {
+        return mapper.map(assignment, AssignmentStatisticResponse.class);
     }
 }

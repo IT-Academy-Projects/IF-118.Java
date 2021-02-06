@@ -6,6 +6,7 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
+import com.softserve.itacademy.response.statistic.GroupStatisticResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -58,5 +59,9 @@ public class GroupConverter {
         map.setDisabled(false);
         map.setCourses(courses);
         return map;
+    }
+
+    public GroupStatisticResponse statisticOf(Group group) {
+        return mapper.map(group, GroupStatisticResponse.class);
     }
 }

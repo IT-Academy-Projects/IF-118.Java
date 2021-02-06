@@ -26,10 +26,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Invitation extends BasicEntity {
 
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
     @Column(nullable = false)
     private String email;
 

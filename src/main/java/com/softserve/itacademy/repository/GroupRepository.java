@@ -1,5 +1,6 @@
 package com.softserve.itacademy.repository;
 
+import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,6 +32,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     byte[] getAvatarById(Integer id);
 
     Optional<Group> findByChatRoomId(Integer id);
+
 
     @Query(value = "select * from student_groups join groups_courses gc on student_groups.id = gc.group_id where gc.course_id in (:courseIds)", nativeQuery = true)
     List<Group> findAllByCourseIds(Set<Integer> courseIds);
