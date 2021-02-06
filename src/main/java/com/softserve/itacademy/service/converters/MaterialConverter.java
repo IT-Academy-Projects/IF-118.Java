@@ -18,11 +18,8 @@ public class MaterialConverter {
     }
 
     public MaterialStatisticResponse statisticOf(Material material) {
-        MaterialStatisticResponse map = mapper.map(material, MaterialStatisticResponse.class);
-        map.setAssignmentStatisticResponses(material.getAssignments().stream()
-        .map(assignmentConverter::statisticOf)
-                .collect(Collectors.toSet()));
-        return map;
+
+        return mapper.map(material, MaterialStatisticResponse.class);
     }
 
 }

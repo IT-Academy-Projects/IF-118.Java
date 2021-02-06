@@ -15,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class UserFullStatisticResponse extends UserTinyStaticResponse {
-    private byte[] avatar;
+
     private Set<AssignmentResponse> assignments;
     private String avg;
+
 }
