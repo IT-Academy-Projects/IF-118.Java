@@ -43,7 +43,9 @@ public class GroupServiceImpl implements GroupService {
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService,
+            ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService,
+            ImageRepository imageRepository, MaterialRepository materialRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;

@@ -32,20 +32,15 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         this.tokenRepository = tokenRepository;
         this.mailSender = mailSender;
     }
-
+//TOD tooooo many spaces
     @Override
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-
         User user = userService.getByEmail(resetPasswordRequest.getEmail());
-
         if (!user.getActivated()) {
             throw new BadCredentialsException("Email is not confirmed");
         }
-
         String token = UUID.randomUUID().toString();
-
         PasswordResetToken resetToken = getOrCreateToken(user, token);
-
         sendPasswordResetEmail(resetToken);
     }
 

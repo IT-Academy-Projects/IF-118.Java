@@ -1,5 +1,5 @@
 package com.softserve.itacademy.entity;
-
+//TODO its better to introduce persistence package and keep all your models repos, projections, etc there
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

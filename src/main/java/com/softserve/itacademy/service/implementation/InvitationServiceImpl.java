@@ -75,6 +75,7 @@ public class InvitationServiceImpl implements InvitationService {
     @Transactional
     @Override
     public void approveById(Integer id) {
+//        TODO Approving invitation id {}
         log.info("approving invitation");
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
@@ -97,6 +98,10 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
+//        TODO leave the method ass soon as possible. This will reduce nested code and improve readability
+//        if (!canBeApproved(invitation)) {return ... }
+
+
         if (canBeApproved(invitation)) {
             if (invitation.getGroup() != null) {
                 approve(invitation);

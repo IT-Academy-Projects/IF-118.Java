@@ -20,7 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-
+//TODO remove this extra spaces at the beginning of the method
         registry.setApplicationDestinationPrefixes("/api/v1/ws");
         registry.enableSimpleBroker("/api/v1/ws/event");
     }

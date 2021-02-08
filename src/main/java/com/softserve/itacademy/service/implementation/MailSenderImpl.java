@@ -22,6 +22,7 @@ public class MailSenderImpl implements MailSender {
     private String username;
 
     @Override
+//    TODO this is not good to make it async on this level. Lets discuss in more details
     @Async
     public void send(String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();

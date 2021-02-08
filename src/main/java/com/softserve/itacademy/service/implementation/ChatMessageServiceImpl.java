@@ -81,11 +81,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public List<ChatMessageResponse> findPaginatedByChatRoomId(int pageNo, int pageSize, int chatId) {
-
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("createdAt").descending());
         Page<ChatMessage> pagedResult = chatMessageRepository.findPaginatedByChatRoomId(paging, chatId);
         List<ChatMessageResponse> list = (List<ChatMessageResponse>) chatMessageConverter.of(pagedResult.toList());
-
+//        TODO why do you do such reverse here. Won't it broke your pagination logic?
         Collections.reverse(list);
         return list;
     }

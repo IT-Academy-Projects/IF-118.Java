@@ -52,6 +52,7 @@ public class InvitationController {
         return new ModelAndView("redirect:" + address + "/login");
     }
 
+//TODO Is it good that any logged in user has an access to the endpoints in this controller?
     @PatchMapping("/approve/{id}")
     public ResponseEntity<Void> approveById(@PathVariable Integer id) {
         invitationService.approveById(id);

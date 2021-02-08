@@ -36,7 +36,10 @@ public class UserServiceImpl implements UserService {
     private final ImageRepository imageRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, ImageService imageService, ImageRepository imageRepository, PasswordResetTokenRepository passwordResetTokenRepository) {
+//    TODO guys I dont want to scroll horizontally
+    public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder,
+            InvitationService invitationService, ImageService imageService, ImageRepository imageRepository,
+            PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.passwordEncoder = passwordEncoder;

@@ -1,5 +1,8 @@
 package com.softserve.itacademy.config;
 
+//TODO It's not good to keep all the constants in single class. Better to keep it as closer as possible to the
+// related class. And if you decide to extract separate class make it as utility one. And current name is incorrect.
+// Fix it
 public class Constance {
     public static final String USER_ID_NOT_FOUND = "User with such id was not found";
     public static final String USER_EMAIL_NOT_FOUND = "User with such email was not found";

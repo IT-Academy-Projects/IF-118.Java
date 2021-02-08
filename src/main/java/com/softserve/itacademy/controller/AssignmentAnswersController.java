@@ -35,6 +35,7 @@ import static com.softserve.itacademy.config.Constance.API_V1;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
+//TODO I dont see the benefits from extracting version into constant.
 @RequestMapping(API_V1 + "assignment-answers")
 public class AssignmentAnswersController {
 
@@ -46,6 +47,7 @@ public class AssignmentAnswersController {
         this.objectMapper = objectMapper;
     }
 
+    //TODO its time to start with swagger docs. Document each of your endpoints with meaningful description
     @StudentRolePermission
     @PostMapping
     public ResponseEntity<AssignmentAnswersResponse> create(@RequestPart(value = "file") MultipartFile file,
