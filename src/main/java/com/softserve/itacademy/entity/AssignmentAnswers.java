@@ -30,7 +30,7 @@ public class AssignmentAnswers extends BasicEntity {
     private String fileReference;
 
     private Integer grade;
-
+//TODO why do I still see it?
     private Boolean isReviewedByTeacher; //in notifications
 
     private Boolean isStudentSawGrade; //in notifications

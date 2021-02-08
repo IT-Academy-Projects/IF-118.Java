@@ -52,6 +52,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .description(assignmentRequest.getDescription())
                 .build();
         if (file != null) {
+            //TODO I dont like such nested calls to the services. Will explain why
             assignment.setFileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_FOLDER, file));
         }
         assignment = assignmentRepository.save(assignment);

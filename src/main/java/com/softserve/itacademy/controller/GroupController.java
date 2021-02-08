@@ -62,6 +62,7 @@ public class GroupController {
     public ResponseEntity<Resource> downloadAvatarById(@PathVariable Integer id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] avatar = groupService.getAvatarById(id);
+//        TODO its not good practice to set such caching here. I'll explain why. Just remind me
         headers.setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).getHeaderValue());
         return new ResponseEntity<>(new ByteArrayResource(avatar), headers, HttpStatus.OK);
     }
@@ -86,6 +87,7 @@ public class GroupController {
 
     @GroupUpdatePermission
     @PatchMapping("/{groupId}")
+//    TODO use automatic line wrapping to avoid such a long lines
     public ResponseEntity<Void> update(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
         groupRequest.setOwnerId(principal.getId());
         groupService.updateGroup(groupId, groupRequest);

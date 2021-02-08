@@ -26,6 +26,7 @@ import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 
 @Service
+//TODO guys I don't see appropriate logging across the whole app. Please fix it.
 public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
 
     private final AssignmentService assignmentService;
@@ -72,6 +73,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .assignment(assignment)
                 .fileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_ANSWERS_FOLDER, file))
                 .status(AssignmentAnswers.AnswersStatus.NEW)
+//                it's better to keep it as null instead of 0
                 .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);

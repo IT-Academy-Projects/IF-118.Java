@@ -70,6 +70,8 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<Integer> groupIds;
         Optional<Material> material = materialRepository.findById(materialId);
         List<MaterialExpirationResponse> responses;
+//        TODO the same is here
+//        if (material.isEmpty()) {  throw new NotFoundException(.... }
         if (material.isPresent()) {
             if (material.get().getOwnerId().equals(principal.getId())) {
                 groupIds = groupRepository.findByOwnerId(principal.getId()).stream().map(BasicEntity::getId).collect(Collectors.toList());

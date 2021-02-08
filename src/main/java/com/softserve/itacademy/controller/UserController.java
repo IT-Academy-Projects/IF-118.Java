@@ -40,6 +40,7 @@ public class UserController {
         this.userService = userService;
     }
 
+//    TODO 'is-..' really?
     @GetMapping("/is-authenticated")
     public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal UserPrincipal principal) {
         if (principal == null) {

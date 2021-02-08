@@ -22,7 +22,8 @@ public class MailReminder implements Reminder {
         this.materialRepository = materialRepository;
         this.userRepository = userRepository;
     }
-
+//TRY to experiment with spring retry tool to handle cases when email can not be sent.
+//    AND refactor email sending as we discussed
     @Override
     public void remind() {
         List<Integer> groupIds = materialRepository.findAllDueDateTimeExpiring();

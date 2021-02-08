@@ -32,6 +32,7 @@ public class ExpirationController {
     }
 
     @PostMapping("/{materialId}")
+    //TODO redundant path variable
     public ResponseEntity<Void> create(@PathVariable Integer materialId, @RequestBody MaterialExpirationRequest materialExpirationRequest) {
         materialExpirationService.setMaterialExpiration(materialExpirationRequest);
         return new ResponseEntity<>(OK);

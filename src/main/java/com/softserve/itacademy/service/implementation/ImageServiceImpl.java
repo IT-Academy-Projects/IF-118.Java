@@ -34,7 +34,7 @@ public class ImageServiceImpl implements ImageService {
 
     public byte[] compress(MultipartFile file) {
         try {
-
+//TODO close your resources appropriately
             ByteArrayInputStream inputStream = new ByteArrayInputStream(file.getBytes());
             BufferedImage originalImage = ImageIO.read(inputStream);
             inputStream.close();
