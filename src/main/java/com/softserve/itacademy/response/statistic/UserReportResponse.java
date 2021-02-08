@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseStatisticResponse {
-    private Set<MaterialStatisticResponse> materials;
+@Builder
+public class UserReportResponse {
+    private Integer userId;
+    private Integer groupId;
+    private String assignments;
 }

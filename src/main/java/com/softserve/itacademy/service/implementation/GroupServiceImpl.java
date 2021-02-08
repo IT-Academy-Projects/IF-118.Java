@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
@@ -139,6 +138,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void submitAssignment(Integer groupId, Integer assignmentId) {
         groupRepository.submitAssignment(groupId, assignmentId);
+    }
+
+    @Override
+    public Set<Integer> findAllGroupsAndUsersIds(Group group) {
+        return groupRepository.findAllById(group.getId());
     }
 
     @Override

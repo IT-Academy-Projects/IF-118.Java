@@ -1,11 +1,7 @@
 package com.softserve.itacademy.service;
 
-import com.softserve.itacademy.response.statistic.GroupAvgGradeResponse;
-import com.softserve.itacademy.response.statistic.GroupStatisticResponse;
-import com.softserve.itacademy.response.statistic.UserFullStatisticResponse;
+import com.softserve.itacademy.entity.report.UserReport;
 
 public interface StatisticService {
-    UserFullStatisticResponse getUserAnswersStatistic(Integer courseId, Integer userId);
-    GroupStatisticResponse getGroupStatistic(Integer groupId);
-    GroupAvgGradeResponse getGroupAvgGrade(Integer groupId);
+    UserReport create(Integer groupId, Integer userId);
 }

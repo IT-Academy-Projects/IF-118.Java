@@ -5,7 +5,6 @@ import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
-import com.softserve.itacademy.response.statistic.CourseStatisticResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,4 @@ public class CourseConverter {
         return map;
     }
 
-    public CourseStatisticResponse statisticOf(Course course) {
-        return mapper.map(course, CourseStatisticResponse.class);
-    }
 }

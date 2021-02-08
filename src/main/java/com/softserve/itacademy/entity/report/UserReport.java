@@ -7,24 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Table
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table
 @Builder
-public class UserReport extends Report {
+@IdClass(UserReportId.class)
+public class UserReport{
 
-    private String name;
+    @Id
+    private Integer userId;
+    @Id
+    private Integer groupId;
 
-    private BigDecimal avg;
-
-    @OneToMany(mappedBy = "user")
-    private Set<AssignmentAnswersReport> assignments;
+    private String assignments;
 }

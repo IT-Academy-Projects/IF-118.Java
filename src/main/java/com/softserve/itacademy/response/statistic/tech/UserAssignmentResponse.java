@@ -1,5 +1,4 @@
-package com.softserve.itacademy.response.statistic;
-
+package com.softserve.itacademy.response.statistic.tech;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,9 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AssignmentAnswerStatisticResponse {
+@NoArgsConstructor
+public class UserAssignmentResponse {
+
     private Integer id;
+    private String name;
+    private Integer answerId;
     private Integer grade;
+
 }

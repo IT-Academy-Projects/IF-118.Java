@@ -2,15 +2,12 @@ package com.softserve.itacademy.repository;
 
 import com.softserve.itacademy.entity.Assignment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
-
 import java.util.Set;
 
 @Repository
@@ -32,9 +29,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             "where sg.owner_id= ?1", nativeQuery = true)
     List<Assignment> findAllByOwnerId(Integer id);
 
-    @Query(value = "select * from assignment join groups_assignments ga on assignment.id = ga.assignment_id " +
-            " where ga.group_id = ?1", nativeQuery = true)
-    Set<Assignment> findAllByGroupId(Integer id);
+
 
     @Query(value = "SELECT * FROM assignment JOIN material m on assignment.material_id = m.id where m.course_id = ?1", nativeQuery = true)
     Set<Assignment> findAllByCourse(Integer courseId);
