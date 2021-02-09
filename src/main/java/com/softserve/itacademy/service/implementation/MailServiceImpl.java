@@ -1,6 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.service.MailSender;
+import com.softserve.itacademy.service.MailService;
 import com.softserve.itacademy.service.mailing.MailMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class MailService implements MailSender {
+public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
     private final QueueMessagingTemplate queueMessagingTemplate;
 
-    public MailService(JavaMailSender mailSender, QueueMessagingTemplate queueMessagingTemplate) {
+    public MailServiceImpl(JavaMailSender mailSender, QueueMessagingTemplate queueMessagingTemplate) {
         this.mailSender = mailSender;
         this.queueMessagingTemplate = queueMessagingTemplate;
     }

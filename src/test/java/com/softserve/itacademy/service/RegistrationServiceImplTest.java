@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     RoleService roleService;
 
     @Mock
-    MailSender mailSender;
+    MailService mailSender;
 
     @Mock
     UserRepository userRepository;
