@@ -5,6 +5,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.security.service.UserPrincipalService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
 
