@@ -3,7 +3,7 @@
 -- changeSet Tsoi:delete_assignment-material_mapping endDelimiter:; splitStatements:true
 
 ALTER TABLE assignment
-DROP CONSTRAINT `fk_material_assignment`;
+    DROP FOREIGN KEY `fk_material_assignment`;
 
 ALTER TABLE assignment
     DROP COLUMN material_id;
