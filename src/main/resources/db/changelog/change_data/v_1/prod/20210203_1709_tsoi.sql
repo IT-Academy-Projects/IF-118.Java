@@ -22,7 +22,7 @@ DROP TABLE users_courses;
 
 -- changeSet Tsoi:drop_material_id_from_assignment endDelimiter:; splitStatements:true
 ALTER TABLE assignment
-    DROP CONSTRAINT `fk_material_assignment`;
+    DROP FOREIGN KEY `fk_material_assignment`;
 
 ALTER TABLE assignment
     DROP COLUMN material_id;
