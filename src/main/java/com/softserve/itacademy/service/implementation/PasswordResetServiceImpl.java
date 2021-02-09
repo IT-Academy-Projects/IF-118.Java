@@ -6,7 +6,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.security.PasswordResetTokenRepository;
 import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.ResetPasswordRequest;
-import com.softserve.itacademy.service.MailSender;
+import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.PasswordResetService;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,27 +25,23 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     private final UserService userService;
     private final PasswordResetTokenRepository tokenRepository;
-    private final MailSender mailSender;
+    private final MailDesignService mailDesignService;
 
-    public PasswordResetServiceImpl(UserService userService, PasswordResetTokenRepository tokenRepository, MailSender mailSender) {
+    public PasswordResetServiceImpl(UserService userService, PasswordResetTokenRepository tokenRepository,
+            MailDesignService mailDesignService) {
         this.userService = userService;
         this.tokenRepository = tokenRepository;
-        this.mailSender = mailSender;
+        this.mailDesignService = mailDesignService;
     }
 
     @Override
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-
         User user = userService.getByEmail(resetPasswordRequest.getEmail());
-
         if (!user.getActivated()) {
             throw new BadCredentialsException("Email is not confirmed");
         }
-
         String token = UUID.randomUUID().toString();
-
         PasswordResetToken resetToken = getOrCreateToken(user, token);
-
         sendPasswordResetEmail(resetToken);
     }
 
@@ -107,6 +103,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 token.getToken()
         );
 
-        mailSender.send(token.getUser().getEmail(), "SoftClass password reset", message);
+        mailDesignService.designAndQueue(token.getUser().getEmail(), "SoftClass password reset", message);
     }
 }

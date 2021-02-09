@@ -23,7 +23,6 @@ import javax.security.auth.login.AccountLockedException;
 public class OwnAuthProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     public OwnAuthProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {

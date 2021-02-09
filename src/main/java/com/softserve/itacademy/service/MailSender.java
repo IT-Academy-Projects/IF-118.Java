@@ -1,5 +1,8 @@
 package com.softserve.itacademy.service;
 
+import com.softserve.itacademy.service.mailing.MailMessage;
+
 public interface MailSender {
-    void send(String emailTo, String subject, String message);
+
+    void addMessageToMailQueue(MailMessage message);
 }

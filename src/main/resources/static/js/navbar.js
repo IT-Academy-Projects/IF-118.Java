@@ -20,5 +20,5 @@ function initButtons(ans) {
 }
 
 function isAuthenticated() {
-    return $.get("/api/v1/users/is-authenticated")
+    return $.get("/api/v1/users/authenticated")
 }
