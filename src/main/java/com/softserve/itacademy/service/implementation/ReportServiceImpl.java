@@ -9,6 +9,9 @@ import com.softserve.itacademy.service.ReportService;
 import com.softserve.itacademy.service.converters.UserReportConverter;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class ReportServiceImpl implements ReportService {
     private final UserReportRepository userReportRepository;
@@ -27,5 +30,12 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public UserReportResponse getById(Integer groupId, Integer userId) {
         return userReportConverter.of(userReportRepository.findById(groupId, userId).orElseThrow(() -> new NotFoundException("No such report")));
+    }
+
+    @Override
+    public Set<UserReportResponse> getAllByGroup(Integer groupId) {
+        return userReportRepository.findAllByGroup(groupId).stream()
+                .map(userReportConverter::of)
+                .collect(Collectors.toSet());
     }
 }

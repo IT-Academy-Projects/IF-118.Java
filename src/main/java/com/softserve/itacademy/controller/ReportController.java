@@ -30,4 +30,10 @@ public class ReportController {
         UserReportResponse byId = reportService.getById(groupId, userId);
         return new ResponseEntity<>(byId, OK);
     }
+
+    @GetMapping("/{groupId}")
+    public ResponseEntity<Set<UserReportResponse>> getGroupStatistic(@PathVariable Integer groupId) {
+        Set<UserReportResponse> allByGroup = reportService.getAllByGroup(groupId);
+        return new ResponseEntity<>(allByGroup, OK);
+    }
 }

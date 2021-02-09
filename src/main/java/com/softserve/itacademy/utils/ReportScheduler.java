@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Slf4j
 @Service
 public class ReportScheduler {
@@ -23,7 +21,7 @@ public class ReportScheduler {
         this.groupRepository = groupRepository;
     }
 
-    @Scheduled(cron = "0 35 15 * * ?")
+    @Scheduled(cron = "0 14 14 * * ?")
     public void saveUserReports() {
         groupRepository.findAll()
                 .forEach(group -> groupService.findAllGroupsAndUsersIds(group)

@@ -74,7 +74,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select new com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse(a.id , a.name, aa.id, aa.grade) " +
             "from Assignment a" +
             "  left join a.assignmentAnswers aa" +
-            "  join a.groups ag where ag.id = ?1 and aa.ownerId = ?2 or aa.ownerId is null")
+            "  join a.groups ag where ag.id = ?1 and aa.ownerId = ?2")
     Set<UserAssignmentResponse> getStat(int groupId, int ownerId);
 
 }

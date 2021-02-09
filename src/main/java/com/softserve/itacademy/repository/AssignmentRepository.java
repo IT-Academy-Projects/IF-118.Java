@@ -29,8 +29,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
             "where sg.owner_id= ?1", nativeQuery = true)
     List<Assignment> findAllByOwnerId(Integer id);
 
-
-
-    @Query(value = "SELECT * FROM assignment JOIN material m on assignment.material_id = m.id where m.course_id = ?1", nativeQuery = true)
-    Set<Assignment> findAllByCourse(Integer courseId);
+    @Query(value = "SELECT a.id FROM assignment a  JOIN groups_assignments ga on a.id = ga.assignment_id " +
+            "where group_id = ?1", nativeQuery = true)
+    Set<Integer> findAllByGroup(Integer groupId);
 }
