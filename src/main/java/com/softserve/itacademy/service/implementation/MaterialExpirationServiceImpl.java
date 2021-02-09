@@ -13,8 +13,8 @@ import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
 import com.softserve.itacademy.security.principal.UserPrincipal;
+import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.MaterialExpirationService;
-import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.MaterialExpirationConverter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,15 +29,15 @@ import java.util.stream.Collectors;
 public class MaterialExpirationServiceImpl implements MaterialExpirationService {
     private final MaterialRepository materialRepository;
     private final UserRepository userRepository;
-    private final MailSender mailSender;
+    private final MailDesignService mailDesignService;
     private final GroupRepository groupRepository;
     private final MaterialExpirationRepository materialExpirationRepository;
     private final MaterialExpirationConverter materialExpirationConverter;
 
-    public MaterialExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailSender mailSender, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
+    public MaterialExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailDesignService mailDesignService, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
         this.materialRepository = materialRepository;
         this.userRepository = userRepository;
-        this.mailSender = mailSender;
+        this.mailDesignService = mailDesignService;
         this.groupRepository = groupRepository;
         this.materialExpirationRepository = materialExpirationRepository;
         this.materialExpirationConverter = materialExpirationConverter;
@@ -59,7 +59,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
 
         List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
         if (!usersByGroupIds.isEmpty()) {
-            usersByGroupIds.forEach(user -> mailSender.send(user.getEmail(), "SoftClass Lection time",
+            usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection time",
                     "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
         }
     }

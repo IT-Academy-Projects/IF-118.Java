@@ -7,7 +7,7 @@ import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserEmailUpdateRequest;
 import com.softserve.itacademy.request.UserNameUpdateRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
-import com.softserve.itacademy.response.IsAuthenticatedResponse;
+import com.softserve.itacademy.response.AuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
 import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
@@ -40,13 +40,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/is-authenticated")
-    public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal UserPrincipal principal) {
+    @GetMapping("/authenticated")
+    public ResponseEntity<AuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal UserPrincipal principal) {
         if (principal == null) {
-            return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(false).build(), OK);
+            return new ResponseEntity<>(AuthenticatedResponse.builder().exists(false).build(), OK);
         }
 
-        return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(true).userId(principal.getId()).build(), OK);
+        return new ResponseEntity<>(AuthenticatedResponse.builder().exists(true).userId(principal.getId()).build(), OK);
     }
 
     @GetMapping("/profile")

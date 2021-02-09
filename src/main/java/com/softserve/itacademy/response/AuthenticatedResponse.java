@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IsAuthenticatedResponse {
+public class AuthenticatedResponse {
 
     Boolean exists;
     Integer userId;
