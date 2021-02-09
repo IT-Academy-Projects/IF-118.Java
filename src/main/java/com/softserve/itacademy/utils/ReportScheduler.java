@@ -21,7 +21,7 @@ public class ReportScheduler {
         this.groupRepository = groupRepository;
     }
 
-    @Scheduled(cron = "0 14 14 * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")
     public void saveUserReports() {
         groupRepository.findAll()
                 .forEach(group -> groupService.findAllGroupsAndUsersIds(group)
