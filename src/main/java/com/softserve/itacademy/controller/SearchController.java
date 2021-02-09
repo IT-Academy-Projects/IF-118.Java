@@ -1,5 +1,6 @@
 package com.softserve.itacademy.controller;
 
+import com.softserve.itacademy.projection.CourseTinyProjection;
 import com.softserve.itacademy.projection.GroupTinyProjection;
 import com.softserve.itacademy.service.SearchService;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ public class SearchController {
     @GetMapping("/group")
     public ResponseEntity<List<GroupTinyProjection>> searchGroups(@RequestParam String searchQuery) {
         return new ResponseEntity<>(searchService.searchGroup(searchQuery), HttpStatus.OK);
+    }
+
+    @GetMapping("/course")
+    public ResponseEntity<List<CourseTinyProjection>> searchCourses(@RequestParam String searchQuery) {
+        return new ResponseEntity<>(searchService.searchCourse(searchQuery), HttpStatus.OK);
     }
 
 }

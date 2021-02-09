@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class SearchServiceImpl implements SearchService {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
         Root<Group> root = criteriaQuery.from(Group.class);
+
         criteriaQuery.select(root).where(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
 
         Query<Group> query = session.createQuery(criteriaQuery);
@@ -43,13 +45,17 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<CourseTinyProjection> searchCourse(String name) {
+    public List<CourseTinyProjection> searchCourse(String searchQuery) {
 
         Session session = entityManager.unwrap(Session.class);
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Course> criteriaQuery = criteriaBuilder.createQuery(Course.class);
         Root<Course> root = criteriaQuery.from(Course.class);
-        criteriaQuery.select(root).where(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
+
+        Predicate predicateOnName = criteriaBuilder.like(root.get("name"), "%" + searchQuery + "%");
+        Predicate predicateOnDescription = criteriaBuilder.like(root.get("description"), "%" + searchQuery + "%");
+        Predicate predicate = criteriaBuilder.or(predicateOnDescription, predicateOnName);
+        criteriaQuery.select(root).where(predicate);
 
         Query<Course> query = session.createQuery(criteriaQuery);
         List<Course> results = query.getResultList();
