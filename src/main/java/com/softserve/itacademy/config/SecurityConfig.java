@@ -58,30 +58,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .mvcMatchers("/", "/api/v1/invitation/invite", "/registration", "/api/v1/invitation/approve/**", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
-                .antMatchers("/api/v1/users/is-authenticated", "/navbar.html", "/img/*").permitAll()
+          http.addFilterBefore(ownAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        .authorizeRequests()
+                .mvcMatchers("/","/api/v1/invitation/invite", "/registration", "/api/v1/invitation/approve/**", "/api/v1/registration", "/api/v1/activation/*", "/activation", "oauth2/**").permitAll()
+                .mvcMatchers("/api/v1/users/is-authenticated", "/password-reset", "/password-reset-new", "/api/v1/password-reset", "/api/v1/password-reset/new", "/navbar.html", "/img/*").permitAll()
                 .antMatchers("/swagger-ui/", "/swagger-ui/**", "/v2/api-docs").hasAuthority("swagger")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .oauth2Login()
-                .loginPage(LOGIN_PAGE).permitAll()
-                .userInfoEndpoint()
-                .oidcUserService(oidcUserService)
+                    .loginPage(LOGIN_PAGE).permitAll()
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService)
+                    .oidcUserService(oidcUserService)
                 .and()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
                 .and()
-                .successHandler(oAuthSuccessHandler)
+                    .successHandler(oAuthSuccessHandler)
                 .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.GET.name()))
-                .logoutSuccessUrl(LOGIN_PAGE)
-                .permitAll()
+                    .logout()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.GET.name()))
+                        .logoutSuccessUrl(LOGIN_PAGE)
+                        .permitAll()
                 .and()
-                .rememberMe();
+                    .rememberMe();
     }
 
     @Override
