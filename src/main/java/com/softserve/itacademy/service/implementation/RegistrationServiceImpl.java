@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-
 @Service
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
@@ -37,6 +35,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailSender mailSender;
+
+    private static final String USER_ID_NOT_FOUND = "User with such id was not found";
 
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.roleService = roleService;

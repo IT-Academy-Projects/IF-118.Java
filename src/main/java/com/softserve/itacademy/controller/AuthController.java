@@ -25,10 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
 
 @RestController
-@RequestMapping(API_V1)
+@RequestMapping("/api/v1/")
 public class AuthController {
 
     private final RegistrationService registrationService;

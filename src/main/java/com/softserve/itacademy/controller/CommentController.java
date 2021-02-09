@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-
 @RestController
-@RequestMapping(API_V1 + "comments")
+@RequestMapping("/api/v1/comments")
 public class CommentController {
 
     private final CommentService commentService;

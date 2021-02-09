@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
-
 @Service
 public class GroupServiceImpl implements GroupService {
 
@@ -43,13 +40,15 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
-    private final AssignmentRepository assignmentRepository;
+    private static final String GROUP_ID_NOT_FOUND = "Group with such id was not found";
+
+
+    public static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
 
     public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
                             UserService userService, ChatRoomService chatRoomService,
                             CourseRepository courseRepository, ImageService imageService,
-                            ImageRepository imageRepository, MaterialRepository materialRepository,
-                            AssignmentRepository assignmentRepository) {
+                            ImageRepository imageRepository, MaterialRepository materialRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -58,7 +57,6 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
-        this.assignmentRepository = assignmentRepository;
     }
 
     @Override

@@ -1,13 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.ASSIGNMENT_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
-import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
-import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
@@ -21,21 +16,20 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
-    private final MaterialService materialService;
     private final AssignmentRepository assignmentRepository;
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;
 
-    public AssignmentServiceImpl(MaterialService materialService,
-                                 AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter, AmazonS3ClientService amazonS3ClientService) {
-        this.materialService = materialService;
+    private static final String ASSIGNMENT_ID_NOT_FOUND = "Assignment with such id was not found";
+    private static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
+
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter, AmazonS3ClientService amazonS3ClientService) {
         this.assignmentRepository = assignmentRepository;
         this.assignmentConverter = assignmentConverter;
         this.amazonS3ClientService = amazonS3ClientService;
