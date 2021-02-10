@@ -4,12 +4,15 @@ import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
+import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.apache.commons.io.FilenameUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +47,8 @@ public class MaterialServiceImplTest {
     private CourseService courseService;
     @Mock
     private AmazonS3ClientService amazonS3ClientService;
+    @Mock
+    private MaterialConverter materialConverter;
 
     @Test
     void createMaterialWithFileTest() throws IOException {
@@ -54,7 +59,7 @@ public class MaterialServiceImplTest {
         Material material = buildMaterial();
         when(courseService.getById(anyInt())).thenReturn(courseBuild());
         when(materialRepository.save(any())).thenReturn(material);
-        materialService.create(buildRequest(), file);
+        MaterialResponse materialResponse = materialService.create(buildRequest(), file);
         verify(materialRepository, times(1)).save(material);
         verify(amazonS3ClientService, times(1)).upload(anyString(), anyString(), eq(file));
     }
@@ -81,22 +86,43 @@ public class MaterialServiceImplTest {
     @Test
     void downloadTest() {
         Material material = buildMaterial();
-        material.setFileReference("reference");
         when(materialRepository.findById(anyInt())).thenReturn(java.util.Optional.of(material));
         materialService.downloadById(1);
         verify(amazonS3ClientService, times(1)).download(anyString(), eq(material.getFileReference()));
+    }
+
+    @Test
+    void deleteSuccessfulTest() {
+        Material material = buildMaterial();
+        when(materialRepository.findById(anyInt())).thenReturn(java.util.Optional.of(material));
+        materialService.delete(1, 1);
+        verify(amazonS3ClientService, times(1)).delete(anyString(), anyString(), eq(material.getFileReference()));
         verify(materialRepository, times(1)).delete(material);
     }
 
-    public Material buildMaterial() {
+    @Test
+    void deleteNotOwnerExceptionTest() {
+        Material material = buildMaterial();
+        when(materialRepository.findById(anyInt())).thenReturn(java.util.Optional.of(material));
+
+        assertThrows(OperationNotAllowedException.class, () ->  materialService.delete(1, 2));
+    }
+
+    @Test
+    void deleteNotFoundException() {
+        assertThrows(NotFoundException.class, () -> materialService.delete(1, 2));
+    }
+
+    private Material buildMaterial() {
         return Material.builder()
                 .name("material")
                 .description("description")
                 .ownerId(1)
+                .fileReference("reference")
                 .build();
     }
 
-    public MaterialRequest buildRequest() {
+    private MaterialRequest buildRequest() {
         return MaterialRequest.builder()
                 .name("material")
                 .description("description")
@@ -105,7 +131,7 @@ public class MaterialServiceImplTest {
                 .build();
     }
 
-    public Course courseBuild() {
+    private Course courseBuild() {
         return Course.builder()
                 .name("course")
                 .ownerId(1)
