@@ -9,7 +9,7 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
   jpa:
-#    show-sql: true
+    show-sql: true
     database: mysql
     hibernate:
       ddl-auto: none

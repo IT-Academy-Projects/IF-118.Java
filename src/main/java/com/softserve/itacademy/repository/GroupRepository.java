@@ -40,4 +40,8 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Query(value = "select * from student_groups sg join groups_materials gm on sg.id = gm.group_id where gm.material_id = :id and gm.opened = 0", nativeQuery = true)
     List<Group> findGroupsWithClosedMaterial(Integer id);
+
+    @Modifying
+    @Query(value = "insert into groups_assignments (group_id, assignment_id) VALUE (?1, ?2)", nativeQuery = true)
+    void submitAssignment(Integer groupId, Integer assignmentId);
 }
