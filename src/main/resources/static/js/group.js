@@ -1,13 +1,17 @@
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 
+let currentUser;
+
 showGroupInfo();
 
 function showGroupInfo() {
 
     $.get(`api/v1/users/me`).then(user => {
+        currentUser = user;
         if (user.roles.find(role => role.name === "STUDENT")) {
             $('#invite-to-group-button').hide();
+            $('#statistic-btn').show();
         }
     });
 
@@ -30,4 +34,8 @@ function showGroupInfo() {
 
 function handleChatButton() {
     window.location.replace(`/group-chat?id=${id}`);
+}
+
+function handleMyStatisticButton() {
+    window.location.replace(`/my-group-statistic?groupId=${id}&id=${currentUser.id}`);
 }
