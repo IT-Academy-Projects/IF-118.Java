@@ -95,4 +95,7 @@ public class ViewController {
 
     @GetMapping(path = "/my-group-statistic", produces = MediaType.TEXT_HTML_VALUE)
     public String myGroupStatistic() { return "user-group-statistic.html"; }
+
+    @GetMapping(path = "/group-statistic", produces = MediaType.TEXT_HTML_VALUE)
+    public String groupStatistic() { return "group-statistic.html"; }
 }

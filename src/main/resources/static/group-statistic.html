@@ -16,8 +16,8 @@
             integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
             crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="css/user-group-statistic.css">
-    <script src="js/user-group-statistic.js"></script>
+    <link rel="stylesheet" href="css/group-statistic.css">
+    <script src="js/group-statistic.js"></script>
 
     <script>
         $(function () {
@@ -27,28 +27,26 @@
 </head>
 
 <body>
-    <div id="navbar"></div>
-    <a id="back-to-group" class="back-button"></a>
-    <div class="wrapper">
-        <div class="diagram-wrapper">
-            <h1>Progress</h1>
-            <div style="width: 400px;align-self: center">
-                <canvas id="myChart" width="400" height="400"></canvas>
-            </div>
-            <span id="diagram-info"></span>
-        </div>
-        <div class="content table-wrapper">
-            <h1 id="table-title">Statistic</h1>
-            <table class="table">
-                <thead class="thead-dark">
-                <tr id="table-head">
-                    <th scope="col">Task</th>
-                    <th scope="col">Grade</th>
-                </tr>
-                </thead>
-                <tbody id="table-content"></tbody>
-            </table>
+<div id="navbar"></div>
+<a id="back-to-group" class="back-button"></a>
+<div class="wrapper">
+    <div class="diagram-wrapper">
+        <h1>Progress</h1>
+        <div style="width: 600px;align-self: center">
+            <canvas id="myChart" width="600" height="400"></canvas>
         </div>
     </div>
+    <div class="content table-wrapper">
+        <h1 id="table-title">Statistic</h1>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr id="table-head">
+                <th scope="col">Student</th>
+            </tr>
+            </thead>
+            <tbody id="table-content"></tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
