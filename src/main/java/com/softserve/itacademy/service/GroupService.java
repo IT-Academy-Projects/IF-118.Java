@@ -27,5 +27,5 @@ public interface GroupService {
 
     void submitAssignment(Integer groupId, Integer assignmentId);
 
-    Set<Integer> findAllGroupsAndUsersIds(Group group);
+    Set<Integer> findAllUsersIds(Group group);
 }

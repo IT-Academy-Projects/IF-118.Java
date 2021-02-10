@@ -139,7 +139,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Set<Integer> findAllGroupsAndUsersIds(Group group) {
+    public Set<Integer> findAllUsersIds(Group group) {
         return groupRepository.findAllById(group.getId());
     }
 

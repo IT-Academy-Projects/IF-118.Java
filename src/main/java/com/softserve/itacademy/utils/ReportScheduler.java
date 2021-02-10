@@ -24,7 +24,7 @@ public class ReportScheduler {
     @Scheduled(cron = "0 0 4 * * ?")
     public void saveUserReports() {
         groupRepository.findAll()
-                .forEach(group -> groupService.findAllGroupsAndUsersIds(group)
+                .forEach(group -> groupService.findAllUsersIds(group)
                     .forEach(id -> statisticService.create(group.getId(), id)));
         
     }
