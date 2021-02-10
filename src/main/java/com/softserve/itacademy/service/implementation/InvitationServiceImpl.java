@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Invitation;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -34,7 +32,7 @@ public class InvitationServiceImpl implements InvitationService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
-    public InvitationServiceImpl(MailSender mailSender, InvitationConverter invitationConverter,
+    public InvitationServiceImpl(MailDesignService mailDesignService, InvitationConverter invitationConverter,
                                  InvitationRepository invitationRepository, UserRepository userRepository,
                                  GroupRepository groupRepository) {
         this.mailDesignService = mailDesignService;
@@ -154,7 +152,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("User id was not found"));
         mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }

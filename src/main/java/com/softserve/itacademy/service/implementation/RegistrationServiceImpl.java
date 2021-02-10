@@ -10,7 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.MailSender;
+import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final MailDesignService mailDesignService;
 
-    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder, MailDesignService mailDesignService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -83,7 +84,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id not found"));
 
         if (!user.getPickedRole()) {
 

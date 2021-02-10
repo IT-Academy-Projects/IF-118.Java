@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
-    private final MaterialService materialService;
     private final AssignmentRepository assignmentRepository;
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;
