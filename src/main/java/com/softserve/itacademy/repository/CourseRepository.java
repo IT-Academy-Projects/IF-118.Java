@@ -37,7 +37,5 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "select avatar from courses where id = :id", nativeQuery = true)
     byte[] getAvatarById(Integer id);
 
-    @Query(value = "select * from courses c join groups_courses gc on c.id = gc.course_id where gc.group_id = ?1", nativeQuery = true)
-    Set<Course> findCoursesByGroups(Integer groupId);
 
 }

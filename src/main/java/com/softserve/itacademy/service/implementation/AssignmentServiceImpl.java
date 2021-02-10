@@ -1,16 +1,12 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Assignment;
-import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
-import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.service.AssignmentService;
-import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
@@ -19,7 +15,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

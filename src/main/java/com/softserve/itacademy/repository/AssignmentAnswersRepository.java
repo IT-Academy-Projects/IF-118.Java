@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -29,15 +28,6 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
                    "set assignment_answers.grade = :grade " +
                    "where assignment_answers.id = :id", nativeQuery = true)
     int updateGrade(Integer id, Integer grade);
-
-    @Query(value = "select * from assignment_answers aa where aa.owner_id = ?1 and aa.assignment_id = ?2", nativeQuery = true)
-    Set<AssignmentAnswers> findByOwnerId(Integer ownerId, Integer assignmentId);
-
-    Set<AssignmentAnswers> findByAssignmentId(Integer assignmentId);
-
-    @Query(value = "select * from assignment_answers aa where aa.assignment_id = ?1 and aa.owner_id = ?2", nativeQuery = true)
-    Optional<AssignmentAnswers> findByOwnerAndAssignment(Integer assignmentId, Integer ownerId);
-
 
     @Modifying
     @Transactional
