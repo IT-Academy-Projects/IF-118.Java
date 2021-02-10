@@ -1,5 +1,9 @@
 package com.softserve.itacademy.config;
 
+import com.softserve.itacademy.repository.ChatRoomRepository;
+import com.softserve.itacademy.repository.GroupRepository;
+import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.security.AccessManager;
 import com.softserve.itacademy.security.oauth2.OAuthSuccessHandler;
 import com.softserve.itacademy.security.ownauth.OwnAuthFilter;
 import com.softserve.itacademy.security.ownauth.OwnAuthProvider;
@@ -98,5 +102,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public OwnAuthProvider ownAuthProvider(UserPrincipalService userPrincipalService, PasswordEncoder passwordEncoder) {
         return new OwnAuthProvider(userPrincipalService, passwordEncoder);
+    }
+
+    @Bean(name="accessManager")
+    public AccessManager accessManager(GroupRepository groupRepository,
+            ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
+        return new AccessManager(groupRepository, chatRoomRepository, userRepository);
     }
 }
