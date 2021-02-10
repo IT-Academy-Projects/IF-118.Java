@@ -71,7 +71,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT `name` FROM users WHERE id = :id ", nativeQuery = true)
     String findNameById(Integer id);
 
-    @Query(value = "select new com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse(a.id , a.name, aa.id, aa.grade) " +
+    @Query(value = "select new com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse(a.id, aa.id, aa.grade) " +
             "from Assignment a" +
             "  left join a.assignmentAnswers aa" +
             "  join a.groups ag where ag.id = ?1 and aa.ownerId = ?2")

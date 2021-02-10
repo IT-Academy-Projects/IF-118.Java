@@ -14,7 +14,6 @@ import lombok.Setter;
 public class UserAssignmentResponse {
 
     private Integer assignmentId;
-    private String name;
     private Integer answerId;
     private Integer grade;
 
