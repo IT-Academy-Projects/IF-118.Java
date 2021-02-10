@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class SearchServiceImpl implements SearchService {
+public class    SearchServiceImpl implements SearchService {
 
     private final EntityManager entityManager;
     private final ProjectionFactory projectionFactory = new SpelAwareProxyProjectionFactory();
