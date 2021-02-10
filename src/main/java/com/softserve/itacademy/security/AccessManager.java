@@ -10,13 +10,12 @@ import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.security.principal.UserPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-
 public class AccessManager {
 
     private final GroupRepository groupRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private static final String USER_ID_NOT_FOUND = "User with such id was not found";
 
     public AccessManager(GroupRepository groupRepository, ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;

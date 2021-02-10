@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-
 @Slf4j
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -76,7 +74,7 @@ public class InvitationServiceImpl implements InvitationService {
     @Transactional
     @Override
     public void approveById(Integer id) {
-        log.info("approving invitation");
+        log.info("approving invitation " + id);
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
         invitationRepository.deleteById(invitationResponse.getId());
@@ -98,20 +96,30 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
-        if (canBeApproved(invitation)) {
-            if (invitation.getGroup() != null) {
-                approve(invitation);
-                invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
-                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
-            } else {
-                approve(invitation);
-                groupRepository.save(getGroup(invitation));
-                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
-            }
+        if (!canBeApproved(invitation)) {
+            return InvitationResponse.builder()
+                    .approved(false)
+                    .build();
         }
-        return InvitationResponse.builder()
-                .approved(false)
-                .build();
+        else {
+            if (invitation.getGroup() != null) {
+                approveGroup(invitation);
+            } else {
+                approveCourse(invitation);
+            }
+            return invitationConverter.of(getInvitationByCode(invitation.getCode()));
+        }
+
+    }
+
+    private void approveCourse(Invitation invitation) {
+        approve(invitation);
+        groupRepository.save(getGroup(invitation));
+    }
+
+    private void approveGroup(Invitation invitation) {
+        approve(invitation);
+        invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
     }
 
     private Group getGroup(Invitation invitation) {
@@ -144,7 +152,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException("User id was not found"));
         mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }

@@ -30,10 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-
 @RestController
-@RequestMapping(API_V1 + "materials")
+@RequestMapping("/api/v1/materials")
 public class MaterialController {
 
     private final MaterialService materialService;

@@ -3,6 +3,7 @@ package com.softserve.itacademy.controller;
 import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
 import com.softserve.itacademy.service.MaterialExpirationService;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping(API_V1 + "expirations")
+@RequestMapping("/api/v1/expirations")
 public class ExpirationController {
 
     private final MaterialExpirationService materialExpirationService;

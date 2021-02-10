@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-
 @Service
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
@@ -39,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final MailDesignService mailDesignService;
 
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
-            PasswordEncoder passwordEncoder, MailDesignService mailDesignService) {
+                                   PasswordEncoder passwordEncoder, MailDesignService mailDesignService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -86,7 +84,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id not found"));
 
         if (!user.getPickedRole()) {
 

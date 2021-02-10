@@ -59,4 +59,5 @@ public class GroupConverter {
         map.setCourses(courses);
         return map;
     }
+
 }
