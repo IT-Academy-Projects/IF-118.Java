@@ -1,8 +1,11 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Assignment;
+import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
+import com.softserve.itacademy.repository.CourseRepository;
+import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
@@ -16,12 +19,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
 
+    private final MaterialService materialService;
     private final AssignmentRepository assignmentRepository;
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;

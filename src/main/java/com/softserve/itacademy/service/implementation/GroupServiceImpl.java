@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class GroupServiceImpl implements GroupService {
 
+    public static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
+    private static final String GROUP_ID_NOT_FOUND = "Group with such id was not found";
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
     private final UserService userService;
@@ -40,15 +42,14 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
-    private static final String GROUP_ID_NOT_FOUND = "Group with such id was not found";
-
-
-    public static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
+    private final AssignmentRepository assignmentRepository;
 
     public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
                             UserService userService, ChatRoomService chatRoomService,
                             CourseRepository courseRepository, ImageService imageService,
-                            ImageRepository imageRepository, MaterialRepository materialRepository) {
+                            ImageRepository imageRepository, MaterialRepository materialRepository,
+                            AssignmentRepository assignmentRepository) {
+
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -57,6 +58,7 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
