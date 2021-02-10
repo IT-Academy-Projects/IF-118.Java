@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
 
 @RestController
 @RequestMapping("/api/v1/events")
