@@ -1,6 +1,5 @@
 package com.softserve.itacademy.response;
 
-import com.softserve.itacademy.entity.Assignment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

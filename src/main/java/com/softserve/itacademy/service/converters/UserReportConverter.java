@@ -18,7 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserReportConverter {
     private final ObjectMapper objectMapper;
-    private final AssignmentRepository assignmentRepository;
 
     @SneakyThrows
     public UserReport of(UserFullStatisticResponse userFullStatisticResponse) {
@@ -26,20 +25,20 @@ public class UserReportConverter {
                 .userId(userFullStatisticResponse.getUserId())
                 .groupId(userFullStatisticResponse.getGroupId())
                 .assignments(objectMapper.writeValueAsString(userFullStatisticResponse.getUserAssignmentResponse()))
+                .avg(userFullStatisticResponse.getAvg())
                 .build();
 
     }
 
     @SneakyThrows
     public UserReportResponse of(UserReport userReport) {
-
         UserAssignmentResponse[] userAssignmentResponses = objectMapper.readValue(userReport.getAssignments(), UserAssignmentResponse[].class);
         Set<UserAssignmentResponse> set = new HashSet<>(Arrays.asList(userAssignmentResponses));
         return UserReportResponse.builder()
                 .userId(userReport.getUserId())
                 .groupId(userReport.getGroupId())
                 .assignments(set)
-                .assignmentIds(assignmentRepository.findAllByGroup(userReport.getGroupId()))
+                .avg(userReport.getAvg())
                 .build();
     }
 }
