@@ -1,5 +1,4 @@
 -- liquibase formatted sql
-
 -- changeSet Tsoi:delete_assignment-material_mapping endDelimiter:; splitStatements:true
 
 ALTER TABLE assignment
@@ -9,14 +8,13 @@ ALTER TABLE assignment
     DROP COLUMN material_id;
 
 -- changeSet Tsoi:add_assignment-groups_mapping endDelimiter:; splitStatements:true
-
 ALTER TABLE assignment
 ADD COLUMN group_id int NOT NULL;
-
 -- changeSet Tsoi:create_table_groups_assignments endDelimiter:; splitStatements:true
+
 CREATE TABLE if not exists `groups_assignments`
 (
-    `group_id`  int NOT NULL,
+    `group_id`      int NOT NULL,
     `assignment_id` int NOT NULL,
     PRIMARY KEY (`group_id`, `assignment_id`),
     KEY `fk__courses__groups__assignment_id` (`assignment_id`),
@@ -32,3 +30,5 @@ ALTER TABLE invitation
 -- changeSet Tsoi:drop_users_courses endDelimiter:; splitStatements:true
 
 DROP TABLE users_courses;
+
+

@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.entity.ChatRoom;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
@@ -8,6 +9,7 @@ import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
@@ -42,8 +44,13 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
+    private final AssignmentRepository assignmentRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
+                            UserService userService, ChatRoomService chatRoomService,
+                            CourseRepository courseRepository, ImageService imageService,
+                            ImageRepository imageRepository, MaterialRepository materialRepository,
+                            AssignmentRepository assignmentRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -52,6 +59,7 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
@@ -126,6 +134,11 @@ public class GroupServiceImpl implements GroupService {
             return Collections.emptyList();
         }
         return groups.stream().map(groupConverter::of).collect(Collectors.toList());
+    }
+
+    @Override
+    public void submitAssignment(Integer groupId, Integer assignmentId) {
+        groupRepository.submitAssignment(groupId, assignmentId);
     }
 
     @Override

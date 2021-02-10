@@ -1,5 +1,6 @@
 package com.softserve.itacademy.response;
 
+import com.softserve.itacademy.entity.Assignment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,4 +27,6 @@ public class GroupResponse {
     private Set<UserResponse> users;
 
     private ChatRoomResponse chatRoom;
+
+    private Set<AssignmentResponse> assignments;
 }
