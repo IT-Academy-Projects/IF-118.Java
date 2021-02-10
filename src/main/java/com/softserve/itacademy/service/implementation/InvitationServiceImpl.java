@@ -1,6 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Course;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Invitation;
@@ -12,7 +11,7 @@ import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.InvitationService;
-import com.softserve.itacademy.service.MailSender;
+import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,19 +23,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
+
 @Slf4j
 @Service
 public class InvitationServiceImpl implements InvitationService {
-    private final MailSender mailSender;
+    private final MailDesignService mailDesignService;
     private final InvitationConverter invitationConverter;
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
-    public InvitationServiceImpl(MailSender mailSender, InvitationConverter invitationConverter,
+    public InvitationServiceImpl(MailDesignService mailDesignService, InvitationConverter invitationConverter,
                                  InvitationRepository invitationRepository, UserRepository userRepository,
                                  GroupRepository groupRepository) {
-        this.mailSender = mailSender;
+        this.mailDesignService = mailDesignService;
         this.invitationConverter = invitationConverter;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
@@ -144,7 +145,7 @@ public class InvitationServiceImpl implements InvitationService {
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
                 .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
-        mailSender.send(user.getEmail(), "SoftClass invitation",
+        mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
 

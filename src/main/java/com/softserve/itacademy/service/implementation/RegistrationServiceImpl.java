@@ -10,7 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.MailSender;
+import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +36,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RoleService roleService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MailSender mailSender;
+    private final MailDesignService mailDesignService;
 
-    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
+            PasswordEncoder passwordEncoder, MailDesignService mailDesignService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
+        this.mailDesignService = mailDesignService;
     }
 
     @Transactional
@@ -142,7 +143,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     user.getActivationCode()
             );
 
-            mailSender.send(user.getEmail(), "SoftClass activation", message);
+            mailDesignService.designAndQueue(user.getEmail(), "SoftClass activation", message);
         }
     }
 }
