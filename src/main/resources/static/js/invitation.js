@@ -1,6 +1,4 @@
 let noInvitationsText = '<span style="text-align: center;">No invitations yet.</span>';
-let stompClient = null;
-let currentUser;
 
 function inviteToCourse() {
   let course_id = parseInt(window.location.toString().split("id=")[1])
@@ -38,43 +36,15 @@ function inviteToGroup() {
   });
 }
 
-//_______________________________________
-
-function connect() {
-  var socket = new SockJS('/api/v1/ws');
-  stompClient = Stomp.over(socket);
-  stompClient.connect({}, onConnected, () => {});
-
-}
-
-function onConnected() {
-    stompClient.subscribe(`/api/v1/ws/event/notification/${currentUser.id}`, onEventReceived);
-}
-
-function onEventReceived(payload) {
-  let notification = JSON.parse(payload.body);
-  console.log(notification)
-}
-
 function refreshInvitations() {
-  let startPageNumber = 0;
-  getCurrentUser().then((user) => {
-    currentUser = user;
-    $.get(`/api/v1/events/${user.id}?pageNo=${startPageNumber}`).then(notifications => {
-      notifications.forEach(notification => {
-        console.log(notification);
-      })
-    });
-    connect();
+  getRequest(`/api/v1/invitation`).then(invitations => {
+    if (invitations.length > 0) {
+      getInvitations();
+    } else {
+      $('#invitations').html(noInvitationsText);
+    }
   });
-
 }
-
-function getCurrentUser() {
-  return $.get("/api/v1/users/me")
-}
-
-//_______________________________________
 
 function getInvitations() {
   getRequest(`/api/v1/invitation`).then(invitations => {

@@ -24,4 +24,7 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Modifying
     @Query(value = "update groups_materials set opened = 1 where material_id = :materialId and group_id in (:groupIds)", nativeQuery = true)
     void openMaterial(Integer materialId, List<Integer> groupIds);
+
+    @Query(value = "select owner_id from material where id = :id", nativeQuery = true)
+    int findOwnerIdById(Integer id);
 }

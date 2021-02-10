@@ -8,20 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,9 +36,13 @@ public class Event {
     @JoinColumn(name = "creator_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_events_users_creator_id"))
     private User creator;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipient_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_events_users_recipient_id"))
-    private User recipient;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "events_recipients",
+            joinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__events__users__event_id"))},
+            inverseJoinColumns = {@JoinColumn(name = "recipient_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_events_users_recipient_id"))}
+    )
+    private List<User> recipients;
 
     private Integer subjectId;
 
@@ -59,8 +53,9 @@ public class Event {
 
 
     public enum EventType {
-        CREATE_ASSIGNMENT,
+        OPEN_LECTION,
         GRADE_ANSWER,
+        REJECT_ANSWER,
         SUBMIT_ANSWER,
         INVITE
     }

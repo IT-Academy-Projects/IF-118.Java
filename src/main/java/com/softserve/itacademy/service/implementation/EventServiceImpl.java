@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Event;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.EventRepository;
 import com.softserve.itacademy.response.EventResponse;
 import com.softserve.itacademy.service.EventService;
@@ -33,7 +34,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public void sendNotificationFromEvent(Event event) {
         EventResponse response = eventConverter.of(event);
-        messagingTemplate.convertAndSend("/api/v1/ws/event/notification/" + event.getRecipient().getId(), response);
+        for(User recipient: event.getRecipients()){
+            messagingTemplate.convertAndSend("/api/v1/ws/event/notification/" + recipient.getId(), response);
+        }
     }
 
     @Override

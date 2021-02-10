@@ -45,6 +45,11 @@ public class InvitationController {
         return new ResponseEntity<>(invitationService.findByCode(code), HttpStatus.OK);
     }
 
+    @GetMapping("/find/{id}")
+    public ResponseEntity<InvitationResponse> findById(@PathVariable Integer id) {
+        return new ResponseEntity<>(invitationService.findById(id), HttpStatus.OK);
+    }
+
     @GetMapping("/approve/{email}/{code}")
     public ModelAndView approveInvitation(@PathVariable String email, @PathVariable("code") String code) {
 

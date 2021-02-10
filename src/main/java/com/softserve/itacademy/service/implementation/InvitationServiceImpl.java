@@ -78,6 +78,11 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
+    public InvitationResponse findById(Integer id) {
+        return invitationConverter.of(getById(id));
+    }
+
+    @Override
     public void delete(Integer id) {
         log.info("delete invitation");
         invitationRepository.delete(getById(id));
@@ -111,17 +116,18 @@ public class InvitationServiceImpl implements InvitationService {
         User creator = userRepository.findById(request.getOwnerId())
                 .orElseThrow(() -> new NotFoundException("User with id(" + request.getOwnerId() + ") not found"));
 
-        User recipient = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("User with email(" + request.getOwnerId() + ") not found"));
+        List<User> recipient = userRepository.findByEmail(request.getEmail()).stream().collect(Collectors.toList());
 
-        Event event = Event.builder()
-                .creator(creator)
-                .recipient(recipient)
-                .type(Event.EventType.INVITE)
-                .subjectId(subjectId)
-                .build();
+        if (!recipient.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipient)
+                    .type(Event.EventType.INVITE)
+                    .subjectId(subjectId)
+                    .build();
 
-        eventService.sendNotificationFromEvent(eventRepository.save(event));
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {

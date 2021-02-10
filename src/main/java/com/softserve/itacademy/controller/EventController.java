@@ -15,7 +15,7 @@ import java.util.List;
 import static com.softserve.itacademy.config.Constance.API_V1;
 
 @RestController
-@RequestMapping(API_V1 + "events")
+@RequestMapping("/api/v1/events")
 public class EventController {
 
     private final EventService eventService;
@@ -28,5 +28,4 @@ public class EventController {
     public ResponseEntity<List<EventResponse>> findAllByUserId(@PathVariable Integer userId, @RequestParam Integer pageNo) {
         return new ResponseEntity<>(eventService.findPaginatedByUserId(userId, pageNo), HttpStatus.OK);
     }
-
 }

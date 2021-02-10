@@ -1,11 +1,14 @@
 package com.softserve.itacademy.service.converters;
 
 import com.softserve.itacademy.entity.Event;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.projection.UserTinyProjection;
 import com.softserve.itacademy.response.EventResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class EventConverter {
@@ -22,9 +25,10 @@ public class EventConverter {
         EventResponse map = mapper.map(event, EventResponse.class);
 
         UserTinyProjection creator = projectionFactory.createProjection(UserTinyProjection.class, event.getCreator());
-        UserTinyProjection recipient = projectionFactory.createProjection(UserTinyProjection.class, event.getRecipient());
+        List<User> recipients = event.getRecipients();
+
         map.setCreator(creator);
-        map.setRecipient(recipient);
+        map.setRecipients(recipients);
 
         return map;
     }
