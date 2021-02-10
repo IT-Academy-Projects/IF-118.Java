@@ -31,7 +31,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageConverter chatMessageConverter;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService, UserService userService, ChatMessageConverter chatMessageConverter, SimpMessagingTemplate messagingTemplate) {
+    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService,
+            UserService userService, ChatMessageConverter chatMessageConverter,
+            SimpMessagingTemplate messagingTemplate) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomService = chatRoomService;
         this.userService = userService;

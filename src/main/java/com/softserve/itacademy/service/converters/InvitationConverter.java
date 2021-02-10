@@ -43,7 +43,6 @@ public class InvitationConverter {
 
     public Invitation of(InvitationRequest request) {
         return Invitation.builder()
-                .createdAt(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(7))
                 .email(request.getEmail())
                 .approved(false)

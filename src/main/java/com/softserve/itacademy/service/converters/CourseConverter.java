@@ -41,4 +41,5 @@ public class CourseConverter {
         map.setMaterials(materials);
         return map;
     }
+
 }

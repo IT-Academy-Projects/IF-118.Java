@@ -22,9 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.USER_EMAIL_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -35,6 +32,9 @@ public class UserServiceImpl implements UserService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+
+    private static final String USER_ID_NOT_FOUND = "User with such id was not found";
+    public static final String USER_EMAIL_NOT_FOUND = "User with such email was not found";
 
     public UserServiceImpl(UserRepository userRepository, UserConverter userConverter, PasswordEncoder passwordEncoder, InvitationService invitationService, ImageService imageService, ImageRepository imageRepository, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void setAvatar(MultipartFile file, Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
         Image avatar = user.getAvatar();
         byte[] compressedFile = imageService.compress(file);
 

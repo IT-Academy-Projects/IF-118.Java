@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +24,6 @@ import java.time.LocalDateTime;
 @Table(name = "invitation")
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Invitation extends BasicEntity {
-
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private String email;

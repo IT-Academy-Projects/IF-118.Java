@@ -9,7 +9,7 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
   jpa:
-#    show-sql: true
+    show-sql: true
     database: mysql
     hibernate:
       ddl-auto: none
@@ -42,5 +42,15 @@ spring:
 
 application:
   address: ${APP_ADDRESS}
+
+cloud:
+  aws:
+    sqs:
+      access-key: ${SQS_ACCESSKEY}
+      secret-key: ${SQS_SECRETKEY}
+      region: ${SQS_REGION}
+      end-point:
+        uri: ${SQS_ENDPOINT_URI}
+
 
 

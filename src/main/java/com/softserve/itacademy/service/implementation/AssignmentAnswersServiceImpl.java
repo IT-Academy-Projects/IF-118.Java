@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 
@@ -40,6 +39,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     private final UserRepository userRepository;
     private final EventService eventService;
     private final EventRepository eventRepository;
+    private static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
 
     public AssignmentAnswersServiceImpl(AssignmentService assignmentService,
                                         AssignmentAnswersRepository assignmentAnswersRepository,

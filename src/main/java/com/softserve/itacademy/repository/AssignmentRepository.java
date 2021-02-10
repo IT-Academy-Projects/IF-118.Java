@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
@@ -22,8 +23,13 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     @Query(value = "update assignment set file_reference=:fileRef where id=:id", nativeQuery = true)
     int updateFileRef(Integer id, String fileRef);
 
-    @Query(value = "select assignment.* from assignment " +
-            "join student_groups sg on assignment.group_id = sg.id " +
-            "where sg.owner_id = :id", nativeQuery = true)
+    @Query(value = "select a.* from assignment a " +
+            "join groups_assignments ga on a.id = ga.assignment_id " +
+            "join student_groups sg on sg.id = ga.group_id " +
+            "where sg.owner_id= ?1", nativeQuery = true)
     List<Assignment> findAllByOwnerId(Integer id);
+
+    @Query(value = "SELECT a.id FROM assignment a  JOIN groups_assignments ga on a.id = ga.assignment_id " +
+            "where group_id = ?1", nativeQuery = true)
+    Set<Integer> findAllByGroup(Integer groupId);
 }
