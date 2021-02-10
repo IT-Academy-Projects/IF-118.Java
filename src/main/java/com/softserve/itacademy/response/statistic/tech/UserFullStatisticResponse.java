@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Getter
@@ -14,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class UserFullStatisticResponse {
-
     private Integer userId;
 
     private Integer groupId;
@@ -22,5 +22,4 @@ public class UserFullStatisticResponse {
     private Set<UserAssignmentResponse> userAssignmentResponse;
 
     private String avg;
-
 }
