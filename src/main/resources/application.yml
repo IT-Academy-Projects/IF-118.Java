@@ -43,4 +43,14 @@ spring:
 application:
   address: ${APP_ADDRESS}
 
+cloud:
+  aws:
+    sqs:
+      access-key: ${SQS_ACCESSKEY}
+      secret-key: ${SQS_SECRETKEY}
+      region: ${SQS_REGION}
+      end-point:
+        uri: ${SQS_ENDPOINT_URI}
+
+
 

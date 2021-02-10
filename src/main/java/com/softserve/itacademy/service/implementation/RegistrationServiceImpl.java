@@ -34,15 +34,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RoleService roleService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MailSender mailSender;
-
-    private static final String USER_ID_NOT_FOUND = "User with such id was not found";
+    private final MailDesignService mailDesignService;
 
     public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
+        this.mailDesignService = mailDesignService;
     }
 
     @Transactional
@@ -142,7 +140,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     user.getActivationCode()
             );
 
-            mailSender.send(user.getEmail(), "SoftClass activation", message);
+            mailDesignService.designAndQueue(user.getEmail(), "SoftClass activation", message);
         }
     }
 }
