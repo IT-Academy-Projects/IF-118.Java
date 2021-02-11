@@ -5,6 +5,8 @@ import com.softserve.itacademy.service.MailService;
 import com.softserve.itacademy.service.mailing.MailMessage;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class MailDesignServiceImpl implements MailDesignService {
 
@@ -20,6 +22,7 @@ public class MailDesignServiceImpl implements MailDesignService {
                 .email(email)
                 .subject(topic)
                 .message(message)
+                .expirationDate(LocalDateTime.now().plusDays(3))
                 .build();
 
         mailSender.addMessageToMailQueue(mail);
