@@ -7,6 +7,7 @@ import com.softserve.itacademy.request.MaterialExpirationRequest;
 import com.softserve.itacademy.response.MaterialExpirationResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +23,9 @@ public class MaterialExpirationConverter {
     }
 
     public MaterialExpiration of(MaterialExpirationRequest materialExpirationRequest, Group group, Material material) {
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         MaterialExpiration expiration = mapper.map(materialExpirationRequest, MaterialExpiration.class);
+        expiration.setId(null);
         expiration.setGroup(group);
         expiration.setMaterial(material);
         return expiration;

@@ -38,7 +38,6 @@ function getMaterial(id) {
                         <div class="col-lg-4">
                             <div class="material-name">Title: ${material.name}</div>
                             <div class="material-description">Description: ${material.description}</div>
-                            <div id="material-expiration">Expiration time: </div>
                             <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
                         </div>
                     </div>
@@ -55,75 +54,125 @@ function getMaterial(id) {
                             </button>
                         </form>
                     </div>
-                    <div class="col-lg-4" id="expiration-date-block">
-                        <form id="set-expiration">
-                            <label for="expiration-date">Set expiration date for lection (by default 1 day)</label>
-                            <input id="expiration-date" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
-                            <div class="form-check">Choose groups:</div>
-                            <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
-                                    onclick="setExpiration(${material.id})">Submit
-                            </button>
-                        </form>
+                    <div class="col-lg-4" id="opened-for-groups">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Group</th>
+                                    <th>Expiration date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>                        
                     </div>
                     
-                `)
-                showGroupsForSelect(id);
-            }
+                `);
+                getGroupsWithClosedMaterial(id);
+                $.when(getGroupsWithOpenedMaterial(id).then(groups => {
+                        for (let i = 0; i < groups.length; i++) {
+                            $('#opened-for-groups table tbody').append(`
+                                <tr id="open-group-${groups[i].id}">
+                                    <td id="name">${groups[i].name}</td>
+                                    <td id="exp-date">No expiration date yet.
+                                        <form id="set-expiration">
+                                            <input id="expiration-date-${groups[i].id}-${material.id}" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
+                                            <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
+                                                    onclick="setExpiration(${material.id}, ${groups[i].id})">Set date
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `);
+                        }
+                    })
+                ).done(function () {
+                    getExpirations(id).then(expirations => {
+                        for (let i = 0; i < expirations.length; i++) {
+                            $('#open-group-' + expirations[i].groupId + ' #exp-date').html(expirations[i].expirationDate + `
+                                <form id="set-expiration">
+                                    <input id="expiration-date-${expirations[i].id}" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
+                                    <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
+                                            onclick="updateExpiration(${expirations[i].id})">Update
+                                    </button>
+                                </form>
+                            `)
+                        }
+                    })
+                });
 
-            material.assignments.forEach(assignment => {
-
-                let buttons = canEdit ? `<button class="btn btn-outline-info" onclick="toggleAnswers(${assignment.id})">View answers</button>` :
-                    `<button type="button" id="answer-${assignment.id}-btn" class="btn btn-outline-success"
-                        data-toggle="modal" data-target="#create-answer-modal" onclick="tempAssignmentId = ${assignment.id}">Answer</button>`;
-
-                let url = assignment.fileReference !== null ? `Download: <a href="/api/v1/assignments/${assignment.id}/file">${assignment.name}</a>` : '';
-
-                $('#assignments').append(`
-                    <div class="assignment">
-                        <div class="assignment-buttons">
-                            <button class="btn btn-primary btn-block text-left" style="margin-right: 10px" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
-                                <span class="assignment-name">
-                                    ${assignment.name}
-                                </span>
-                            </button>
-                            ${canEdit ? `<button class="btn btn-primary" style="margin-right: 10px" type="button"
-                                                data-toggle="modal" data-target="#update-assignment-modal"
-                                                onclick="tempAssignmentId = ${assignment.id}; $('#new-assignment-name').val('${assignment.name}');
-                                                $('#new-assignment-description').val('${assignment.description}');checkAssignment()">Edit</button>
-                                         <button class="btn btn-primary" type="button" onclick="tempAssignmentId = ${assignment.id};
-                                         deleteAssignment()">Delete</button>` : ``}
-                        </div>
-                        <div class="collapse" id="collapse-${assignment.id}">
-                           <div class="card card-body">
-                                     <div class="assignment-description">${assignment.description}</div>
-                                     <div class="assignment-description">${url}</div>
-                               <div style="margin-top: 10px">
-                                     ${buttons}
-                               </div>
-                               <div id="answer-${assignment.id}-review" class="answer-body">
-                                    <div id="answer-${assignment.id}-review-body">
-                                       <table class="table">
-                                           <tbody id="answer-${assignment.id}-table">
-                                          </tbody>
-                                        </table>
-                                     </div>
-                                 </div>
-                           </div>
-                        </div>
-                    </div>`);
-                //     if (!canEdit) {
-                //         let myAnswer = assignment.assignmentAnswers.find(answer => answer.ownerId === currentUser.id);
-                //         if (myAnswer) {
-                //             showMyAnswer(myAnswer, assignment.id);
-                //         }
-                //     } else {
-                //         showAnswers(assignment)
-                //     }
+                // <div class="col-lg-4" id="expiration-date-block">
                 //
-                // })
-
-            });
-            showExpiration(id);
+                //                     </div>
+                // getExpirations(material.id).then(expirations => {
+                //     $('#material-expiration table').append(`
+                //         <tr>
+                //             <td>Group</td>
+                //             <td>Expiration date</td>
+                //         </tr>
+                //     `);
+                //     expirations.forEach(expiration => {
+                //         $('#material-expiration table').append(`
+                //             <tr>
+                //                 <td>${expiration.groupId}</td>
+                //                 <td>${expiration.expirationDate}</td>
+                //             </tr>
+                //         `);
+                //     })
+                // });
+            }
+            // material.assignments.forEach(assignment => {
+            //
+            //     let buttons = canEdit ? `<button class="btn btn-outline-info" onclick="toggleAnswers(${assignment.id})">View answers</button>` :
+            //         `<button type="button" id="answer-${assignment.id}-btn" class="btn btn-outline-success"
+            //             data-toggle="modal" data-target="#create-answer-modal" onclick="tempAssignmentId = ${assignment.id}">Answer</button>`;
+            //
+            //     let url = assignment.fileReference !== null ? `Download: <a href="/api/v1/assignments/${assignment.id}/file">${assignment.name}</a>` : '';
+            //
+            //     $('#assignments').append(`
+            //         <div class="assignment">
+            //             <div class="assignment-buttons">
+            //                 <button class="btn btn-primary btn-block text-left" style="margin-right: 10px" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
+            //                     <span class="assignment-name">
+            //                         ${assignment.name}
+            //                     </span>
+            //                 </button>
+            //                 ${canEdit ? `<button class="btn btn-primary" style="margin-right: 10px" type="button"
+            //                                     data-toggle="modal" data-target="#update-assignment-modal"
+            //                                     onclick="tempAssignmentId = ${assignment.id}; $('#new-assignment-name').val('${assignment.name}');
+            //                                     $('#new-assignment-description').val('${assignment.description}');checkAssignment()">Edit</button>
+            //                              <button class="btn btn-primary" type="button" onclick="tempAssignmentId = ${assignment.id};
+            //                              deleteAssignment()">Delete</button>` : ``}
+            //             </div>
+            //             <div class="collapse" id="collapse-${assignment.id}">
+            //                <div class="card card-body">
+            //                          <div class="assignment-description">${assignment.description}</div>
+            //                          <div class="assignment-description">${url}</div>
+            //                    <div style="margin-top: 10px">
+            //                          ${buttons}
+            //                    </div>
+            //                    <div id="answer-${assignment.id}-review" class="answer-body">
+            //                         <div id="answer-${assignment.id}-review-body">
+            //                            <table class="table">
+            //                                <tbody id="answer-${assignment.id}-table">
+            //                               </tbody>
+            //                             </table>
+            //                          </div>
+            //                      </div>
+            //                </div>
+            //             </div>
+            //         </div>`);
+            //     //     if (!canEdit) {
+            //     //         let myAnswer = assignment.assignmentAnswers.find(answer => answer.ownerId === currentUser.id);
+            //     //         if (myAnswer) {
+            //     //             showMyAnswer(myAnswer, assignment.id);
+            //     //         }
+            //     //     } else {
+            //     //         showAnswers(assignment)
+            //     //     }
+            //     //
+            //     // })
+            //
+            // });
         });
     })
 }
@@ -232,17 +281,18 @@ function showAnswers(assignment) {
     });
 }
 
-function setExpiration(materialId) {
-    let checkedIds = []
-    $("#set-expiration .form-check input:checked").each(function () {
-        checkedIds.push($(this).val());
-    });
+function setExpiration(materialId, groupId) {
     let data = {
-        expirationDate: $('#expiration-date').val() + 'T' + getCurrentTime(),
-        groupIds: checkedIds,
+        expirationDate: $('#expiration-date-'+groupId+'-'+materialId).val() + 'T' + getCurrentTime(),
+        groupId: groupId,
         materialId: materialId
     }
     postRequest(`/api/v1/expirations/`, data);
+}
+
+function updateExpiration(expirationId) {
+    let data = $('#expiration-date-'+expirationId).val() + 'T' + getCurrentTime();
+    patchRequest(`/api/v1/expirations/${expirationId}`, data);
 }
 
 function openMaterial(materialId) {
@@ -253,10 +303,10 @@ function openMaterial(materialId) {
     patchRequest(`/api/v1/materials/open/${materialId}`, checkedIds);
 }
 
-function showGroupsForSelect(materialId) {
-    getRequest(`/api/v1/groups/open/${materialId}`).then(groups => {
+function getGroupsWithClosedMaterial(materialId) {
+    getRequest(`/api/v1/groups/closed/${materialId}`).then(groups => {
         for (let i = 0; i < groups.length; i++) {
-            $('#set-expiration .form-check, #open-material .form-check').append(`
+            $('#open-material .form-check').append(`
                 <input class="form-check-input" type="checkbox" value="${groups[i].id}" id="group-${groups[i].id}">
                 <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
         `)
@@ -264,12 +314,12 @@ function showGroupsForSelect(materialId) {
     })
 }
 
-function showExpiration(materialId) {
-    getRequest(`/api/v1/expirations/${materialId}`).then(expirations => {
-        expirations.forEach(expiration => {
-            $("#material-expiration").append(`<p>${expiration.expirationDate}</p>`);
-        })
-    })
+function getGroupsWithOpenedMaterial(materialId) {
+    return getRequest(`/api/v1/groups/opened/${materialId}`);
+}
+
+function getExpirations(materialId) {
+    return getRequest(`/api/v1/expirations/${materialId}`);
 }
 
 function getDayAfterToday(days) {
