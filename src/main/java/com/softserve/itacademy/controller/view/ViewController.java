@@ -1,5 +1,7 @@
 package com.softserve.itacademy.controller.view;
 
+import com.softserve.itacademy.security.perms.CourseReadPermission;
+import com.softserve.itacademy.security.perms.GroupReadPermission;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
 import org.springframework.http.MediaType;
@@ -86,4 +88,9 @@ public class ViewController {
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
     @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #id)")
     public String chatView(@RequestParam int id) { return "group-chat.html"; }
+
+    @GetMapping(path = "/search-result", produces = MediaType.TEXT_HTML_VALUE)
+    @CourseReadPermission
+    @GroupReadPermission
+    public String searchView(@RequestParam String searchQuery) { return "search-result.html"; }
 }
