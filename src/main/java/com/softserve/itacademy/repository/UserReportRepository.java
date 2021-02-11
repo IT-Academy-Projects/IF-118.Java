@@ -24,6 +24,7 @@ public interface UserReportRepository extends JpaRepository<UserReport, UserRepo
     @Query(value = "delete from UserReport ur where ur.groupId = ?1 and  ur.userId = ?2")
     int deleteByGroupIdAndUserId(Integer groupId, Integer userId);
 
+    @Transactional
     @Modifying
     @Query(value = "update UserReport ur set ur.updatable = true where ur.groupId = ?1 and  ur.userId = ?2")
     int makeUpdatable(Integer groupId, Integer userId);

@@ -16,4 +16,5 @@ public interface AssignmentAnswersService {
     void update(MultipartFile file, Integer id);
     void submit(Integer id);
     void reject(Integer id);
+    void makeReportUpdatable(Integer groupId, Integer userId);
 }
