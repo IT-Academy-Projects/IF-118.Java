@@ -134,6 +134,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<GroupResponse> findGroupsWithOpenedMaterial(Integer materialId) {
+        List<Group> groups = groupRepository.findGroupsWithOpenedMaterial(materialId);
+        if (groups.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return groups.stream().map(groupConverter::of).collect(Collectors.toList());
+    }
+
+    @Override
     public void submitAssignment(Integer groupId, Integer assignmentId) {
         groupRepository.submitAssignment(groupId, assignmentId);
     }
@@ -159,7 +168,7 @@ public class GroupServiceImpl implements GroupService {
         return groupConverter.of(group);
     }
 
-    private Group getById(Integer id) {
+    public Group getById(Integer id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
     }

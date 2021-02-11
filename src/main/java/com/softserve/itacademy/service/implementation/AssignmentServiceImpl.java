@@ -1,12 +1,14 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Assignment;
+import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.request.AssignmentRequest;
 import com.softserve.itacademy.response.AssignmentResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.service.AssignmentService;
+import com.softserve.itacademy.service.GroupService;
 import com.softserve.itacademy.service.converters.AssignmentConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_FOLDER;
@@ -15,7 +17,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,14 +28,17 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;
+    private final GroupService groupService;
 
     private static final String ASSIGNMENT_ID_NOT_FOUND = "Assignment with such id was not found";
     private static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
 
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter, AmazonS3ClientService amazonS3ClientService) {
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter,
+                                 AmazonS3ClientService amazonS3ClientService, GroupService groupService) {
         this.assignmentRepository = assignmentRepository;
         this.assignmentConverter = assignmentConverter;
         this.amazonS3ClientService = amazonS3ClientService;
+        this.groupService = groupService;
     }
 
     @Override
@@ -47,13 +54,16 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     public AssignmentResponse create(AssignmentRequest assignmentRequest, MultipartFile file) {
+        Group group = groupService.getById(assignmentRequest.getGroupId());
         Assignment assignment = Assignment.builder()
                 .name(assignmentRequest.getName())
                 .description(assignmentRequest.getDescription())
+                .groups(Set.of(group))
                 .build();
         if (file != null) {
             assignment.setFileReference(amazonS3ClientService.upload(BUCKET_NAME, ASSIGNMENTS_FOLDER, file));
         }
+        group.getAssignments().add(assignment);
         assignment = assignmentRepository.save(assignment);
         return assignmentConverter.of(assignment);
     }

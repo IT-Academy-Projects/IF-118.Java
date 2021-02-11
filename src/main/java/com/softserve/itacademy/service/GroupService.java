@@ -30,4 +30,6 @@ public interface GroupService {
     void submitAssignment(Integer groupId, Integer assignmentId);
 
     Set<User> findAllUsers(Group group);
+
+    Group getById(Integer id);
 }
