@@ -99,26 +99,12 @@ function getMaterial(id) {
                         }
                     })
                 });
-
-                // <div class="col-lg-4" id="expiration-date-block">
-                //
-                //                     </div>
-                // getExpirations(material.id).then(expirations => {
-                //     $('#material-expiration table').append(`
-                //         <tr>
-                //             <td>Group</td>
-                //             <td>Expiration date</td>
-                //         </tr>
-                //     `);
-                //     expirations.forEach(expiration => {
-                //         $('#material-expiration table').append(`
-                //             <tr>
-                //                 <td>${expiration.groupId}</td>
-                //                 <td>${expiration.expirationDate}</td>
-                //             </tr>
-                //         `);
-                //     })
-                // });
+            } else {
+                getExpirations(id).then(expirations => {
+                    for (let i = 0; i < expirations.length; i++) {
+                        $('.material-description').append(`<p>Expiration time: ${expirations[i].expirationDate}</p>`);
+                    }
+                });
             }
             // material.assignments.forEach(assignment => {
             //
