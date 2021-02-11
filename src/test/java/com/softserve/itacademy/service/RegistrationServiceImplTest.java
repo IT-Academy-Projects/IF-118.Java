@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
         assertEquals(exceptedResponse, actualResponse);
         verify(userRepository, times(1)).save(expectedUser);
         verify(mailDesignService, times(1)).designAndQueue(eq(registrationRequest.getEmail()), anyString(), anyString());
-        verify(passwordEncoder, times(1)).encode(eq(registrationRequest.getPassword()));
+        verify(passwordEncoder, times(1)).encode(registrationRequest.getPassword());
     }
 
     @Test

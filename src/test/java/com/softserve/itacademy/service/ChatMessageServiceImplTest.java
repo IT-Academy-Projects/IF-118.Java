@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class ChatMessageServiceImplTest {
+class ChatMessageServiceImplTest {
 
     private final ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class PasswordResetServiceImplTest {
+class PasswordResetServiceImplTest {
 
     @InjectMocks
     PasswordResetServiceImpl passwordResetService;
@@ -62,7 +62,7 @@ public class PasswordResetServiceImplTest {
 
         passwordResetService.resetPassword(request);
 
-        verify(tokenRepository, times(1)).findByUserId(eq(user.getId()));
+        verify(tokenRepository, times(1)).findByUserId((user.getId()));
         verify(tokenRepository, times(1)).save(isA(PasswordResetToken.class));
         verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyString());
     }
@@ -77,7 +77,7 @@ public class PasswordResetServiceImplTest {
 
         passwordResetService.resetPassword(request);
 
-        verify(tokenRepository, times(1)).findByUserId(eq(user.getId()));
+        verify(tokenRepository, times(1)).findByUserId(user.getId());
         verify(tokenRepository, times(1)).save(isA(PasswordResetToken.class));
         verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyString());
     }
@@ -102,10 +102,10 @@ public class PasswordResetServiceImplTest {
 
         passwordResetService.setPasswordByToken(request);
 
-        verify(userService, times(1)).getUserByPasswordResetToken(eq(request.getToken()));
-        verify(userService, times(1)).setPassword(eq(user.getId()), eq(request.getNewPassword()));
-        verify(tokenRepository, times(1)).setUsedByToken(eq(request.getToken()));
-        verify(tokenRepository, times(1)).findByToken(eq(request.getToken()));
+        verify(userService, times(1)).getUserByPasswordResetToken(request.getToken());
+        verify(userService, times(1)).setPassword(user.getId(), request.getNewPassword());
+        verify(tokenRepository, times(1)).setUsedByToken(request.getToken());
+        verify(tokenRepository, times(1)).findByToken(request.getToken());
     }
 
     @Test

@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class OwnAuthProviderTest {
+class OwnAuthProviderTest {
 
     @InjectMocks
     private OwnAuthProvider provider;
@@ -69,7 +69,7 @@ public class OwnAuthProviderTest {
         Authentication actualResult = provider.authenticate(authentication);
 
         assertEquals(expectedResult, actualResult);
-        verify(userPrincipalService, times(1)).getByEmail(eq(authentication.getName()));
+        verify(userPrincipalService, times(1)).getByEmail(authentication.getName());
         verify(passwordEncoder, times(1)).matches(anyString(), anyString());
     }
 
