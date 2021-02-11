@@ -16,7 +16,13 @@ function initButtons(ans) {
         $('#logout-button').show();
         $('#courses-btn').show();
         $('#groups-btn').show();
+        $('#search-form').show();
     }
+}
+
+function handleSearch() {
+    let searchQuery = $('#search-field').val();
+    window.location.replace(`/search-result?searchQuery=${searchQuery}`);
 }
 
 function isAuthenticated() {
