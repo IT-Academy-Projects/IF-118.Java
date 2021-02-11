@@ -92,4 +92,10 @@ public class ViewController {
 
     @GetMapping(path = "/password-reset-new", produces = MediaType.TEXT_HTML_VALUE)
     public String newPasswordView(@RequestParam String token) { return "password-reset-new.html"; }
+
+    @GetMapping(path = "/my-group-statistic", produces = MediaType.TEXT_HTML_VALUE)
+    public String myGroupStatistic() { return "user-group-statistic.html"; }
+
+    @GetMapping(path = "/group-statistic", produces = MediaType.TEXT_HTML_VALUE)
+    public String groupStatistic() { return "group-statistic.html"; }
 }

@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
 
 @RestController
-@RequestMapping(API_V1 + "chat")
+@RequestMapping("/api/v1/chat")
 public class ChatController {
 
     public static final int CHAT_PAGE_SIZE = 50;

@@ -5,17 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.security.perms.GroupDeletePermission;
 import com.softserve.itacademy.security.perms.GroupReadPermission;
 import com.softserve.itacademy.security.perms.GroupUpdatePermission;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,11 +33,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping(API_V1 + "groups")
+@RequestMapping("/api/v1/groups")
 public class GroupController {
 
     private final GroupService groupService;
