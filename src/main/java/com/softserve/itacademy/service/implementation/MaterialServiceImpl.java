@@ -116,8 +116,8 @@ public class MaterialServiceImpl implements MaterialService {
                 .orElseThrow(() -> new NotFoundException("Material with such id was not found"));
     }
 
-    private void createOpenLectionEvent(Integer subjectId, List<Integer> groupIds) {
-        Integer creatorId = materialRepository.findOwnerIdById(subjectId);
+    private void createOpenLectionEvent(Integer entityId, List<Integer> groupIds) {
+        Integer creatorId = materialRepository.findOwnerIdById(entityId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
 
@@ -128,7 +128,7 @@ public class MaterialServiceImpl implements MaterialService {
                     .creator(creator)
                     .recipients(recipients)
                     .type(Event.EventType.OPEN_LECTION)
-                    .subjectId(subjectId)
+                    .entityId(entityId)
                     .build();
 
             eventService.sendNotificationFromEvent(eventRepository.save(event));

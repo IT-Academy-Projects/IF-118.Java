@@ -44,7 +44,7 @@ public class Event {
     )
     private List<User> recipients;
 
-    private Integer subjectId;
+    private Integer entityId;
 
     @NotNull
     @Enumerated(EnumType.STRING)

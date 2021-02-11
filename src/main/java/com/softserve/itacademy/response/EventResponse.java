@@ -7,7 +7,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class EventResponse {
@@ -17,6 +16,6 @@ public class EventResponse {
     private UserTinyProjection creator;
     private List<User> recipients;
     private LocalDateTime date;
-    private Integer subjectId;
+    private Integer entityId;
 
 }

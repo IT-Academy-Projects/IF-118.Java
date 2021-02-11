@@ -112,7 +112,7 @@ public class InvitationServiceImpl implements InvitationService {
         return invitationRepository.deleteByExpirationDate();
     }
 
-    private void createInvitationEvent(InvitationRequest request, Integer subjectId) {
+    private void createInvitationEvent(InvitationRequest request, Integer entityId) {
         User creator = userRepository.findById(request.getOwnerId())
                 .orElseThrow(() -> new NotFoundException("User with id(" + request.getOwnerId() + ") not found"));
 
@@ -123,7 +123,7 @@ public class InvitationServiceImpl implements InvitationService {
                     .creator(creator)
                     .recipients(recipient)
                     .type(Event.EventType.INVITE)
-                    .subjectId(subjectId)
+                    .entityId(entityId)
                     .build();
 
             eventService.sendNotificationFromEvent(eventRepository.save(event));
