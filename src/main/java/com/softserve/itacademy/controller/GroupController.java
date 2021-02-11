@@ -2,6 +2,8 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
@@ -9,14 +11,12 @@ import com.softserve.itacademy.security.perms.GroupCreatePermission;
 import com.softserve.itacademy.security.perms.GroupDeletePermission;
 import com.softserve.itacademy.security.perms.GroupReadPermission;
 import com.softserve.itacademy.security.perms.GroupUpdatePermission;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.GroupService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,8 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
-@RequestMapping("/api/v1/groups")
+@RequestMapping(API_V1 + "groups")
 public class GroupController {
 
     private final GroupService groupService;
@@ -48,15 +50,15 @@ public class GroupController {
     @GroupCreatePermission
     @PostMapping
     public ResponseEntity<GroupResponse> create(@RequestPart(value = "group") String group,
-                                                @RequestPart(value = "file", required = false) MultipartFile file,
-                                                @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
+                                                @RequestPart(value = "file",  required = false) MultipartFile file,
+                                                @AuthenticationPrincipal User user) throws JsonProcessingException {
         GroupRequest groupRequest = objectMapper.readValue(group, GroupRequest.class);
-        groupRequest.setOwnerId(principal.getId());
+        groupRequest.setOwnerId(user.getId());
         return new ResponseEntity<>(groupService.create(groupRequest, file), HttpStatus.CREATED);
     }
 
     @GroupReadPermission
-    @GetMapping(path = "/{id}/avatar", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @GetMapping(path = "/{id}/avatar", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
     public ResponseEntity<Resource> downloadAvatarById(@PathVariable Integer id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] avatar = groupService.getAvatarById(id);
@@ -84,8 +86,8 @@ public class GroupController {
 
     @GroupUpdatePermission
     @PatchMapping("/{groupId}")
-    public ResponseEntity<Void> update(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
-        groupRequest.setOwnerId(principal.getId());
+    public ResponseEntity<Void> update(@AuthenticationPrincipal User user, @PathVariable Integer groupId, @RequestBody GroupRequest groupRequest) {
+        groupRequest.setOwnerId(user.getId());
         groupService.updateGroup(groupId, groupRequest);
         return new ResponseEntity<>(OK);
     }
@@ -95,10 +97,5 @@ public class GroupController {
     public ResponseEntity<Void> updateDisabled(@PathVariable Integer id, @RequestBody DisableRequest disableRequest) {
         groupService.updateDisabled(id, disableRequest.isDisabled());
         return new ResponseEntity<>(OK);
-    }
-
-    @GetMapping("/open/{materialId}")
-    public ResponseEntity<List<GroupResponse>> findGroupsWithClosedMaterial(@PathVariable Integer materialId) {
-        return new ResponseEntity<>(groupService.findGroupsWithClosedMaterial(materialId), OK);
     }
 }

@@ -27,9 +27,7 @@ public class CourseConverter {
         map.setMaterialIds((course.getMaterials().stream()
                 .map(Material::getId)
                 .collect(Collectors.toSet())));
-        if (course.getAvatar() != null) {
-            map.setImageId(course.getAvatar().getId());
-        }
+        map.setHasAvatar(course.getAvatar() != null);
         return map;
     }
 
@@ -41,5 +39,4 @@ public class CourseConverter {
         map.setMaterials(materials);
         return map;
     }
-
 }

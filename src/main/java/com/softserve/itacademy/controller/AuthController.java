@@ -1,14 +1,12 @@
 package com.softserve.itacademy.controller;
 
-import com.softserve.itacademy.security.principal.UserPrincipal;
+import static com.softserve.itacademy.config.Constance.API_V1;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.security.dto.ActivationResponse;
-import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.RegistrationRequest;
-import com.softserve.itacademy.security.dto.ResetPasswordRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.PasswordResetService;
 import com.softserve.itacademy.service.RegistrationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,17 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 
-
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping(API_V1)
 public class AuthController {
 
     private final RegistrationService registrationService;
-    private final PasswordResetService passwordResetService;
 
-    public AuthController(RegistrationService registrationService, PasswordResetService passwordResetService) {
+    public AuthController(RegistrationService registrationService) {
         this.registrationService = registrationService;
-        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/registration")
@@ -47,8 +42,8 @@ public class AuthController {
     @PatchMapping("/role-pick")
     public ResponseEntity<RolePickResponse> rolePick(
             @Valid @RequestBody RolePickRequest dto,
-            @AuthenticationPrincipal UserPrincipal principal) {
-        return new ResponseEntity<>(registrationService.pickRole(principal.getId(), dto), HttpStatus.OK);
+            @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(registrationService.pickRole(user.getId(), dto), HttpStatus.OK);
     }
 
     @GetMapping("/activation/{code}")
@@ -58,19 +53,5 @@ public class AuthController {
         headers.setLocation(URI.create("/login"));
 
         return new ResponseEntity<>(registrationService.activateUser(code), headers, HttpStatus.MOVED_PERMANENTLY);
-    }
-
-    @PostMapping("/password-reset")
-    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-
-        passwordResetService.resetPassword(resetPasswordRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/password-reset/new")
-    public ResponseEntity<Void> setPasswordByToken(@Valid @RequestBody PasswordByTokenRequest dto) {
-
-        passwordResetService.setPasswordByToken(dto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

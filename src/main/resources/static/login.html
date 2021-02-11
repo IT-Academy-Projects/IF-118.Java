@@ -26,9 +26,8 @@
         <div class="card">
             <div class="card-header">
                 <h3>Sign In</h3>
-                <p id="info-label"></p>
+                <p id="error-label"></p>
                 <div class="d-flex justify-content-end social">
-                    <span><a class="fab fa-facebook" href="/oauth2/authorize/facebook"></a></span>
                     <span><a class="fab fa-google" href="/oauth2/authorize/google"></a></span>
                 </div>
             </div>
@@ -51,16 +50,13 @@
                         <input type="checkbox" id="remember-me" name="remember-me">Remember Me
                     </div>
                     <div class="form-group">
-                        <input type="button" value="Login" class="btn float-right auth_btn" onclick="handleLogin()">
+                        <input type="button" value="Login" class="btn float-right login_btn" onclick="handleLogin()">
                     </div>
                 </form>
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-center links">
                     Don't have an account?<a href="/registration">Sign Up</a>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <a href="/password-reset">Forgot your password?</a>
                 </div>
             </div>
         </div>

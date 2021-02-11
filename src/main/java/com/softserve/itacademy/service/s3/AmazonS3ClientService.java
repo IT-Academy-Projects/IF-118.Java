@@ -8,15 +8,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.softserve.itacademy.exception.FileProcessingException;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.UUID;
+import java.io.InputStream;
 
 @Service
 public class AmazonS3ClientService {
@@ -34,7 +31,7 @@ public class AmazonS3ClientService {
      * It gives s3 client for working with service
      **/
     @PostConstruct
-    private void connectClient() {
+    public void connectClient() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         s3client = AmazonS3ClientBuilder
                 .standard()
@@ -43,28 +40,17 @@ public class AmazonS3ClientService {
                 .build();
     }
 
-    public String upload(String bucketName, String folder, MultipartFile file) {
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String fileReference = folder + "/" + UUID.randomUUID().toString().toLowerCase() + "." + extension;
-        try {
-            s3client.putObject(bucketName, fileReference, file.getInputStream(), new ObjectMetadata());
-        } catch (IOException e) {
-            throw new FileProcessingException("Cannot write file");
-        }
-        return fileReference;
+    public void upload(String bucketName, String filename, InputStream inputStream) {
+        s3client.putObject(bucketName, filename, inputStream, new ObjectMetadata());
     }
 
-    public byte[] download(String bucketName, String fileReference) {
+    public byte[] download(String bucketName, String fileReference) throws IOException {
         S3Object s3object = s3client.getObject(bucketName, fileReference);
-        try {
-            return s3object.getObjectContent().readAllBytes();
-        } catch (IOException e) {
-            throw new FileProcessingException("Cannot read bytes from file");
-        }
+        return s3object.getObjectContent().readAllBytes();
     }
 
-    public void delete(String bucketName, String folder, String fileReference) {
-        s3client.deleteObject(bucketName, folder + "/" + fileReference);
+    public void delete(String bucketName, String fileReference) {
+        s3client.deleteObject(bucketName, fileReference);
     }
 
 }

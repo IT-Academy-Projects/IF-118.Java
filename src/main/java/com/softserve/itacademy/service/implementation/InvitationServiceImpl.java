@@ -1,57 +1,48 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Group;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
-import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.InvitationService;
-import com.softserve.itacademy.service.MailDesignService;
+import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class InvitationServiceImpl implements InvitationService {
-    private final MailDesignService mailDesignService;
+    private final MailSender mailSender;
     private final InvitationConverter invitationConverter;
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
 
-    public InvitationServiceImpl(MailDesignService mailDesignService, InvitationConverter invitationConverter,
-                                 InvitationRepository invitationRepository, UserRepository userRepository,
-                                 GroupRepository groupRepository) {
-        this.mailDesignService = mailDesignService;
+    public InvitationServiceImpl(MailSender mailSender, InvitationConverter invitationConverter,
+                                 InvitationRepository invitationRepository, UserRepository userRepository) {
+        this.mailSender = mailSender;
         this.invitationConverter = invitationConverter;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
     }
 
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
         log.info("sending invitation on email");
         Invitation invitation = invitationConverter.of(invitationRequest);
-        sendInvitationMail(invitation);
-        invitation.setLink(getLink(invitation));
+            sendInvitationMail(invitation);
+            invitation.setLink(getLink(invitation));
         return invitationConverter.of(invitationRepository.save(invitation));
     }
 
-    @Transactional
     @Override
     public void approveByLink(String email, String code) {
         Invitation invitation = getInvitationByCode(code);
@@ -67,14 +58,13 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void delete(Integer id) {
-        log.info("delete invitation");
+        log.info("disapproving invitation");
         invitationRepository.delete(getById(id));
     }
 
-    @Transactional
     @Override
     public void approveById(Integer id) {
-        log.info("approving invitation " + id);
+        log.info("approving invitation");
         InvitationResponse invitationResponse = approveCourseOrGroup(getById(id));
         invitationRepository.approve(id, invitationResponse.getCode());
         invitationRepository.deleteById(invitationResponse.getId());
@@ -89,50 +79,25 @@ public class InvitationServiceImpl implements InvitationService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
     public int deleteByExpirationDate() {
         return invitationRepository.deleteByExpirationDate();
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
-        if (!canBeApproved(invitation)) {
-            return InvitationResponse.builder()
-                    .approved(false)
-                    .build();
-        }
-        else {
-            if (invitation.getGroup() != null) {
-                approveGroup(invitation);
+        if (!invitation.getApproved() && invitation.getExpirationDate().isAfter(LocalDateTime.now())) {
+            if (invitation.getGroup() != null && canBeApproved(invitation)) {
+                approve(invitation);
+                invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             } else {
-                approveCourse(invitation);
+                approve(invitation);
+                invitationRepository.courseApprove(invitation.getUser().getId(), invitation.getCourse().getId());
+                return invitationConverter.of(getInvitationByCode(invitation.getCode()));
             }
-            return invitationConverter.of(getInvitationByCode(invitation.getCode()));
         }
-
-    }
-
-    private void approveCourse(Invitation invitation) {
-        approve(invitation);
-        groupRepository.save(getGroup(invitation));
-    }
-
-    private void approveGroup(Invitation invitation) {
-        approve(invitation);
-        invitationRepository.groupApprove(invitation.getUser().getId(), invitation.getGroup().getId());
-    }
-
-    private Group getGroup(Invitation invitation) {
-        Set<Course> courses = new HashSet<>();
-        courses.add(invitation.getCourse());
-        Set<User> users = new HashSet<>();
-        users.add(invitation.getUser());
-        return Group.builder()
-                .name(invitation.getCourse().getName() +"-" + invitation.getUser().getName())
-                .ownerId(invitation.getOwnerId())
-                .courses(courses)
-                .users(users)
-                .disabled(false)
+        return InvitationResponse.builder()
+                .approved(false)
                 .build();
     }
 
@@ -152,8 +117,8 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("User id was not found"));
-        mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
+                .orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
+        mailSender.send(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
 

@@ -1,5 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
 import com.softserve.itacademy.exception.NotFoundException;
@@ -10,7 +11,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
-import com.softserve.itacademy.service.MailDesignService;
+import com.softserve.itacademy.service.MailSender;
 import com.softserve.itacademy.service.RegistrationService;
 import com.softserve.itacademy.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,16 +33,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     private String address;
 
     private final RoleService roleService;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final MailDesignService mailDesignService;
 
-    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository,
-                                   PasswordEncoder passwordEncoder, MailDesignService mailDesignService) {
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final MailSender mailSender;
+
+    public RegistrationServiceImpl(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailDesignService = mailDesignService;
+        this.mailSender = mailSender;
     }
 
     @Transactional
@@ -52,13 +55,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .pickedRole(false)
+                .isPickedRole(false)
                 .activationCode(UUID.randomUUID().toString())
                 .build();
 
         setPickedRole(dto.getPickedRole(), user);
         addUser(user);
-        sendActivationEmail(user);
+        sendActivationMessage(user);
 
         return SuccessRegistrationResponse.builder()
                 .email(user.getEmail())
@@ -84,9 +87,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RolePickResponse pickRole(Integer userId, RolePickRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_ID_NOT_FOUND));
 
-        if (!user.getPickedRole()) {
+        if (!user.getIsPickedRole()) {
 
             setPickedRole(request.getPickedRole(), user);
             userRepository.save(user);
@@ -106,19 +109,18 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new RoleAlreadyPickedException("Account " + userId + " already picked a role");
     }
 
-
     private void setPickedRole(String role, User user) {
 
         if (!(role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("TEACHER"))) {
             throw new BadCredentialsException("User " + user.getId() + "picked forbidden registration role " + role);
         }
 
-        Role userRole = roleService.getByNameIgnoreCase("USER");
-        Role pickedRole = roleService.getByNameIgnoreCase(role);
+        Role userRole = roleService.findByNameIgnoreCase("USER");
+        Role pickedRole = roleService.findByNameIgnoreCase(role);
 
         user.addRole(userRole);
         user.addRole(pickedRole);
-        user.setPickedRole(true);
+        user.setIsPickedRole(true);
     }
 
     private void addUser(User user) {
@@ -132,7 +134,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
     }
 
-    private void sendActivationEmail(User user) {
+    private void sendActivationMessage(User user) {
         if (!user.getEmail().isBlank()) {
             String message = String.format(
                     "Hello, %s! \n" + "Your activation link: %s/api/v1/activation/%s",
@@ -141,10 +143,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     user.getActivationCode()
             );
 
-            mailDesignService.designAndQueue(user.getEmail(), "SoftClass activation", message);
+            mailSender.send(user.getEmail(), "SoftClass activation", message);
         }
     }
 }
-
 
 

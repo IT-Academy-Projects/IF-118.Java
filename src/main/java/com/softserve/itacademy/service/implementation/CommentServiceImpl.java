@@ -1,5 +1,8 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.COMMENT_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.MATERIAL_ID_NOT_FOUND;
+import static com.softserve.itacademy.config.Constance.USER_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Comment;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.entity.User;
@@ -26,11 +29,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
     private final MaterialRepository materialRepository;
     private final UserRepository userRepository;
-
-    private static final String USER_ID_NOT_FOUND = "User with such id was not found";
-    private static final String MATERIAL_ID_NOT_FOUND = "Material with such id was not found";
-    private static final String COMMENT_ID_NOT_FOUND = "Comment with such id was not found";
-
 
     public CommentServiceImpl(CommentRepository commentRepository, CommentConverter commentConverter, MaterialRepository materialRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;

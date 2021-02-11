@@ -2,6 +2,8 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.softserve.itacademy.config.Constance.API_V1;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.request.DescriptionRequest;
 import com.softserve.itacademy.request.DisableRequest;
@@ -11,14 +13,12 @@ import com.softserve.itacademy.security.perms.CourseDeletePermission;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.CourseUpdatePermission;
 import com.softserve.itacademy.security.perms.roles.AdminRolePermission;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.CourseService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,8 +35,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
-@RequestMapping("/api/v1/courses")
+@RequestMapping(API_V1 + "courses")
 public class CourseController {
 
     private final CourseService courseService;
@@ -50,15 +52,15 @@ public class CourseController {
     @CourseCreatePermission
     @PostMapping
     public ResponseEntity<CourseResponse> create(@RequestPart(value = "course") String course,
-                                                 @RequestPart(value = "file", required = false) MultipartFile file,
-                                                 @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
+                                                 @RequestPart(value = "file",  required = false) MultipartFile file,
+                                                 @AuthenticationPrincipal User currentUser) throws JsonProcessingException {
         CourseRequest courseRequest = objectMapper.readValue(course, CourseRequest.class);
-        courseRequest.setOwnerId(principal.getId());
+        courseRequest.setOwnerId(currentUser.getId());
         return new ResponseEntity<>(courseService.create(courseRequest, file), HttpStatus.CREATED);
     }
 
     @CourseReadPermission
-    @GetMapping(path = "/{id}/avatar", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @GetMapping(path = "/{id}/avatar", produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
     public ResponseEntity<Resource> downloadAvatarById(@PathVariable Integer id) {
         HttpHeaders headers = new HttpHeaders();
         byte[] avatar = courseService.getAvatarById(id);
@@ -74,8 +76,8 @@ public class CourseController {
 
     @CourseReadPermission
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal UserPrincipal principal) {
-        return new ResponseEntity<>(courseService.findByOwner(principal.getId()), HttpStatus.OK);
+    public ResponseEntity<List<CourseResponse>> findByOwner(@AuthenticationPrincipal User currentUser) {
+        return new ResponseEntity<>(courseService.findByOwner(currentUser.getId()), HttpStatus.OK);
     }
 
     @AdminRolePermission

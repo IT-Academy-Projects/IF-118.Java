@@ -25,7 +25,7 @@ public class WithMockOwnUserSecurityContextFactory implements WithSecurityContex
                 .roles(Set.of(
                         Role.builder().name("USER").build(),
                         Role.builder().name(ownUser.role()).build()))
-                .pickedRole(true)
+                .isPickedRole(true)
                 .build();
 
         Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());

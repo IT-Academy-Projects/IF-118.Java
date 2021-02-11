@@ -59,7 +59,7 @@ input:focus {
     box-shadow: 0 0 0 0 !important;
 }
 
-#info-label {
+#error-label {
     color: #FFC312;
 }
 
@@ -74,13 +74,13 @@ input:focus {
     margin-right: 5px;
 }
 
-.auth_btn {
+.login_btn {
     color: black;
     background-color: #FFC312;
     width: 100px;
 }
 
-.auth_btn:hover {
+.login_btn:hover {
     color: black;
     background-color: white;
 }

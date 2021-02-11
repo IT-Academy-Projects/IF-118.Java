@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.ChatMessage;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.repository.ChatMessageRepository;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
@@ -31,9 +32,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageConverter chatMessageConverter;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService,
-            UserService userService, ChatMessageConverter chatMessageConverter,
-            SimpMessagingTemplate messagingTemplate) {
+    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService, UserService userService, ChatMessageConverter chatMessageConverter, SimpMessagingTemplate messagingTemplate) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomService = chatRoomService;
         this.userService = userService;
@@ -43,14 +42,14 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Transactional
     @Override
-    public ChatMessageResponse processMessage(ChatMessageRequest chatMessageRequest, Integer userId, Integer chatId) {
+    public ChatMessageResponse processMessage(ChatMessageRequest chatMessageRequest, User user, Integer chatId) {
 
-        log.info("Received new message with for chat id {} from user id {}", chatId, userId);
+        log.info("Received new message with for chat id {} from user id {}", chatId, user.getId());
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .content(chatMessageRequest.getContent())
                 .chatRoom(chatRoomService.getById(chatId))
-                .user(userService.getById(userId))
+                .user(userService.getById(user.getId()))
                 .status(ChatMessage.MessageStatus.RECEIVED)
                 .build();
 

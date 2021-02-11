@@ -1,9 +1,10 @@
 package com.softserve.itacademy.controller;
 
 
+import static com.softserve.itacademy.config.Constance.API_V1;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.ChatMessageRequest;
 import com.softserve.itacademy.response.ChatMessageResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.ChatMessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/v1/chat")
+@RequestMapping(API_V1 + "chat")
 public class ChatController {
 
     public static final int CHAT_PAGE_SIZE = 50;
@@ -34,13 +34,13 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/{chatId}")
-    @PreAuthorize("@accessManager.isAllowedToChat(#principal, #chatId)")
+    @PreAuthorize("@accessManager.isAllowedToChat(#user, #chatId)")
     public ChatMessageResponse processMessage(
             @Payload @Valid ChatMessageRequest chatMessageRequest,
             @DestinationVariable Integer chatId,
-            @AuthenticationPrincipal UserPrincipal principal) {
+            @AuthenticationPrincipal User user) {
 
-        return chatMessageService.processMessage(chatMessageRequest, principal.getId(), chatId);
+        return chatMessageService.processMessage(chatMessageRequest, user, chatId);
     }
 
     @GetMapping("/{chatId}/{pageNo}")

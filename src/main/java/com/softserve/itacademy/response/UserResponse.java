@@ -18,6 +18,6 @@ public class UserResponse {
     private String email;
     private String activationCode;
     private Boolean disabled;
-    private Integer imageId;
+    private byte[] avatar;
 
 }
