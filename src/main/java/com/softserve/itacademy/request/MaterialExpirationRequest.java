@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +14,6 @@ import java.util.List;
 public class MaterialExpirationRequest {
     private LocalDateTime startDate;
     private LocalDateTime expirationDate;
-    private List<Integer> groupIds;
+    private Integer groupId;
     private Integer materialId;
 }

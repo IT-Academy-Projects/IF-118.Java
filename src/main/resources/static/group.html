@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Group</title>
+    <!-- Bootstrap, jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
@@ -18,6 +19,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <link rel="stylesheet" href="css/course.css">
+    <!-- Font Awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/group.css">
     <script src="js/group.js"></script>
     <script src="js/invitation.js"></script>
     <script>
@@ -39,19 +45,35 @@
     <div class="content-wrapper">
         <div class="content">
             <div class="info">
-                <div class="course-title" id="group-name"></div>
+                <h1 class="course-title" id="group-name"></h1>
                 <div class="owner">Owner: <span id="owner"></span></div>
                 <input type="button" class="btn btn-dark" id="chat-btn" onclick="handleChatButton()" value="Chat"/>
+                <input type="button" class="btn btn-dark" id="statistic-btn" onclick="handleMyStatisticButton()" style="display: none" value="My statistic"/>
+                <input type="button" class="btn btn-dark" id="group-statistic-btn" onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
             </div>
+            <br>
             <h3>List of students:</h3>
+            <div id="students"></div>
             <div>
-                <button id="invite-to-group-button" type="button" class="btn btn-outline-success btn-sm"
+                <button id="invite-to-group-button" type="button" class="btn btn-success"
                         data-toggle="modal" data-target="#invite-to-group-modal">Invite student
                 </button>
             </div>
-            <div id="students"></div>
+            <br>
             <h3>Courses of this group:</h3>
             <div id="courses"></div>
+            <br>
+            <div class="assignment-title">
+                <h3 style="font-weight: bold; color: white">Topics</h3>
+                <div class="col-sm" id="add-assignment-btn">
+                    <button id="create-assignment-button" type="button" class="btn btn-success btn-sm"
+                            data-toggle="modal" data-target="#create-assignment-modal">+
+                    </button>
+                </div>
+            </div>
+            <div class="assignments" id="assignments">
+
+            </div>
 
             <!-- Modal -->
             <div id="invite-to-group-modal" class="modal fade" role="dialog">
@@ -76,8 +98,157 @@
                             <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for assignments -->
+<div id="create-assignment-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add assignment</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="assignment-input">
+                            <label for="assignment-name">Name:</label>
+                            <input id="assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <label for="assignment-description">Description:</label>
+                            <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <label for="assignment-file">Assignment:</label>
+                            <input type="file" class="form-control" id="assignment-file">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="create-assignment-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="createAssignment()">Create
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for answers -->
+<div id="create-answer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="answer-input">
+                            <label for="answer-file">File:</label>
+                            <input type="file" class="form-control" id="answer-file"  lang="en"
+                                   onchange="checkAnswerFile()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="create-answer-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="createAnswer()">Create
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for updating answers -->
+<div id="update-answer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="answer-input">
+                            <label for="answer-file">File:</label>
+                            <input type="file" class="form-control" id="new-answer-file"  lang="en"
+                                   onchange="checkAnswerFile()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-answer-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="updateAnswer()">Update
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for assignment answer grade -->
+<div id="grade-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Grade student`s answer</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="grade-input">
+                            <label for="grade-textarea">Grade:</label>
+                            <input id="grade-textarea" class="form-control" placeholder="Grade" type="number" min="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submit-grade-btn" type="button" class="btn btn-outline-success show"
+                        onclick="gradeAssignmentAnswer()">Grade
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for updating assignments -->
+<div id="update-assignment-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit assignment</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="assignment-input">
+                            <label for="new-assignment-name">Name:</label>
+                            <input id="new-assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <label for="new-assignment-description">Description:</label>
+                            <textarea id="new-assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <label for="new-assignment-file">Assignment:</label>
+                            <input type="file" class="form-control" id="new-assignment-file">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-assignment-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="updateAssignment()">Edit
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

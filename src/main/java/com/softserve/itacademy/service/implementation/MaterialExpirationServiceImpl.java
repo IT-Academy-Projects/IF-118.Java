@@ -46,18 +46,19 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     @Override
     @Transactional
     public void setMaterialExpiration(MaterialExpirationRequest materialExpirationRequest) {
-        List<Integer> groupIds = materialExpirationRequest.getGroupIds();
         materialExpirationRequest.setStartDate(LocalDateTime.now());
-        if (groupIds != null) {
-            List<Group> groups = groupRepository.findAllByIds(groupIds);
-            Optional<Material> material = materialRepository.findById(materialExpirationRequest.getMaterialId());
-            material.ifPresent(value -> groups.forEach(group -> {
-                MaterialExpiration materialExpiration = materialExpirationConverter.of(materialExpirationRequest, group, value);
-                materialExpirationRepository.save(materialExpiration);
-            }));
+        Optional<Group> group = groupRepository.findById(materialExpirationRequest.getGroupId());
+        if (group.isEmpty()) {
+            throw new NotFoundException("Group with such id was not found");
         }
+        Optional<Material> material = materialRepository.findById(materialExpirationRequest.getMaterialId());
+        if (material.isEmpty()) {
+            throw new NotFoundException("Material with such id was not found");
+        }
+        MaterialExpiration materialExpiration = materialExpirationConverter.of(materialExpirationRequest, group.get(), material.get());
+        materialExpirationRepository.save(materialExpiration);
 
-        List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
+        List<User> usersByGroupIds = userRepository.findByGroupId(group.get().getId());
         if (!usersByGroupIds.isEmpty()) {
             usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection time",
                     "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
@@ -86,5 +87,11 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         } else {
             throw new NotFoundException("Material with such id was not found");
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate) {
+        materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate);
     }
 }

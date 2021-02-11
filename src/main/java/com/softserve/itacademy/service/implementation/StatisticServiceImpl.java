@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.report.UserReport;
+import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse;
 import com.softserve.itacademy.response.statistic.tech.UserFullStatisticResponse;
@@ -17,10 +18,13 @@ public class StatisticServiceImpl implements StatisticService {
 
     private final UserRepository userRepository;
     private final ReportService reportService;
+    private final AssignmentRepository assignmentRepository;
 
-    public StatisticServiceImpl(UserRepository userRepository, ReportService reportService) {
+    public StatisticServiceImpl(UserRepository userRepository, ReportService reportService,
+                                AssignmentRepository assignmentRepository) {
         this.userRepository = userRepository;
         this.reportService = reportService;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
@@ -39,16 +43,16 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     private String getAvg(Integer groupId, Integer userId) {
-        double avg = getTinyStatistic(groupId, userId).stream()
-                .mapToDouble(user -> {
-                    if (user.getAnswerId() != null) {
-                        return user.getGrade();
-                    } else
-                        return 0.0;
-                })
-                .average().orElse(0.0);
-        return String.format("%.2g%n", avg).trim();
-    }
+        Set<Integer> allByGroup = assignmentRepository.findAllByGroup(groupId);
 
+        Set<UserAssignmentResponse> assignments = getTinyStatistic(groupId, userId);
+        if (assignments.isEmpty()) {
+            return null;
+        } else {
+            double sum = assignments.stream()
+                    .mapToDouble(UserAssignmentResponse::getGrade).sum();
+            return String.format("%.2g%n", sum / allByGroup.size()).trim();
+        }
+    }
 
 }

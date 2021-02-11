@@ -13,5 +13,5 @@ public class AssignmentRequest {
 
     private String name;
     private String description;
-    private int materialId;
+    private int groupId;
 }
