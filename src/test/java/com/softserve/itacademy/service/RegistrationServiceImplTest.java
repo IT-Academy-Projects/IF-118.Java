@@ -116,7 +116,7 @@ class RegistrationServiceImplTest {
 
         assertEquals(expectedResponse, actualResponse);
         verify(userRepository, times(1)).save(user.setActivated(true));
-        verify(userRepository, times(1)).findByActivationCode(eq(user.getActivationCode()));
+        verify(userRepository, times(1)).findByActivationCode(user.getActivationCode());
     }
 
     @Test

@@ -117,7 +117,7 @@ class PasswordResetServiceImplTest {
 
         assertThrows(BadCredentialsException.class, () -> passwordResetService.setPasswordByToken(request));
 
-        verify(userService, times(0)).setPassword(eq(user.getId()), eq(request.getNewPassword()));
+        verify(userService, times(0)).setPassword(user.getId(), request.getNewPassword());
     }
 
     @Test //
@@ -129,7 +129,7 @@ class PasswordResetServiceImplTest {
 
         assertThrows(BadCredentialsException.class, () -> passwordResetService.setPasswordByToken(request));
 
-        verify(userService, times(0)).setPassword(eq(user.getId()), eq(request.getNewPassword()));
+        verify(userService, times(0)).setPassword(user.getId(), request.getNewPassword());
     }
 
     @Test //
@@ -140,6 +140,6 @@ class PasswordResetServiceImplTest {
 
         assertThrows(NotFoundException.class, () -> passwordResetService.setPasswordByToken(request));
 
-        verify(userService, times(0)).setPassword(eq(user.getId()), eq(request.getNewPassword()));
+        verify(userService, times(0)).setPassword(user.getId(), request.getNewPassword());
     }
 }
