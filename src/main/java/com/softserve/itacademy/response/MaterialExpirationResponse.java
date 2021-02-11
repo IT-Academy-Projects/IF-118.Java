@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MaterialExpirationResponse {
+    private Integer id;
     private LocalDateTime expirationDate;
     private LocalDateTime startDate;
     private Boolean opened;

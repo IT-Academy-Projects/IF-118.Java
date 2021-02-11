@@ -97,8 +97,13 @@ public class GroupController {
         return new ResponseEntity<>(OK);
     }
 
-    @GetMapping("/open/{materialId}")
+    @GetMapping("/closed/{materialId}")
     public ResponseEntity<List<GroupResponse>> findGroupsWithClosedMaterial(@PathVariable Integer materialId) {
         return new ResponseEntity<>(groupService.findGroupsWithClosedMaterial(materialId), OK);
+    }
+
+    @GetMapping("/opened/{materialId}")
+    public ResponseEntity<List<GroupResponse>> findGroupsWithOpenedMaterial(@PathVariable Integer materialId) {
+        return new ResponseEntity<>(groupService.findGroupsWithOpenedMaterial(materialId), OK);
     }
 }
