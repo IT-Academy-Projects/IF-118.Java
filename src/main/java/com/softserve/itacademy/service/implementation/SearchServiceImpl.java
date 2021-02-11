@@ -41,7 +41,7 @@ public class SearchServiceImpl implements SearchService {
 
         Query<Group> query = session.createQuery(criteriaQuery);
         List<Group> results = query.getResultList();
-        return results.stream().map((group) -> projectionFactory.createProjection(GroupTinyProjection.class, group)).collect(Collectors.toList());
+        return results.stream().map(group -> projectionFactory.createProjection(GroupTinyProjection.class, group)).collect(Collectors.toList());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SearchServiceImpl implements SearchService {
 
         Query<Course> query = session.createQuery(criteriaQuery);
         List<Course> results = query.getResultList();
-        return results.stream().map((course) -> projectionFactory.createProjection(CourseTinyProjection.class, course)).collect(Collectors.toList());
+        return results.stream().map(course -> projectionFactory.createProjection(CourseTinyProjection.class, course)).collect(Collectors.toList());
     }
 
 }
