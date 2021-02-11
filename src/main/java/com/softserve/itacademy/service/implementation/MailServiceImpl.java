@@ -13,6 +13,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
 public class MailServiceImpl implements MailService {
@@ -39,7 +41,16 @@ public class MailServiceImpl implements MailService {
     @SqsListener(value = "${cloud.aws.sqs.end-point.uri}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 300))
     public void loadMessageFromSQS(MailMessage message) {
+        log.info("Loading message to {} with {} subject from queue", message.getEmail(), message.getSubject());
+        validateAndSend(message);
+    }
+
+    public boolean validateAndSend(MailMessage message) {
+        if (message.getExpirationDate().isBefore(LocalDateTime.now())) {
+            return false;
+        }
         send(message);
+        return true;
     }
 
     public void send(MailMessage message) {
