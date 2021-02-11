@@ -7,6 +7,6 @@ public interface CourseTinyProjection extends IdNameTupleProjection {
     Integer getOwnerId();
     Boolean getDisabled();
     String getDescription();
-    @Value("#{target.avatar != null}")
-    Boolean getHasAvatar();
+    @Value("#{target.avatar != null ? target.avatar.id : null}")
+    Integer getImageId();
 }

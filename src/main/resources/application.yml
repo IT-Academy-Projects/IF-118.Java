@@ -9,14 +9,15 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
   jpa:
+    show-sql: true
     database: mysql
-#    show-sql=true
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
+        type: debag
         globally_quoted_identifiers: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
@@ -28,6 +29,9 @@ spring:
           google:
             client-id: ${OAUTH2_GOOGLE_ID}
             client-secret: ${OAUTH2_GOOGLE_SECRET}
+          facebook:
+            client-id: ${FACEBOOK_ID}
+            client-secret: ${FACEBOOK_SECRET}
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
@@ -38,5 +42,15 @@ spring:
 
 application:
   address: ${APP_ADDRESS}
+
+cloud:
+  aws:
+    sqs:
+      access-key: ${SQS_ACCESSKEY}
+      secret-key: ${SQS_SECRETKEY}
+      region: ${SQS_REGION}
+      end-point:
+        uri: ${SQS_ENDPOINT_URI}
+
 
 

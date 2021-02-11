@@ -2,7 +2,8 @@ package com.softserve.itacademy.security.ownauth;
 
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.repository.UserRepository;
+import com.softserve.itacademy.security.principal.UserPrincipal;
+import com.softserve.itacademy.security.service.UserPrincipalService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,22 +12,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountLockedException;
 
 
 @Slf4j
-@Component
 public class OwnAuthProvider implements AuthenticationProvider {
 
-    private final UserRepository userRepository;
-
+    private final UserPrincipalService userPrincipalService;
     private final PasswordEncoder passwordEncoder;
 
-    public OwnAuthProvider(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public OwnAuthProvider(UserPrincipalService userPrincipalService, PasswordEncoder passwordEncoder) {
+        this.userPrincipalService = userPrincipalService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -37,7 +35,7 @@ public class OwnAuthProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new BadCredentialsException("Account not found"));
+        User user = userPrincipalService.getByEmail(email);
 
         if(user.getDisabled()) {
             throw new AccountLockedException("Account is disabled");
@@ -50,7 +48,7 @@ public class OwnAuthProvider implements AuthenticationProvider {
         log.debug("User " + email + " trying to authorize");
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(UserPrincipal.of(user), password, user.getAuthorities());
         } else {
             throw new BadCredentialsException("Wrong email or password");
         }

@@ -22,6 +22,10 @@ public interface UserService {
 
     User getById(Integer id);
 
+    User getByEmail(String email);
+
+    User getUserByPasswordResetToken(String token);
+
     int updateName(String name, Integer id);
 
     int updateEmail(String email, Integer id);
@@ -30,9 +34,11 @@ public interface UserService {
 
     void changePass(Integer id, String oldPass, String newPass);
 
+    void setPassword(Integer id, String password);
+
     void deleteInvitation(Integer userId, Integer invitationId);
 
-    void createAvatar(MultipartFile file, Integer id);
+    void setAvatar(MultipartFile file, Integer id);
 
     byte[] getAvatar(Integer id);
 

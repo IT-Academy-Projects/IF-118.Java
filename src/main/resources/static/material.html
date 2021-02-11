@@ -33,7 +33,7 @@
 
         <div id="materials"></div>
         <div class="assignment-title">
-            <h3 style="font-weight: bold">Assignments</h3>
+            <h3 style="font-weight: bold">Topics</h3>
             <div class="col-sm" id="add-assignment-btn">
                 <button id="create-assignment-button" type="button" class="btn btn-outline-success btn-sm"
                         data-toggle="modal" data-target="#create-assignment-modal">+
@@ -61,6 +61,8 @@
                             <input id="assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
                             <label for="assignment-description">Description:</label>
                             <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <label for="assignment-file">Assignment:</label>
+                            <input type="file" class="form-control" id="assignment-file">
                         </div>
                     </div>
                 </form>
@@ -154,6 +156,38 @@
             <div class="modal-footer">
                 <button id="submit-grade-btn" type="button" class="btn btn-outline-success show"
                         onclick="gradeAssignmentAnswer()">Grade
+                </button>
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for updating assignments -->
+<div id="update-assignment-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit assignment</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="assignment-input">
+                            <label for="new-assignment-name">Name:</label>
+                            <input id="new-assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <label for="new-assignment-description">Description:</label>
+                            <textarea id="new-assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <label for="new-assignment-file">Assignment:</label>
+                            <input type="file" class="form-control" id="new-assignment-file">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-assignment-btn" type="button" class="btn btn-outline-success show" disabled
+                        onclick="updateAssignment()">Edit
                 </button>
                 <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
             </div>

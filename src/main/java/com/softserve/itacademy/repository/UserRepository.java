@@ -3,6 +3,7 @@ package com.softserve.itacademy.repository;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
+import com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -51,6 +53,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT * FROM users u JOIN groups_users gu ON u.id = gu.user_id JOIN student_groups sg ON gu.group_id = sg.id WHERE gu.group_id=:id", nativeQuery = true)
     List<User> findByGroupId(Integer id);
 
+    @Query(value = "SELECT * FROM users u join groups_users gu on u.id = gu.user_id where gu.group_id in (:groupIds)", nativeQuery = true)
+    List<User> findAllByGroupIds(List<Integer> groupIds);
+
     @Modifying
     @Transactional
     @Query("update User u set u.password = ?2 where u.id = ?1")
@@ -62,6 +67,16 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteInvitation(Integer id);
 
     byte[] getAvatarById(Integer id);
+
+    @Query(value = "SELECT `name` FROM users WHERE id = :id ", nativeQuery = true)
+    String findNameById(Integer id);
+
+    @Query(value = "select new com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse(a.id, aa.id, aa.grade) " +
+            "from Assignment a" +
+            "  left join a.assignmentAnswers aa" +
+            "  join a.groups ag where ag.id = ?1 and aa.ownerId = ?2")
+    Set<UserAssignmentResponse> getStat(int groupId, int ownerId);
+
 }
 
 

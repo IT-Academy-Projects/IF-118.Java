@@ -37,7 +37,12 @@ public class CustomOidcUserService extends OidcUserService {
     }
 
     private void updateUser(String email, String name) {
-        User user = userRepository.findByEmail(email).orElse(new User().setIsPickedRole(false).setActivated(true));
+        User user = userRepository.findByEmail(email).orElse(
+                User.builder()
+                        .email(email)
+                        .pickedRole(false)
+                        .activated(true)
+                        .build());
 
         user.setEmail(email);
         user.setName(name);

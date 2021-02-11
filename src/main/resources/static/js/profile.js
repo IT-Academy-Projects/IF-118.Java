@@ -135,8 +135,8 @@ function changeAvatar() {
 }
 
 function showUser(user) {
-    if (user.avatar !== '' && user.avatar !== undefined && user.avatar !== null) {
-        $('#user-avatar').attr('src', `data:image/png;base64,${user.avatar}`);
+    if (user.imageId !== null) {
+        $('#user-avatar').attr('src', `/api/v1/images/${user.imageId}`);
         $('#avatar-placeholder').hide();
     } else {
         $('#user-avatar').attr('src', `img/no-avatar.png`);

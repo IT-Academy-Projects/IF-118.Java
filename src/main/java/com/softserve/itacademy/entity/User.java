@@ -1,6 +1,7 @@
 package com.softserve.itacademy.entity;
 
 import com.softserve.itacademy.entity.security.Role;
+import com.softserve.itacademy.security.principal.PrincipalDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Accessors(chain = true)
 @Table(name = "users")
-public class User extends BasicEntity {
+public class User extends BasicEntity implements PrincipalDetails {
 
     @Column(nullable = false)
     @EqualsAndHashCode.Include
@@ -58,7 +60,7 @@ public class User extends BasicEntity {
     private Boolean activated = false;
 
     @Column
-    private Boolean isPickedRole;
+    private Boolean pickedRole;
 
     @Column
     private String activationCode;
@@ -66,11 +68,12 @@ public class User extends BasicEntity {
     @Column
     private String invitationCode;
 
-    @Column
-    private byte[] avatar;
+    @OneToOne
+    @JoinColumn(name = "image_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_users_images_image_id"))
+    private Image avatar;
 
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_users_roles_user_id"))},
@@ -95,14 +98,6 @@ public class User extends BasicEntity {
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_courses",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__users__courses__user_id"))},
-            inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk__courses__users__course_id"))}
-    )
-    private Set<Course> courses = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Comment> comments;

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
@@ -30,4 +31,18 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     byte[] getAvatarById(Integer id);
 
     Optional<Group> findByChatRoomId(Integer id);
+
+    @Query(value = "select * from student_groups where id in(:groupIds)", nativeQuery = true)
+    List<Group> findAllByIds(List<Integer> groupIds);
+
+    @Query(value = "select * from student_groups sg join groups_materials gm on sg.id = gm.group_id where gm.material_id = :id and gm.opened = 0", nativeQuery = true)
+    List<Group> findGroupsWithClosedMaterial(Integer id);
+
+    @Modifying
+    @Query(value = "insert into groups_assignments (group_id, assignment_id) VALUE (?1, ?2)", nativeQuery = true)
+    void submitAssignment(Integer groupId, Integer assignmentId);
+
+    @Query(value = "select gu.user_id from users u join groups_users gu on u.id = gu.group_id" +
+            " where group_id = ?1", nativeQuery = true)
+    Set<Integer> findAllById(Integer groupId);
 }

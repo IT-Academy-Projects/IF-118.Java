@@ -1,8 +1,0 @@
-.invitations{
-    width: 80%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,20rem);
-    justify-content: center;
-}
-

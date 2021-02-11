@@ -23,15 +23,15 @@ function rolePickRequest(data) {
 
         error: function (request) {
             if(request.responseJSON.error === "RoleAlreadyPickedException") {
-                showError("This account already picked a role")
+                showInfo("This account already picked a role")
             } else {
-                showError(request.message)
+                showInfo(request.message)
             }
         }
     });
 }
 
-function showError(text) {
-    $("#error-label").text(text);
+function showInfo(text) {
+    $("#info-label").text(text);
 }
 
