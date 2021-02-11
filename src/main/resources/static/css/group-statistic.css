@@ -1,0 +1,34 @@
+.wrapper {
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-wrapper {
+    width: 75%;
+}
+
+.diagram-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    margin-bottom: 60px;
+}
+
+#back-to-group {
+    font-size: 48px;
+}
+
+.back-button {
+    color: gray;
+    padding: 15px 20px;
+    margin: 0 5px;
+    font-size: 20px;
+}
+
+.back-button:hover {
+    color: lightblue;
+    text-decoration: none;
+}

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ import javax.persistence.Table;
 @Table
 @Builder
 @IdClass(UserReportId.class)
-public class UserReport{
+public class UserReport {
 
     @Id
     private Integer userId;
@@ -27,4 +28,8 @@ public class UserReport{
     private Integer groupId;
 
     private String assignments;
+
+    private boolean updatable;
+
+    private String avg;
 }

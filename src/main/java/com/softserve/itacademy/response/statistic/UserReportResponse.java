@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Getter
@@ -18,5 +19,5 @@ public class UserReportResponse {
     private Integer userId;
     private Integer groupId;
     private Set<UserAssignmentResponse> assignments;
-    private Set<Integer> assignmentIds;
+    private String avg;
 }
