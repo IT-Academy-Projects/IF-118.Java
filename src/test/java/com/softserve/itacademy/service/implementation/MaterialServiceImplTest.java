@@ -7,12 +7,9 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.MaterialRequest;
-import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
-import org.apache.commons.io.FilenameUtils;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,12 +22,10 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +54,8 @@ public class MaterialServiceImplTest {
         Material material = buildMaterial();
         when(courseService.getById(anyInt())).thenReturn(courseBuild());
         when(materialRepository.save(any())).thenReturn(material);
-        MaterialResponse materialResponse = materialService.create(buildRequest(), file);
+        MaterialRequest materialRequest = buildRequest();
+        materialService.create(materialRequest, file);
         verify(materialRepository, times(1)).save(material);
         verify(amazonS3ClientService, times(1)).upload(anyString(), anyString(), eq(file));
     }
