@@ -20,4 +20,6 @@ public interface InvitationService {
     int deleteByExpirationDate();
 
     InvitationResponse findByCode(String code);
+
+    InvitationResponse findById(Integer id);
 }

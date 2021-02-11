@@ -19,6 +19,4 @@ public class AssignmentAnswersResponse {
     private Integer ownerId;
     private AssignmentAnswers.AnswersStatus status;
     private Integer grade;
-    private Boolean isReviewedByTeacher;
-    private Boolean isStudentSawGrade;
 }
