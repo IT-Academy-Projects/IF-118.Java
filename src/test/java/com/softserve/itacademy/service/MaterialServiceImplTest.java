@@ -34,7 +34,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 
 @ExtendWith(SpringExtension.class)
-public class MaterialServiceImplTest {
+class MaterialServiceImplTest {
     @InjectMocks
     private MaterialServiceImpl materialService;
     @Mock
