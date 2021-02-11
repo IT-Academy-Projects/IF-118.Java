@@ -22,6 +22,10 @@ import javax.security.auth.login.AccountLockedException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -29,10 +33,8 @@ public class OwnAuthProviderTest {
 
     @InjectMocks
     private OwnAuthProvider provider;
-
     @Mock
     private UserPrincipalService userPrincipalService;
-
     @Mock
     private PasswordEncoder passwordEncoder;
 
@@ -40,7 +42,6 @@ public class OwnAuthProviderTest {
 
     @BeforeEach
     public void setup() {
-
         user = User.builder()
                 .email("test@example.com")
                 .password("password1")
@@ -50,6 +51,7 @@ public class OwnAuthProviderTest {
                 .activationCode("testcode")
                 .build();
 
+        when(userPrincipalService.getByEmail(user.getEmail())).thenReturn(user);
         when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenAnswer(
                 (invocation) -> {
                     String pass = invocation.getArgument(0);
@@ -57,22 +59,22 @@ public class OwnAuthProviderTest {
                     return pass.equals(pass2);
                 }
         );
-
-        when(userPrincipalService.getByEmail(user.getEmail())).thenReturn(user);
     }
 
     @Test
-    void testAuthenticateSuccess() {
+    void authenticateSuccess() {
         Authentication expectedResult = new UsernamePasswordAuthenticationToken(UserPrincipal.of(user), user.getPassword(), user.getAuthorities());
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
 
-        authentication = provider.authenticate(authentication);
+        Authentication actualResult = provider.authenticate(authentication);
 
-        assertEquals(expectedResult, authentication);
+        assertEquals(expectedResult, actualResult);
+        verify(userPrincipalService, times(1)).getByEmail(eq(authentication.getName()));
+        verify(passwordEncoder, times(1)).matches(anyString(), anyString());
     }
 
     @Test
-    void testAuthenticateWrongPass() {
+    void authenticateWrongPass() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), "123");
 
         assertThrows(BadCredentialsException.class, () -> provider.authenticate(authentication));
@@ -80,7 +82,7 @@ public class OwnAuthProviderTest {
 
 
     @Test
-    void testAuthenticateNotActive() {
+    void authenticateNotActive() {
         user.setActivated(false);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
 
@@ -89,7 +91,7 @@ public class OwnAuthProviderTest {
 
 
     @Test
-    void testAuthenticateDisabled() {
+    void authenticateDisabled() {
         user.setDisabled(true);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
 
@@ -97,7 +99,7 @@ public class OwnAuthProviderTest {
     }
 
     @Test
-    void testAuthenticateNotFound() {
+    void authenticateNotFound() {
         when(userPrincipalService.getByEmail(Mockito.anyString())).thenThrow(new NotFoundException("User not found"));
         Authentication authentication = new UsernamePasswordAuthenticationToken("wrong@example.com", user.getPassword());
 

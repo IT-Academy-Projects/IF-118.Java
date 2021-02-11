@@ -24,6 +24,11 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -33,45 +38,19 @@ public class ChatMessageServiceImplTest {
 
     @InjectMocks
     private ChatMessageServiceImpl chatMessageService;
-
     @Mock
     private ChatMessageRepository chatMessageRepository;
-
     @Mock
     private ChatRoomService chatRoomService;
-
     @Mock
     private UserService userService;
-
     @Mock
     private ChatMessageConverter chatMessageConverter;
-
     @Mock
     private SimpMessagingTemplate messagingTemplate;
 
-    User user;
-    ChatMessageRequest request;
-    ChatRoom chatRoom;
-
     @BeforeEach
     public void setup() {
-
-        user = User.builder()
-                .email("test@example.com")
-                .name("tester")
-                .activated(false)
-                .pickedRole(false)
-                .activationCode("testcode")
-                .build();
-        user.setId(1);
-
-        chatRoom = ChatRoom.builder()
-                .messages(Collections.emptyList())
-                .type(ChatRoom.ChatType.GROUP)
-                .build();
-        chatRoom.setId(1);
-
-        request = new ChatMessageRequest("Test message");
 
         when(chatMessageRepository.save(Mockito.any(ChatMessage.class))).thenAnswer(
                 invocation -> {
@@ -95,21 +74,48 @@ public class ChatMessageServiceImplTest {
                             .build();
                 }
         );
-
-        when(userService.getById(user.getId())).thenReturn(user);
-        when(chatRoomService.getById(chatRoom.getId())).thenReturn(chatRoom);
     }
 
     @Test
     void testProcessMessageSuccess() {
+        when(userService.getById(getUser().getId())).thenReturn(getUser());
+        when(chatRoomService.getById(getUser().getId())).thenReturn(getChatRoom());
+
         ChatMessageResponse exceptedResponse = ChatMessageResponse.builder()
-                .content(request.getContent())
+                .content(getRequest().getContent())
                 .id(1)
-                .user(factory.createProjection(UserTinyProjection.class, user))
+                .user(factory.createProjection(UserTinyProjection.class, getUser()))
                 .build();
 
-        ChatMessageResponse actualResponse = chatMessageService.processMessage(request, user.getId(), chatRoom.getId());
+        ChatMessageResponse actualResponse = chatMessageService.processMessage(getRequest(), getUser().getId(), getChatRoom().getId());
 
         assertEquals(exceptedResponse, actualResponse);
+        verify(chatMessageRepository, times(2)).save(isA(ChatMessage.class));
+        verify(messagingTemplate, times(1)).convertAndSend(anyString(), eq(exceptedResponse));
+    }
+
+    private User getUser() {
+        User user = User.builder()
+                .email("test@example.com")
+                .name("tester")
+                .activated(false)
+                .pickedRole(false)
+                .activationCode("testcode")
+                .build();
+        user.setId(1);
+        return user;
+    }
+
+    private ChatRoom getChatRoom() {
+        ChatRoom chatRoom = ChatRoom.builder()
+                .messages(Collections.emptyList())
+                .type(ChatRoom.ChatType.GROUP)
+                .build();
+        chatRoom.setId(1);
+        return chatRoom;
+    }
+
+    private ChatMessageRequest getRequest() {
+        return new ChatMessageRequest("Test message");
     }
 }

@@ -43,7 +43,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Transactional
     @Override
     public ChatMessageResponse processMessage(ChatMessageRequest chatMessageRequest, Integer userId, Integer chatId) {
-
         log.info("Received new message with for chat id {} from user id {}", chatId, userId);
 
         ChatMessage chatMessage = ChatMessage.builder()
@@ -54,10 +53,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
 
         chatMessage = save(chatMessage);
-
-//        chatMessage.setCreatedAt(LocalDateTime.now());
-//        chatMessage.setUpdatedAt(LocalDateTime.now());
-
         return sendMessage(chatMessage);
     }
 

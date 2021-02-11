@@ -17,15 +17,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -33,32 +37,19 @@ class RegistrationServiceImplTest {
 
     @InjectMocks
     private RegistrationServiceImpl registrationService;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private RoleService roleService;
-
     @Mock
     private MailDesignService mailDesignService;
-
     @Mock
     private UserRepository userRepository;
 
-    private RegistrationRequest registrationRequest;
-    private String pickedRole = "TEACHER";
-    private RolePickRequest roleRequest;
     private User user;
 
     @BeforeEach
     public void setup() {
-        when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(passwordEncoder.encode(Mockito.anyString())).thenReturn("ENCODED_PASSWORD");
-        when(roleService.getByNameIgnoreCase("TEACHER")).thenReturn(Role.builder().name("TEACHER").build());
-        when(roleService.getByNameIgnoreCase("STUDENT")).thenReturn(Role.builder().name("STUDENT").build());
-        when(roleService.getByNameIgnoreCase("USER")).thenReturn(Role.builder().name("USER").build());
-
         user = User.builder()
                 .email("test@example.com")
                 .name("tester")
@@ -67,40 +58,46 @@ class RegistrationServiceImplTest {
                 .activationCode("testcode")
                 .build();
         user.setId(1);
-
-        registrationRequest = RegistrationRequest.builder()
-                .email("test@example.com")
-                .name("Test Tester")
-                .password("password1")
-                .pickedRole("TEACHER")
-                .build();
-
-        roleRequest = RolePickRequest.builder().pickedRole(pickedRole).build();
     }
 
     @Test
-    void testRegisterUserSuccess() {
+    void registerUserSuccess() {
+        RegistrationRequest registrationRequest = getRegistrationRequest();
+
         SuccessRegistrationResponse exceptedResponse = SuccessRegistrationResponse.builder()
                 .email(registrationRequest.getEmail())
                 .name(registrationRequest.getName())
                 .role(registrationRequest.getPickedRole())
                 .build();
+
+        User expectedUser = User.builder()
+                .email(registrationRequest.getEmail())
+                .name(registrationRequest.getName())
+                .password("ENCODED_PASSWORD")
+                .pickedRole(true)
+                .build();
+
         when(userRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.empty());
 
         SuccessRegistrationResponse actualResponse = registrationService.registerUser(registrationRequest);
 
         assertEquals(exceptedResponse, actualResponse);
+        verify(userRepository, times(1)).save(expectedUser);
+        verify(mailDesignService, times(1)).designAndQueue(eq(registrationRequest.getEmail()), anyString(), anyString());
+        verify(passwordEncoder, times(1)).encode(eq(registrationRequest.getPassword()));
     }
 
     @Test
-    void testRegisterUserNotUniqueEmail() {
+    void registerUserNotUniqueEmail() {
+        RegistrationRequest registrationRequest = getRegistrationRequest();
         when(userRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.ofNullable(user));
 
         assertThrows(BadCredentialsException.class, () -> registrationService.registerUser(registrationRequest));
     }
 
     @Test
-    void testRegisterUserWithWrongRole() {
+    void registerUserWithWrongRole() {
+        RegistrationRequest registrationRequest = getRegistrationRequest();
         when(userRepository.findByActivationCode(registrationRequest.getEmail())).thenReturn(Optional.empty());
         registrationRequest.setPickedRole("ADMIN");
 
@@ -108,7 +105,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testActivationSuccess() {
+    void activationSuccess() {
         when(userRepository.findByActivationCode(user.getActivationCode())).thenReturn(Optional.ofNullable(user));
         ActivationResponse expectedResponse = ActivationResponse.builder()
                 .isActivated(true)
@@ -118,10 +115,12 @@ class RegistrationServiceImplTest {
         ActivationResponse actualResponse = registrationService.activateUser(user.getActivationCode());
 
         assertEquals(expectedResponse, actualResponse);
+        verify(userRepository, times(1)).save(user.setActivated(true));
+        verify(userRepository, times(1)).findByActivationCode(eq(user.getActivationCode()));
     }
 
     @Test
-    void testActivationInvalidCode() {
+    void activationInvalidCode() {
         String code = user.getActivationCode();
         when(userRepository.findByActivationCode(code)).thenReturn(Optional.empty());
 
@@ -131,22 +130,29 @@ class RegistrationServiceImplTest {
     @Test
     @WithMockOwnStudent
     void pickRoleSuccessTeacher() {
+        Role teacherRole = Role.builder().name("TEACHER").build();
+        Role userRole = Role.builder().name("USER").build();
+
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
+        when(roleService.getByNameIgnoreCase("TEACHER")).thenReturn(teacherRole);
+        when(roleService.getByNameIgnoreCase("USER")).thenReturn(userRole);
+
         RolePickResponse expectedResponse = RolePickResponse.builder()
                 .email(user.getEmail())
-                .pickedRole(pickedRole)
+                .pickedRole("TEACHER")
                 .build();
 
-        RolePickResponse actualResponse = registrationService.pickRole(1, roleRequest);
+        RolePickResponse actualResponse = registrationService.pickRole(1, getRoleRequest());
 
         assertEquals(expectedResponse, actualResponse);
+        verify(userRepository, times(1)).save(user.setRoles(Set.of(userRole, teacherRole)));
     }
 
     @Test
     void pickRoleUserNotFound() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> registrationService.pickRole(1, roleRequest));
+        assertThrows(NotFoundException.class, () -> registrationService.pickRole(1, getRoleRequest()));
     }
 
     @Test
@@ -154,6 +160,19 @@ class RegistrationServiceImplTest {
         user.setPickedRole(true);
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
 
-        assertThrows(RoleAlreadyPickedException.class, () -> registrationService.pickRole(1, roleRequest));
+        assertThrows(RoleAlreadyPickedException.class, () -> registrationService.pickRole(1, getRoleRequest()));
+    }
+
+    private RegistrationRequest getRegistrationRequest() {
+        return RegistrationRequest.builder()
+                .email("test@example.com")
+                .name("Test Tester")
+                .password("password1")
+                .pickedRole("TEACHER")
+                .build();
+    }
+
+    private RolePickRequest getRoleRequest() {
+        return RolePickRequest.builder().pickedRole("TEACHER").build();
     }
 }
