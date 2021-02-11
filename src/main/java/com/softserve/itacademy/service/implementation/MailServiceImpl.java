@@ -42,6 +42,7 @@ public class MailServiceImpl implements MailService {
         send(message);
     }
 
+    @Override
     public void send(MailMessage message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 

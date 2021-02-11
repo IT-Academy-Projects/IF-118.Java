@@ -35,28 +35,21 @@ class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
 
     @Mock
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mock
-    RoleService roleService;
+    private RoleService roleService;
 
     @Mock
-    MailDesignService mailDesignService;
+    private MailDesignService mailDesignService;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    RegistrationRequest registrationRequest = RegistrationRequest.builder()
-            .email("test@example.com")
-            .name("Test Tester")
-            .password("password1")
-            .pickedRole("TEACHER")
-            .build();
-
-    String pickedRole = "TEACHER";
-    RolePickRequest roleRequest = RolePickRequest.builder().pickedRole(pickedRole).build();
-
-    User user;
+    private RegistrationRequest registrationRequest;
+    private String pickedRole = "TEACHER";
+    private RolePickRequest roleRequest;
+    private User user;
 
     @BeforeEach
     public void setup() {
@@ -74,81 +67,90 @@ class RegistrationServiceImplTest {
                 .activationCode("testcode")
                 .build();
         user.setId(1);
+
+        registrationRequest = RegistrationRequest.builder()
+                .email("test@example.com")
+                .name("Test Tester")
+                .password("password1")
+                .pickedRole("TEACHER")
+                .build();
+
+        roleRequest = RolePickRequest.builder().pickedRole(pickedRole).build();
     }
 
     @Test
     void testRegisterUserSuccess() {
-
         SuccessRegistrationResponse exceptedResponse = SuccessRegistrationResponse.builder()
                 .email(registrationRequest.getEmail())
                 .name(registrationRequest.getName())
                 .role(registrationRequest.getPickedRole())
                 .build();
-
         when(userRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.empty());
-        assertEquals(exceptedResponse, registrationService.registerUser(registrationRequest));
+
+        SuccessRegistrationResponse actualResponse = registrationService.registerUser(registrationRequest);
+
+        assertEquals(exceptedResponse, actualResponse);
     }
 
     @Test
     void testRegisterUserNotUniqueEmail() {
-
         when(userRepository.findByEmail(registrationRequest.getEmail())).thenReturn(Optional.ofNullable(user));
+
         assertThrows(BadCredentialsException.class, () -> registrationService.registerUser(registrationRequest));
     }
 
     @Test
     void testRegisterUserWithWrongRole() {
-
         when(userRepository.findByActivationCode(registrationRequest.getEmail())).thenReturn(Optional.empty());
         registrationRequest.setPickedRole("ADMIN");
+
         assertThrows(BadCredentialsException.class, () -> registrationService.registerUser(registrationRequest));
     }
 
     @Test
     void testActivationSuccess() {
-
         when(userRepository.findByActivationCode(user.getActivationCode())).thenReturn(Optional.ofNullable(user));
-
         ActivationResponse expectedResponse = ActivationResponse.builder()
                 .isActivated(true)
                 .message("Successfully activated")
                 .build();
 
-        assertEquals(expectedResponse, registrationService.activateUser(user.getActivationCode()));
+        ActivationResponse actualResponse = registrationService.activateUser(user.getActivationCode());
+
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void testActivationInvalidCode() {
-
         String code = user.getActivationCode();
         when(userRepository.findByActivationCode(code)).thenReturn(Optional.empty());
+
         assertThrows(NotFoundException.class, () -> registrationService.activateUser(code));
     }
 
     @Test
     @WithMockOwnStudent
     void pickRoleSuccessTeacher() {
-
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
-
-        RolePickResponse res = RolePickResponse.builder()
+        RolePickResponse expectedResponse = RolePickResponse.builder()
                 .email(user.getEmail())
                 .pickedRole(pickedRole)
                 .build();
 
-        assertEquals(res, registrationService.pickRole(1, roleRequest));
+        RolePickResponse actualResponse = registrationService.pickRole(1, roleRequest);
+
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void pickRoleUserNotFound() {
-
         when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+
         assertThrows(NotFoundException.class, () -> registrationService.pickRole(1, roleRequest));
     }
 
     @Test
     void pickRoleAlreadyPicked() {
-
         user.setPickedRole(true);
         when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
 

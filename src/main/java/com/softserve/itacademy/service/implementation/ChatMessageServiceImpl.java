@@ -17,7 +17,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,12 +53,28 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .status(ChatMessage.MessageStatus.RECEIVED)
                 .build();
 
-        save(chatMessage);
+        chatMessage = save(chatMessage);
 
-        chatMessage.setCreatedAt(LocalDateTime.now());
-        chatMessage.setUpdatedAt(LocalDateTime.now());
+//        chatMessage.setCreatedAt(LocalDateTime.now());
+//        chatMessage.setUpdatedAt(LocalDateTime.now());
 
         return sendMessage(chatMessage);
+    }
+
+    @Override
+    public List<ChatMessageResponse> findPaginatedByChatRoomId(int pageNo, int pageSize, int chatId) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("createdAt").descending());
+        Page<ChatMessage> pagedResult = chatMessageRepository.findPaginatedByChatRoomId(paging, chatId);
+        List<ChatMessageResponse> list = (List<ChatMessageResponse>) chatMessageConverter.of(pagedResult.toList());
+
+        Collections.reverse(list);
+        return list;
+    }
+
+    private ChatMessage save(ChatMessage chatMessage) {
+        chatMessage = chatMessageRepository.save(chatMessage);
+        log.info("Saved message with id {}", chatMessage.getId());
+        return chatMessage;
     }
 
     private ChatMessageResponse sendMessage(ChatMessage chatMessage) {
@@ -72,24 +87,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         log.info("Broadcast message with id {}", chatMessage.getId());
 
         return response;
-    }
-
-    @Override
-    public ChatMessage save(ChatMessage chatMessage) {
-        chatMessage = chatMessageRepository.save(chatMessage);
-        log.info("Saved message with id {}", chatMessage.getId());
-        return chatMessage;
-    }
-
-    @Override
-    public List<ChatMessageResponse> findPaginatedByChatRoomId(int pageNo, int pageSize, int chatId) {
-
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("createdAt").descending());
-        Page<ChatMessage> pagedResult = chatMessageRepository.findPaginatedByChatRoomId(paging, chatId);
-        List<ChatMessageResponse> list = (List<ChatMessageResponse>) chatMessageConverter.of(pagedResult.toList());
-
-        Collections.reverse(list);
-        return list;
     }
 
 }
