@@ -53,6 +53,7 @@ public class MailServiceImpl implements MailService {
         return true;
     }
 
+    @Override
     public void send(MailMessage message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 

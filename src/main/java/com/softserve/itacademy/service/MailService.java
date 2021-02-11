@@ -5,4 +5,6 @@ import com.softserve.itacademy.service.mailing.MailMessage;
 public interface MailService {
 
     void addMessageToMailQueue(MailMessage message);
+
+    void send(MailMessage message);
 }
