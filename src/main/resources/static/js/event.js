@@ -30,9 +30,9 @@ function refreshEvents() {
 }
 
 function  showAnswerEvent(notification){
-    let subId = notification.subjectId;
+    let entId = notification.entityId;
 
-    $.get(`/api/v1/assignment-answers/${subId}`).then(answer => {
+    $.get(`/api/v1/assignment-answers/${entId}`).then(answer => {
         $.get(`api/v1/assignments/${answer.id}`).then(assignment => {
             if(notification.type = "GRADE_ANSWER") {
                 showGradeEventMessage(notification.creator.name, assignment.name);
@@ -68,9 +68,9 @@ function  showInvitationEvent(notification){
     let newRow = tbodyRef.insertRow();
     let newCell = newRow.insertCell();
 
-    let subId = notification.subjectId;
+    let entId = notification.entityId;
 
-    $.get(`/api/v1/invitation/find/${subId}`).then(invitation => {
+    $.get(`/api/v1/invitation/find/${entId}`).then(invitation => {
         if( invitation.courseOrGroup == 'course'){
             $.get(`api/v1/courses/${invitation.courseOrGroupId}`).then(course => {
                 var eventMsg = document.createTextNode(notification.creator.name + " invite you to " + course.name);
