@@ -28,4 +28,6 @@ public interface GroupService {
     void submitAssignment(Integer groupId, Integer assignmentId);
 
     Set<Integer> findAllUsersIds(Group group);
+
+    Group getById(Integer id);
 }

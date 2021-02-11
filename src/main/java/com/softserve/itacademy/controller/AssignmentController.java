@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/assignments")
