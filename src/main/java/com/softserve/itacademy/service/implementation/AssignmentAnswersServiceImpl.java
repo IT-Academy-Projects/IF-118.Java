@@ -7,7 +7,9 @@ import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentAnswersRepository;
+import com.softserve.itacademy.repository.AssignmentRepository;
 import com.softserve.itacademy.repository.EventRepository;
+import com.softserve.itacademy.repository.UserReportRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
@@ -39,13 +41,15 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     private final UserRepository userRepository;
     private final EventService eventService;
     private final EventRepository eventRepository;
+    private final AssignmentRepository assignmentRepository;
+    private final UserReportRepository userReportRepository;
     private static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
 
-    public AssignmentAnswersServiceImpl(AssignmentService assignmentService,
-                                        AssignmentAnswersRepository assignmentAnswersRepository,
-                                        AssignmentAnswersConverter assignmentAnswersConverter,
-                                        AmazonS3ClientService amazonS3ClientService,
-                                        UserService userService, UserRepository userRepository, EventService eventService, EventRepository eventRepository) {
+    public AssignmentAnswersServiceImpl(AssignmentService assignmentService, AssignmentAnswersRepository assignmentAnswersRepository,
+                                        AssignmentAnswersConverter assignmentAnswersConverter, AmazonS3ClientService amazonS3ClientService,
+                                        UserService userService, UserRepository userRepository, EventService eventService,
+                                        EventRepository eventRepository, AssignmentRepository assignmentRepository,
+                                        UserReportRepository userReportRepository) {
         this.assignmentService = assignmentService;
         this.assignmentAnswersRepository = assignmentAnswersRepository;
         this.assignmentAnswersConverter = assignmentAnswersConverter;
@@ -54,6 +58,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         this.userRepository = userRepository;
         this.eventService = eventService;
         this.eventRepository = eventRepository;
+        this.assignmentRepository = assignmentRepository;
+        this.userReportRepository = userReportRepository;
     }
 
     @Override
@@ -76,6 +82,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
+        makeReportUpdatable(getGroupId(assignment.getId()), ownerId);
         return assignmentAnswersConverter.of(assignmentAnswers);
     }
 
@@ -150,5 +157,13 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .build();
 
         eventService.sendNotificationFromEvent(eventRepository.save(event));
+    }
+
+    private int makeReportUpdatable(Integer groupId, Integer userId) {
+        return userReportRepository.makeUpdatable(groupId, userId);
+    }
+
+    private int getGroupId(Integer assignmentId) {
+        return assignmentRepository.getGroupId(assignmentId);
     }
 }

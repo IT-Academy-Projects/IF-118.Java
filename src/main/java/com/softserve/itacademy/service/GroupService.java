@@ -1,8 +1,10 @@
 package com.softserve.itacademy.service;
 
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
+import com.softserve.itacademy.response.UserResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,5 +29,5 @@ public interface GroupService {
 
     void submitAssignment(Integer groupId, Integer assignmentId);
 
-    Set<Integer> findAllUsersIds(Group group);
+    Set<User> findAllUsers(Group group);
 }

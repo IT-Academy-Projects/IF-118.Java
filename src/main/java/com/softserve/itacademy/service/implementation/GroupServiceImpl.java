@@ -12,6 +12,7 @@ import com.softserve.itacademy.repository.CourseRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
+import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import com.softserve.itacademy.service.ChatRoomService;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class GroupServiceImpl implements GroupService {
 
-    public static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
+    private static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
     private static final String GROUP_ID_NOT_FOUND = "Group with such id was not found";
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
@@ -41,11 +42,12 @@ public class GroupServiceImpl implements GroupService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
+    private final UserRepository userRepository;
 
     public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
                             UserService userService, ChatRoomService chatRoomService,
-                            CourseRepository courseRepository, ImageService imageService,
-                            ImageRepository imageRepository, MaterialRepository materialRepository) {
+                            CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository,
+                            MaterialRepository materialRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -54,6 +56,7 @@ public class GroupServiceImpl implements GroupService {
         this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.materialRepository = materialRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -136,8 +139,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Set<Integer> findAllUsersIds(Group group) {
-        return groupRepository.findAllById(group.getId());
+    public Set<User> findAllUsers(Group group) {
+        return userRepository.findAllById(group.getId());
     }
 
     @Override
