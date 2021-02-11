@@ -1,7 +1,6 @@
 package com.softserve.itacademy.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
