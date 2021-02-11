@@ -165,7 +165,7 @@ public class GroupServiceImpl implements GroupService {
         return groupConverter.of(group);
     }
 
-    private Group getById(Integer id) {
+    public Group getById(Integer id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(GROUP_ID_NOT_FOUND));
     }
