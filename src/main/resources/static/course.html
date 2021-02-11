@@ -23,6 +23,7 @@
 
 <body>
 <div id="navbar"></div>
+<div id="events"></div>
 <div class="wrapper">
     <div class="content" id="course-content">
         <div class="course-title" id="course-name"></div>
@@ -158,6 +159,10 @@
     $(function () {
         $("#navbar").load("navbar.html");
         $("#create-comment-modal").load("add-comment-modal.html");
+    });
+
+    $(function () {
+        $("#events").load("event.html");
     });
 </script>
 

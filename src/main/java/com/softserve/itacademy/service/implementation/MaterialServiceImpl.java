@@ -1,16 +1,17 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Group;
-import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.entity.*;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;
+import com.softserve.itacademy.repository.EventRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
+import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.MaterialRequest;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import com.softserve.itacademy.response.MaterialResponse;
 import com.softserve.itacademy.service.CourseService;
+import com.softserve.itacademy.service.EventService;
 import com.softserve.itacademy.service.MaterialService;
 import com.softserve.itacademy.service.converters.MaterialConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
@@ -33,15 +34,24 @@ public class MaterialServiceImpl implements MaterialService {
     private final CourseService courseService;
     private final MaterialConverter materialConverter;
     private final AmazonS3ClientService amazonS3ClientService;
+    private final UserRepository userRepository;
+    private final EventService eventService;
+    private final EventRepository eventRepository;
 
     public MaterialServiceImpl(MaterialRepository materialRepository,
                                MaterialConverter materialConverter,
                                CourseService courseService,
-                               AmazonS3ClientService amazonS3ClientService) {
+                               AmazonS3ClientService amazonS3ClientService,
+                               UserRepository userRepository,
+                               EventService eventService,
+                               EventRepository eventRepository) {
         this.materialRepository = materialRepository;
         this.materialConverter = materialConverter;
         this.courseService = courseService;
         this.amazonS3ClientService = amazonS3ClientService;
+        this.userRepository = userRepository;
+        this.eventService = eventService;
+        this.eventRepository = eventRepository;
     }
 
 
@@ -97,6 +107,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void open(Integer materialId, List<Integer> groupIds) {
         materialRepository.openMaterial(materialId, groupIds);
+        createOpenLectionEvent(materialId, groupIds);
     }
 
     @Override
@@ -104,4 +115,24 @@ public class MaterialServiceImpl implements MaterialService {
         return materialRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Material with such id was not found"));
     }
+
+    private void createOpenLectionEvent(Integer entityId, List<Integer> groupIds) {
+        Integer creatorId = materialRepository.findOwnerIdById(entityId);
+        User creator = userRepository.findById(creatorId)
+                .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
+
+        List<User> recipients = userRepository.findAllByGroupIds(groupIds);
+
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(Event.EventType.OPEN_LECTION)
+                    .entityId(entityId)
+                    .build();
+
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
+    }
 }
+

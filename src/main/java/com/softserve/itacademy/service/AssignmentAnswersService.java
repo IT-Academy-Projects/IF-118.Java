@@ -6,12 +6,9 @@ import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 public interface AssignmentAnswersService {
 
     AssignmentAnswersResponse findById(Integer id);
-    List<AssignmentAnswersResponse> findAllByOwnerId(Integer id);
     AssignmentAnswersResponse create(MultipartFile file, AssignmentAnswersRequest assignmentAnswersRequest);
     DownloadFileResponse downloadById(Integer id);
     void grade(Integer id, Integer grade);
@@ -19,6 +16,4 @@ public interface AssignmentAnswersService {
     void update(MultipartFile file, Integer id);
     void submit(Integer id);
     void reject(Integer id);
-    void reviewByTeacher(Integer id);
-    void reviewByStudent(Integer id);
 }

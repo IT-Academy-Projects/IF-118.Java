@@ -1,15 +1,18 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Event;
 import com.softserve.itacademy.entity.Group;
 import com.softserve.itacademy.entity.Invitation;
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
+import com.softserve.itacademy.repository.EventRepository;
 import com.softserve.itacademy.repository.GroupRepository;
 import com.softserve.itacademy.repository.InvitationRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.request.InvitationRequest;
 import com.softserve.itacademy.response.InvitationResponse;
+import com.softserve.itacademy.service.EventService;
 import com.softserve.itacademy.service.InvitationService;
 import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.converters.InvitationConverter;
@@ -31,15 +34,19 @@ public class InvitationServiceImpl implements InvitationService {
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final EventRepository eventRepository;
+    private final EventService eventService;
 
     public InvitationServiceImpl(MailDesignService mailDesignService, InvitationConverter invitationConverter,
                                  InvitationRepository invitationRepository, UserRepository userRepository,
-                                 GroupRepository groupRepository) {
+                                 GroupRepository groupRepository, EventRepository eventRepository, EventService eventService) {
         this.mailDesignService = mailDesignService;
         this.invitationConverter = invitationConverter;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+        this.eventRepository = eventRepository;
+        this.eventService = eventService;
     }
 
     @Override
@@ -48,7 +55,11 @@ public class InvitationServiceImpl implements InvitationService {
         Invitation invitation = invitationConverter.of(invitationRequest);
         sendInvitationMail(invitation);
         invitation.setLink(getLink(invitation));
-        return invitationConverter.of(invitationRepository.save(invitation));
+
+        invitation = invitationRepository.save(invitation);
+        createInvitationEvent(invitationRequest, invitation.getId());
+
+        return invitationConverter.of(invitation);
     }
 
     @Transactional
@@ -63,6 +74,11 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public InvitationResponse findByCode(String code) {
         return invitationConverter.of(getInvitationByCode(code));
+    }
+
+    @Override
+    public InvitationResponse findById(Integer id) {
+        return invitationConverter.of(getById(id));
     }
 
     @Override
@@ -93,6 +109,24 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public int deleteByExpirationDate() {
         return invitationRepository.deleteByExpirationDate();
+    }
+
+    private void createInvitationEvent(InvitationRequest request, Integer entityId) {
+        User creator = userRepository.findById(request.getOwnerId())
+                .orElseThrow(() -> new NotFoundException("User with id(" + request.getOwnerId() + ") not found"));
+
+        List<User> recipient = userRepository.findByEmail(request.getEmail()).stream().collect(Collectors.toList());
+
+        if (!recipient.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipient)
+                    .type(Event.EventType.INVITE)
+                    .entityId(entityId)
+                    .build();
+
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
     }
 
     private InvitationResponse approveCourseOrGroup(Invitation invitation) {
