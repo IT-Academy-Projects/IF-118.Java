@@ -7,13 +7,13 @@ function handleRegister() {
 
     if (email === '' || password === '' || passwordRepeat === '' || name === '') {
         makeRed();
-        showInfo("Enter all required information")
+        showError("Enter all required information")
     } else if (password !== passwordRepeat) {
         $('#passwordRepeat').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showInfo("Password confirmation is not correct")
+        showError("Password confirmation is not correct")
     } else if (!validateEmail(email)) {
         $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showInfo("Email is not correct")
+        showError("Email is not correct")
     } else {
         registerRequestJson({
             "email": email,
@@ -41,14 +41,14 @@ function registerRequestJson(data) {
         },
 
         error: function (request, textStatus, errorThrown) {
-            showInfo(request.responseJSON.message)
+            showError(request.responseJSON.message)
             makeRed();
         }
     });
 }
 
-function showInfo(text) {
-    let label = $("#info-label");
+function showError(text) {
+    let label = $("#error-label");
     label.text(text);
     label.show();
 }

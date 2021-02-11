@@ -25,6 +25,11 @@ public interface InvitationRepository extends JpaRepository<Invitation, Integer>
     @Query(value = "insert into groups_users (user_id, group_id) VALUE (?1, ?2)", nativeQuery = true)
     void groupApprove(Integer userId, Integer groupId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "insert into users_courses (user_id, course_id) VALUE (?1, ?2)", nativeQuery = true)
+    void courseApprove(Integer userId, Integer courseId);
+
     List<Invitation> findAllByEmail(String email);
 
     @Transactional

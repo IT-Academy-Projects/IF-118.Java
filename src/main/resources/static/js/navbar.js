@@ -11,7 +11,7 @@ function initButtons(ans) {
         $('#register-button').show();
         $('#login-button').show();
     } else {
-        $('#notification-button').show();
+        $('#invitation-button').show();
         $('#panel-button').show();
         $('#logout-button').show();
         $('#courses-btn').show();
@@ -20,5 +20,5 @@ function initButtons(ans) {
 }
 
 function isAuthenticated() {
-    return $.get("/api/v1/users/authenticated")
+    return $.get("/api/v1/users/is-authenticated")
 }

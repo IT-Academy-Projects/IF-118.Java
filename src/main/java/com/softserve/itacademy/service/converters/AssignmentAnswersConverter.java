@@ -14,9 +14,7 @@ public class AssignmentAnswersConverter {
     private final ModelMapper mapper;
 
     public AssignmentAnswersResponse of(AssignmentAnswers assignmentAnswers) {
-
         return mapper.map(assignmentAnswers, AssignmentAnswersResponse.class);
-
     }
 
     public AssignmentAnswers of(AssignmentAnswersRequest assignmentAnswersRequest) {

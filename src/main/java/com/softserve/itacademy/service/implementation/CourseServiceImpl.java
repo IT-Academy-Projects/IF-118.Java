@@ -1,28 +1,27 @@
 package com.softserve.itacademy.service.implementation;
 
+import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Course;
-import com.softserve.itacademy.entity.Image;
 import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
+import com.softserve.itacademy.exception.FileProcessingException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
 import com.softserve.itacademy.service.CourseService;
-import com.softserve.itacademy.service.ImageService;
 import com.softserve.itacademy.service.UserService;
 import com.softserve.itacademy.service.converters.CourseConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @Service
 @Slf4j
@@ -32,17 +31,12 @@ public class CourseServiceImpl implements CourseService {
     private final UserService userService;
     private final CourseConverter courseConverter;
     private final MaterialRepository materialRepository;
-    private final ImageService imageService;
-    private final ImageRepository imageRepository;
-    private static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository, ImageService imageService, ImageRepository imageRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository) {
         this.courseRepository = courseRepository;
         this.userService = userService;
         this.courseConverter = courseConverter;
         this.materialRepository = materialRepository;
-        this.imageService = imageService;
-        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -59,8 +53,11 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseConverter.of(courseRequest, materials);
 
         if (file != null) {
-            Image image = new Image(imageService.compress(file));
-            course.setAvatar(imageRepository.save(image));
+            try {
+                course.setAvatar(file.getBytes());
+            } catch (IOException e) {
+                throw new FileProcessingException("Cannot get bytes from avatar file for course");
+            }
         }
 
         Course savedCourse = courseRepository.save(course);
@@ -104,9 +101,7 @@ public class CourseServiceImpl implements CourseService {
     public byte[] getAvatarById(Integer id) {
         if (!courseRepository.existsById(id)) { throw new NotFoundException(COURSE_ID_NOT_FOUND); }
         byte[] avatar = courseRepository.getAvatarById(id);
-        if (avatar == null) {
-            throw new NotFoundException("Avatar doesn't exist for this course");
-        }
+        if (avatar == null) { throw new NotFoundException("Avatar doesn't exist for this course"); }
         return avatar;
     }
 

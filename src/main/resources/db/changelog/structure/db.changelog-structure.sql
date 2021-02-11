@@ -175,8 +175,3 @@ ALTER TABLE assignment_answers ADD COLUMN is_submitted BOOLEAN DEFAULT FALSE;
 -- changeSet Ivanyshyn:structure-1.1.2 endDelimiter:; splitStatements:true
 
 ALTER TABLE assignment_answers ADD COLUMN grade INTEGER NOT NULL;
-
--- changeSet Ivanyshyn:structure-1.1.3 endDelimiter:; splitStatements:true
-
-ALTER TABLE assignment_answers DROP COLUMN is_submitted;
-ALTER TABLE assignment_answers ADD COLUMN status VARCHAR(255) DEFAULT 'NEW';

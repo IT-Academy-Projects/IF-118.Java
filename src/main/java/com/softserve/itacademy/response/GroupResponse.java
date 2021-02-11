@@ -19,13 +19,11 @@ public class GroupResponse {
     private String name;
     private Integer ownerId;
     private Boolean disabled;
-    private Integer imageId;
+    private Boolean hasAvatar;
 
     private Set<CourseResponse> courses;
 
     private Set<UserResponse> users;
 
     private ChatRoomResponse chatRoom;
-
-    private Set<AssignmentResponse> assignments;
 }

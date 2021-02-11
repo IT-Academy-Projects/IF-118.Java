@@ -1,5 +1,7 @@
 package com.softserve.itacademy.controller;
 
+import static com.softserve.itacademy.config.Constance.API_V1;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.projection.IdNameTupleProjection;
 import com.softserve.itacademy.projection.UserFullTinyProjection;
@@ -7,12 +9,12 @@ import com.softserve.itacademy.request.DisableRequest;
 import com.softserve.itacademy.request.UserEmailUpdateRequest;
 import com.softserve.itacademy.request.UserNameUpdateRequest;
 import com.softserve.itacademy.request.UserPasswordRequest;
-import com.softserve.itacademy.response.AuthenticatedResponse;
+import com.softserve.itacademy.response.IsAuthenticatedResponse;
 import com.softserve.itacademy.response.UserResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.UserDeletePermission;
 import com.softserve.itacademy.service.UserService;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(API_V1 + "users")
 public class UserController {
 
     private final UserService userService;
@@ -39,32 +39,32 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/authenticated")
-    public ResponseEntity<AuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal UserPrincipal principal) {
-        if (principal == null) {
-            return new ResponseEntity<>(AuthenticatedResponse.builder().exists(false).build(), OK);
+    @GetMapping("/is-authenticated")
+    public ResponseEntity<IsAuthenticatedResponse> isAuthenticated(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(false).build(), OK);
         }
 
-        return new ResponseEntity<>(AuthenticatedResponse.builder().exists(true).userId(principal.getId()).build(), OK);
+        return new ResponseEntity<>(IsAuthenticatedResponse.builder().exists(true).userId(user.getId()).build(), OK);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserResponse> getUserProfile(@AuthenticationPrincipal UserPrincipal principal) {
-        return new ResponseEntity<>(userService.getUserById(principal.getId()), OK);
+    public ResponseEntity<UserResponse> getUserProfile(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(userService.getUserById(user.getId()), OK);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal UserPrincipal principal) {
-        if (principal == null) {
+    public ResponseEntity<UserFullTinyProjection> findCurrentUser(@AuthenticationPrincipal User user) {
+        if (user == null) {
             throw new NotFoundException("user was not found");
         }
-        return new ResponseEntity<>(userService.findById(principal.getId()), OK);
+        return new ResponseEntity<>(userService.findById(user.getId()), OK);
     }
 
     @PutMapping("/{id}/avatar")
     public ResponseEntity<Void> changePhoto(@RequestPart(value = "avatar") MultipartFile file,
                                             @PathVariable Integer id) {
-        userService.setAvatar(file, id);
+        userService.createAvatar(file, id);
         return new ResponseEntity<>(OK);
     }
 
@@ -86,16 +86,16 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/profile/email")
-    public ResponseEntity<Void> updateUserEmail(@AuthenticationPrincipal UserPrincipal principal,
+    public ResponseEntity<Void> updateUserEmail(@AuthenticationPrincipal User user,
                                                   @RequestBody UserEmailUpdateRequest request) {
-        userService.updateEmail(request.getEmail(), principal.getId());
+        userService.updateEmail(request.getEmail(), user.getId());
         return new ResponseEntity<>(OK);
     }
 
     @PatchMapping("/{id}/profile/name")
-    public ResponseEntity<Void> updateUserName(@AuthenticationPrincipal UserPrincipal principal,
+    public ResponseEntity<Void> updateUserName(@AuthenticationPrincipal User user,
                                                   @RequestBody UserNameUpdateRequest request) {
-        userService.updateName(request.getName(), principal.getId());
+        userService.updateName(request.getName(), user.getId());
         return new ResponseEntity<>(OK);
     }
 

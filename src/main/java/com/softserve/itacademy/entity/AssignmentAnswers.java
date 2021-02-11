@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,22 +27,11 @@ public class AssignmentAnswers extends BasicEntity {
 
     private String fileReference;
 
+    private Boolean isSubmitted;
+
     private Integer grade;
-
-    private Boolean isReviewedByTeacher; //in notifications
-
-    private Boolean isStudentSawGrade; //in notifications
 
     @ManyToOne
     @JoinColumn(name = "assignment_id",  referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_assignment_assignment_answers"))
     private Assignment assignment;
-
-    @Enumerated(EnumType.STRING)
-    private AnswersStatus status;
-
-    public enum AnswersStatus {
-        NEW,
-        SUBMITTED,
-        REJECTED
-    }
 }

@@ -6,7 +6,7 @@ public interface GroupTinyProjection extends IdNameTupleProjection {
 
     Integer getOwnerId();
     Boolean getDisabled();
-    @Value("#{target.avatar != null ? target.avatar.id : null}")
-    Integer getImageId();
+    @Value("#{target.avatar != null}")
+    Boolean getHasAvatar();
 
 }
