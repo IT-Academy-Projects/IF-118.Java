@@ -1,26 +1,37 @@
-refreshEvents();
+let currentUser;
+getEvents();
 
 function connect() {
     var socket = new SockJS('/api/v1/ws');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, () => {});
-
 }
 
 function onConnected() {
-    stompClient.subscribe(`/api/v1/ws/event/notification/${currentUser.id}`);
+    stompClient.subscribe(`/api/v1/ws/event/notification/${currentUser.id}`, onEventReceived);
 }
 
-function refreshEvents() {
+function onEventReceived(payload) {
+    let event = JSON.parse(payload.body);
+
+    let type = event.type;
+    if(type == "INVITE"){
+        showInvitationEvent(event);
+    } else{
+       showAnswerEvent(event);
+    }
+}
+
+function getEvents() {
     let startPageNumber = 0;
     getCurrentUser().then((user) => {
         currentUser = user;
         $.get(`/api/v1/events/${user.id}?pageNo=${startPageNumber}`).then(notifications => {
             notifications.forEach(notification => {
                 let type = notification.type;
-                if(type == "INVITE"){
+                if (type == "INVITE") {
                     showInvitationEvent(notification);
-                } else{
+                } else {
                     showAnswerEvent(notification);
                 }
             })
@@ -46,27 +57,27 @@ function  showAnswerEvent(notification){
 }
 
 function showGradeEventMessage(teacherName, assignmentName){
-    $('#invitations').append(`
-       <p class="card-text">${teacherName} grade your answer to ${assignmentName} assignment</p>
-  `);
+    let newCell = createNewCell();
+
+    var eventMsg = document.createTextNode(teacherName + " grade your answer to " + assignmentName + " assignment");
+    newCell.appendChild(eventMsg);
 }
 
 function showSubmitEventMessage(studentName, assignmentName){
-    $('#invitations').append(`
-       <p class="card-text">${studentName} submit answer to ${assignmentName} assignment</p>
-  `);
+    let newCell = createNewCell();
+
+    var eventMsg = document.createTextNode(studentName + " submit answer to " + assignmentName + " assignment");
+    newCell.appendChild(eventMsg);
 }
 
 function showRejectEventMessage(teacherName, assignmentName){
-    $('#invitations').append(`
-            <p class="card-text">${teacherName} reject your answer to ${assignmentName} assignment</p>
-  `);
+    let newCell = createNewCell();
+    var eventMsg = document.createTextNode(teacherName + " reject your answer to " + assignmentName + " assignment");
+    newCell.appendChild(eventMsg);
 }
 
 function  showInvitationEvent(notification){
-    let tbodyRef = document.getElementById('eventTable').getElementsByTagName('tbody')[0];
-    let newRow = tbodyRef.insertRow();
-    let newCell = newRow.insertCell();
+    let newCell = createNewCell();
 
     let entId = notification.entityId;
 
@@ -89,3 +100,10 @@ function getCurrentUser() {
     return $.get("/api/v1/users/me")
 }
 
+function createNewCell(){
+    let tbodyRef = document.getElementById('eventTable').getElementsByTagName('tbody')[0];
+    let newRow = tbodyRef.insertRow();
+    let newCell = newRow.insertCell();
+
+    return newCell;
+}
