@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-
 @RestController
-@RequestMapping(API_V1 + "/search")
+@RequestMapping("/api/v1/search")
 public class SearchController {
 
     private final SearchService searchService;
