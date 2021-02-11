@@ -7,10 +7,8 @@ function init() {
     searchQuery = urlParams.get('searchQuery');
     getRequest(`api/v1/users/me`).then(user => {
         currentUserId = user.id;
-
         showCourses();
         showGroups();
-
     })
 }
 

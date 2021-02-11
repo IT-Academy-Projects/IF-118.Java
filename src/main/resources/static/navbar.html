@@ -10,6 +10,10 @@
         <a id="courses-btn" class="navigation-item text-warning" href="/user" style="display: none">Courses</a>
         <a id="groups-btn" class="navigation-item text-warning" href="/user?content=groups" style="display: none">Groups</a>
     </form>
+    <form class="form-inline" id="search-form" style="display: none">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search-field">
+        <button class="btn btn-outline-warning my-2 my-sm-0" type="button" onclick="handleSearch()">Search</button>
+    </form>
     <form class="form-inline">
         <a id="invitation-button" class="navigation-item text-warning" href="/invite" style="display: none">Invitations</a>
         <a id="panel-button" class="navigation-item text-warning" href="/profile" style="display: none">Profile</a>

@@ -2,6 +2,8 @@ package com.softserve.itacademy.controller;
 
 import com.softserve.itacademy.projection.CourseTinyProjection;
 import com.softserve.itacademy.projection.GroupTinyProjection;
+import com.softserve.itacademy.security.perms.CourseReadPermission;
+import com.softserve.itacademy.security.perms.GroupReadPermission;
 import com.softserve.itacademy.service.SearchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,13 @@ public class SearchController {
         this.searchService = searchService;
     }
 
+    @GroupReadPermission
     @GetMapping("/group")
     public ResponseEntity<List<GroupTinyProjection>> searchGroups(@RequestParam String searchQuery) {
         return new ResponseEntity<>(searchService.searchGroup(searchQuery), HttpStatus.OK);
     }
 
+    @CourseReadPermission
     @GetMapping("/course")
     public ResponseEntity<List<CourseTinyProjection>> searchCourses(@RequestParam String searchQuery) {
         return new ResponseEntity<>(searchService.searchCourse(searchQuery), HttpStatus.OK);
