@@ -19,4 +19,5 @@ public class InvitationResponse {
     private String link;
     private Integer courseOrGroupId;
     private String code;
+    private Integer ownerId;
 }

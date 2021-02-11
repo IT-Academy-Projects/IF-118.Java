@@ -20,11 +20,16 @@
         $(function () {
             $("#navbar").load("navbar.html");
         });
+
+        $(function () {
+            $("#events").load("event.html");
+        });
     </script>
 </head>
 
 <body>
 <div id="navbar"></div>
+<div id="events"></div>
 <div class="wrapper">
     <div class="header"></div>
     <div class="content-wrapper">
@@ -33,6 +38,8 @@
                 <div class="course-title" id="group-name"></div>
                 <div class="owner">Owner: <span id="owner"></span></div>
                 <input type="button" class="btn btn-dark" id="chat-btn" onclick="handleChatButton()" value="Chat"/>
+                <input type="button" class="btn btn-dark" id="statistic-btn" onclick="handleMyStatisticButton()" style="display: none" value="My statistic"/>
+                <input type="button" class="btn btn-dark" id="group-statistic-btn" onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
             </div>
             <h3>List of students:</h3>
             <div>

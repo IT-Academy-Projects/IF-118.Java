@@ -32,14 +32,43 @@ function getMaterial(id) {
                 canEdit = false;
                 $('#add-assignment-btn').hide();
             }
-
             $('#materials').append(`
                 <div class="material">
-                    <div class="material-name">${material.name}</div>
-                    <div class="material-description">${material.description}</div>
-                    <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="material-name">Title: ${material.name}</div>
+                            <div class="material-description">Description: ${material.description}</div>
+                            <div id="material-expiration">Expiration time: </div>
+                            <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                        </div>
+                    </div>
                 </div>
             `);
+            if (canEdit) {
+                $('#materials .material .row').append(`
+                    <div class="col-lg-4" id="open-material-block">
+                        <form id="open-material">
+                            Open ${material.name} for groups:
+                            <div class="form-check"></div>
+                            <button id="open-material-btn" type="button" class="btn btn-outline-success show"
+                                    onclick="openMaterial(${material.id})">Submit
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-lg-4" id="expiration-date-block">
+                        <form id="set-expiration">
+                            <label for="expiration-date">Set expiration date for lection (by default 1 day)</label>
+                            <input id="expiration-date" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
+                            <div class="form-check">Choose groups:</div>
+                            <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
+                                    onclick="setExpiration(${material.id})">Submit
+                            </button>
+                        </form>
+                    </div>
+                    
+                `)
+                showGroupsForSelect(id);
+            }
 
             material.assignments.forEach(assignment => {
 
@@ -51,42 +80,51 @@ function getMaterial(id) {
 
                 $('#assignments').append(`
                     <div class="assignment">
-                        <button class="btn btn-primary btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
-                            <span class="assignment-name">
-                                ${assignment.name}
-                            </span>
-                        </button>
+                        <div class="assignment-buttons">
+                            <button class="btn btn-primary btn-block text-left" style="margin-right: 10px" type="button" data-toggle="collapse" data-target="#collapse-${assignment.id}" aria-expanded="false" aria-controls="collapse">
+                                <span class="assignment-name">
+                                    ${assignment.name}
+                                </span>
+                            </button>
+                            ${canEdit ? `<button class="btn btn-primary" style="margin-right: 10px" type="button"
+                                                data-toggle="modal" data-target="#update-assignment-modal"
+                                                onclick="tempAssignmentId = ${assignment.id}; $('#new-assignment-name').val('${assignment.name}');
+                                                $('#new-assignment-description').val('${assignment.description}');checkAssignment()">Edit</button>
+                                         <button class="btn btn-primary" type="button" onclick="tempAssignmentId = ${assignment.id};
+                                         deleteAssignment()">Delete</button>` : ``}
+                        </div>
                         <div class="collapse" id="collapse-${assignment.id}">
-                            <div class="card card-body">
-                                <div class="assignment-description">${assignment.description}</div>
-                                <div class="assignment-description">${url}</div>
-                                <div style="margin-top: 10px">
+                           <div class="card card-body">
+                                     <div class="assignment-description">${assignment.description}</div>
+                                     <div class="assignment-description">${url}</div>
+                               <div style="margin-top: 10px">
                                      ${buttons}
-                                </div>
-                                <div id="answer-${assignment.id}-review" class="answer-body">
+                               </div>
+                               <div id="answer-${assignment.id}-review" class="answer-body">
                                     <div id="answer-${assignment.id}-review-body">
-                                        <table class="table">
-                                            <tbody id="answer-${assignment.id}-table">
-                                            </tbody>
+                                       <table class="table">
+                                           <tbody id="answer-${assignment.id}-table">
+                                          </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
+                                     </div>
+                                 </div>
+                           </div>
                         </div>
                     </div>`);
-                if (!canEdit) {
-                    let myAnswer = assignment.assignmentAnswers.find(answer => answer.ownerId === currentUser.id);
-                    if (myAnswer) {
-                        showMyAnswer(myAnswer, assignment.id);
-                    }
-                } else {
-                    showAnswers(assignment)
-                }
+                //     if (!canEdit) {
+                //         let myAnswer = assignment.assignmentAnswers.find(answer => answer.ownerId === currentUser.id);
+                //         if (myAnswer) {
+                //             showMyAnswer(myAnswer, assignment.id);
+                //         }
+                //     } else {
+                //         showAnswers(assignment)
+                //     }
+                //
+                // })
 
-            })
-
+            });
+            showExpiration(id);
         });
-
     })
 }
 
@@ -111,6 +149,33 @@ function createAssignment() {
     })
 }
 
+function updateAssignment() {
+    let data = {
+        name: $('#new-assignment-name').val(),
+        description: $('#new-assignment-description').val(),
+        materialId: materialId
+    }
+
+    let formData = new FormData();
+    formData.append('assignment', JSON.stringify(data));
+    let file = $('#new-assignment-file').prop('files')[0];
+    if (file !== null) {
+        formData.append('file', file);
+    }
+    patchFileRequest(`/api/v1/assignments/${tempAssignmentId}`, formData, (res) => {
+        $('#assignments').html('');
+        $('#materials').html('');
+        $('#update-assignment-modal').modal('hide');
+        getMaterial(materialId);
+    })
+}
+
+function deleteAssignment() {
+    deleteRequest(`/api/v1/assignments/${tempAssignmentId}`, null, () => {
+        getMaterial(materialId);
+    })
+}
+
 function checkAnswerFile() {
     if ($('#answer-file').val().length > 0) {
         $('#create-answer-btn').removeAttr('disabled');
@@ -131,7 +196,7 @@ function showMyAnswer(answer, assignmentId) {
             <tr>
                 <td><span style="font-weight: bold" class="h3">${currentUser.name}</span></td>
                 <td><a href="/api/v1/assignment-answers/${answer.id}/file">Answer</a></td>
-                <td><span>${answer.grade}</span></td>
+                ${answer.status === 'REJECTED' ? `<td><span>Rejected</span></td>` : `<td><span>${answer.grade}</span></td>`}
                 <td><button type="button" id="answer-${answer.id}-btn" class="btn btn-outline-success"
                         data-toggle="modal" data-target="#update-answer-modal" onclick="tempAnswerId = ${answer.id}">Change answer</button></td>
                 <td><button type="button" id="submit-${answer.id}-btn" class="btn btn-outline-success" 
@@ -139,17 +204,17 @@ function showMyAnswer(answer, assignmentId) {
             </tr>
         `);
     let submit = '#submit-' + answer.id + '-btn'
-    $(submit).attr('disabled', answer.isSubmitted)
+    $(submit).attr('disabled', answer.status === 'SUBMITTED')
 
     $(`#answer-${assignmentId}-review`).toggle();
     $(`#answer-${assignmentId}-btn`).hide();
 }
 
 function showAnswers(assignment) {
-    let answerTable = "#answer-" + assignment.id+ "-table";
+    let answerTable = "#answer-" + assignment.id + "-table";
     $(answerTable).innerHTML = ''
     assignment.assignmentAnswers.forEach(answer => {
-        if (answer.isSubmitted === true) {
+        if (answer.status === 'SUBMITTED') {
             getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
                 $(answerTable).append(`
                 <tr>
@@ -158,11 +223,74 @@ function showAnswers(assignment) {
                     <td><span id="grade-${answer.id}">${answer.grade}</span></td>
                     <td><button type="button" id="grade-${answer.id}-btn" class="btn btn-outline-success" 
                         data-toggle="modal" data-target="#grade-modal" onclick="assignmentAnswerId = ${answer.id}">Grade</button></td>
+                    <td><button type="button" id="reject-${answer.id}-btn" class="btn btn-outline-success" 
+                        onclick="reject(${answer.id})">Reject</button></td>
                 </tr>
                 `);
             });
         }
     });
+}
+
+function setExpiration(materialId) {
+    let checkedIds = []
+    $("#set-expiration .form-check input:checked").each(function () {
+        checkedIds.push($(this).val());
+    });
+    let data = {
+        expirationDate: $('#expiration-date').val() + 'T' + getCurrentTime(),
+        groupIds: checkedIds,
+        materialId: materialId
+    }
+    postRequest(`/api/v1/expirations/`, data);
+}
+
+function openMaterial(materialId) {
+    let checkedIds = []
+    $("#open-material input:checked").each(function () {
+        checkedIds.push($(this).val());
+    });
+    patchRequest(`/api/v1/materials/open/${materialId}`, checkedIds);
+}
+
+function showGroupsForSelect(materialId) {
+    getRequest(`/api/v1/groups/open/${materialId}`).then(groups => {
+        for (let i = 0; i < groups.length; i++) {
+            $('#set-expiration .form-check, #open-material .form-check').append(`
+                <input class="form-check-input" type="checkbox" value="${groups[i].id}" id="group-${groups[i].id}">
+                <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
+        `)
+        }
+    })
+}
+
+function showExpiration(materialId) {
+    getRequest(`/api/v1/expirations/${materialId}`).then(expirations => {
+        expirations.forEach(expiration => {
+            $("#material-expiration").append(`<p>${expiration.expirationDate}</p>`);
+        })
+    })
+}
+
+function getDayAfterToday(days) {
+    let d = new Date();
+
+    let month = d.getMonth() + 1;
+    let day = d.getDate() + days;
+
+    return d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+}
+
+function getDefaultExpirationDate() {
+    return getDayAfterToday(1);
+}
+
+function getCurrentTime() {
+    let hours = new Date().getHours();
+    let minutes = new Date().getMinutes();
+    return (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
 }
 
 function toggleAnswers(id) {
@@ -192,8 +320,7 @@ function updateAnswer() {
 
     let formData = new FormData();
     formData.append('file', file);
-    formData.append('answerId', tempAnswerId);
-    patchFileRequest(`/api/v1/assignment-answers`, formData).then(res => {
+    patchFileRequest(`/api/v1/assignment-answers/${tempAnswerId}`, formData).then(res => {
         showMyAnswer(res, tempAssignmentId);
         $('#update-answer-modal').modal('hide');
         file = '';
@@ -218,10 +345,19 @@ function checkAssignment() {
     } else {
         $('#create-assignment-btn').attr('disabled', true);
     }
+    if ($('#new-assignment-name').val().length > 0 && $('#new-assignment-description').val().length > 0) {
+        $('#update-assignment-btn').removeAttr('disabled');
+    } else {
+        $('#update-assignment-btn').attr('disabled', true);
+    }
 }
 
 function submit(id) {
     patchRequest(`/api/v1/assignment-answers/${id}/submit`).then($('#submit-' + id + '-btn').attr('disabled', true));
+}
+
+function reject(id) {
+    patchRequest(`/api/v1/assignment-answers/${id}/reject`).then($('#reject-' + id + '-btn').attr('disabled', true))
 }
 
 function getRequest(url) {
@@ -245,29 +381,51 @@ function postFileRequest(url, data, callback) {
         processData: false,
         contentType: false,
         enctype: 'multipart/form-data',
-        success: function(res) {
+        success: function (res) {
             if (callback)
                 callback(res)
         }
     });
 }
 
-function patchFileRequest(url, data) {
+function patchFileRequest(url, data, callback) {
     return $.ajax({
         url: url,
         type: 'PATCH',
         data: data,
         processData: false,
         contentType: false,
-        enctype: 'multipart/form-data'
+        enctype: 'multipart/form-data',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
     });
 }
 
-function patchRequest(url, data) {
+function patchRequest(url, data, callback) {
     return $.ajax({
         url: url,
         type: 'PATCH',
         data: JSON.stringify(data),
-        contentType: 'application/json; charset=utf-8'
+        contentType: 'application/json; charset=utf-8',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
     })
 }
+
+function deleteRequest(url, data, callback) {
+    return $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+        success: function (res) {
+            if (callback)
+                callback(res)
+        }
+    })
+}
+

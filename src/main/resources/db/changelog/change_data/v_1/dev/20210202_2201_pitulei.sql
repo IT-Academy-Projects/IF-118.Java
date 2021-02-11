@@ -4,4 +4,4 @@
 
 -- USERS
 UPDATE users
-SET is_picked_role = 1;
+SET picked_role = 1;

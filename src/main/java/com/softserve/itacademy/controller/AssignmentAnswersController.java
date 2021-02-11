@@ -2,7 +2,6 @@ package com.softserve.itacademy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
@@ -11,10 +10,12 @@ import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.AssignmentAnswersService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,11 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping(API_V1 + "assignment-answers")
+@RequestMapping("/api/v1/assignment-answers")
 public class AssignmentAnswersController {
 
     private final AssignmentAnswersService assignmentAnswersService;
@@ -49,17 +47,17 @@ public class AssignmentAnswersController {
     @PostMapping
     public ResponseEntity<AssignmentAnswersResponse> create(@RequestPart(value = "file") MultipartFile file,
                                                             @RequestPart(value = "assignmentAnswer") String data,
-                                                            @AuthenticationPrincipal User user) throws JsonProcessingException {
+                                                            @AuthenticationPrincipal UserPrincipal principal) throws JsonProcessingException {
         AssignmentAnswersRequest assignmentAnswersRequest = objectMapper.readValue(data, AssignmentAnswersRequest.class);
-        assignmentAnswersRequest.setOwnerId(user.getId());
+        assignmentAnswersRequest.setOwnerId(principal.getId());
         return new ResponseEntity<>(assignmentAnswersService.create(file, assignmentAnswersRequest), HttpStatus.CREATED);
     }
 
     @StudentRolePermission
-    @PatchMapping
-    public ResponseEntity<AssignmentAnswersResponse> update(@RequestPart(value = "file") MultipartFile file,
-                                                            @RequestPart(value = "answerId") String id) {
-        assignmentAnswersService.update(file, Integer.valueOf(id));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AssignmentAnswersResponse> update(@PathVariable Integer id,
+                                                            @RequestPart(value = "file") MultipartFile file) {
+        assignmentAnswersService.update(file, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -94,6 +92,13 @@ public class AssignmentAnswersController {
     @PatchMapping("/{id}/submit")
     public ResponseEntity<Void> submit(@PathVariable Integer id) {
         assignmentAnswersService.submit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @TeacherRolePermission
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<Void> reject(@PathVariable Integer id) {
+        assignmentAnswersService.reject(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

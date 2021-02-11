@@ -21,8 +21,10 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "select * from courses where owner_id=:id and disabled = false", nativeQuery = true)
     List<Course> findByOwnerId(Integer id);
 
-    @Query(value = "select * from courses c inner join users_courses uc on c.id = uc.course_id where uc.user_id = :id and c.disabled = false", nativeQuery = true)
-    List<Course> findAllByUserId(Integer id);
+    @Query(value = "select distinct * from courses c join groups_courses gc on c.id = gc.course_id " +
+            "join groups_users gu on gc.group_id = gu.group_id " +
+            "where gu.user_id = ?1", nativeQuery = true)
+    Set<Course> findAllByUserId(Integer id);
 
     @Modifying
     @Transactional
@@ -34,5 +36,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query(value = "select avatar from courses where id = :id", nativeQuery = true)
     byte[] getAvatarById(Integer id);
+
 
 }

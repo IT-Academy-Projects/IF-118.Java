@@ -80,7 +80,7 @@ public class ViewController {
         return "material.html";
     }
 
-    @GetMapping(path = "/invite", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(path = "/invitation", produces = MediaType.TEXT_HTML_VALUE)
     public String inviteView() {
         return "invitation.html";
     }
@@ -93,4 +93,16 @@ public class ViewController {
     @CourseReadPermission
     @GroupReadPermission
     public String searchView(@RequestParam String searchQuery) { return "search-result.html"; }
+
+    @GetMapping(path = "/password-reset", produces = MediaType.TEXT_HTML_VALUE)
+    public String passwordResetView() { return "password-reset.html"; }
+
+    @GetMapping(path = "/password-reset-new", produces = MediaType.TEXT_HTML_VALUE)
+    public String newPasswordView(@RequestParam String token) { return "password-reset-new.html"; }
+
+    @GetMapping(path = "/my-group-statistic", produces = MediaType.TEXT_HTML_VALUE)
+    public String myGroupStatistic() { return "user-group-statistic.html"; }
+
+    @GetMapping(path = "/group-statistic", produces = MediaType.TEXT_HTML_VALUE)
+    public String groupStatistic() { return "group-statistic.html"; }
 }

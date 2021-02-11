@@ -5,10 +5,10 @@ function handleLogin() {
 
     if (email === '') {
         $('#email').css("border", "2px solid red").css("box-shadow", "0 0 3px red");
-        showError("Enter email");
+        showInfo("Enter email");
     } else if (password === '') {
         $('#password').css("border", "2px solid red").css("box-shadow", "0 0 3px red")
-        showError("Enter password");
+        showInfo("Enter password");
     } else {
         loginRequest({
             "email": email,
@@ -29,11 +29,11 @@ function loginRequest(data) {
         },
 
         error: function (request) {
-            showError(request.responseJSON.message);
+            showInfo(request.responseJSON.message);
         },
     });
 }
 
-function showError(text) {
-    $("#error-label").text(text);
+function showInfo(text) {
+    $("#info-label").text(text);
 }

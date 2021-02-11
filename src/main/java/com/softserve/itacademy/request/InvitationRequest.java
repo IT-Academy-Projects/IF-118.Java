@@ -15,9 +15,6 @@ public class InvitationRequest {
     private int userId;
     private int courseId;
     private int groupId;
-//    private LocalDate expirationDate;
-//    private Boolean approved;
-//    private String link;
-
+    private int ownerId;
 
 }
