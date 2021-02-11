@@ -37,4 +37,5 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query(value = "select avatar from courses where id = :id", nativeQuery = true)
     byte[] getAvatarById(Integer id);
 
+
 }

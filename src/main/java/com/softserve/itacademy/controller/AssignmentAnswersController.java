@@ -6,15 +6,16 @@ import com.softserve.itacademy.request.AssignmentAnswersRequest;
 import com.softserve.itacademy.request.GradeRequest;
 import com.softserve.itacademy.response.AssignmentAnswersResponse;
 import com.softserve.itacademy.response.DownloadFileResponse;
-import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.security.perms.CourseReadPermission;
 import com.softserve.itacademy.security.perms.roles.StudentRolePermission;
 import com.softserve.itacademy.security.perms.roles.TeacherRolePermission;
 import com.softserve.itacademy.security.perms.roles.UserRolePermission;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.AssignmentAnswersService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,11 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.softserve.itacademy.config.Constance.API_V1;
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
-@RequestMapping(API_V1 + "assignment-answers")
+@RequestMapping("/api/v1/assignment-answers")
 public class AssignmentAnswersController {
 
     private final AssignmentAnswersService assignmentAnswersService;

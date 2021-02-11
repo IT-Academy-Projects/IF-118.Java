@@ -29,4 +29,5 @@ public class AssignmentConverter {
     public Assignment of(AssignmentRequest assignmentRequest) {
         return mapper.map(assignmentRequest, Assignment.class);
     }
+
 }

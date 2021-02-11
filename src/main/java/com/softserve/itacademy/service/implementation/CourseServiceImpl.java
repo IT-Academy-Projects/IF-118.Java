@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -35,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final MaterialRepository materialRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
+    private static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
 
     public CourseServiceImpl(CourseRepository courseRepository, UserService userService, CourseConverter courseConverter, MaterialRepository materialRepository, ImageService imageService, ImageRepository imageRepository) {
         this.courseRepository = courseRepository;

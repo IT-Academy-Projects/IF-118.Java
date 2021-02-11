@@ -28,12 +28,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.config.Constance.COURSE_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.GROUP_ID_NOT_FOUND;
-
 @Service
 public class GroupServiceImpl implements GroupService {
 
+    public static final String COURSE_ID_NOT_FOUND = "Course with such id was not found";
+    private static final String GROUP_ID_NOT_FOUND = "Group with such id was not found";
     private final GroupRepository groupRepository;
     private final GroupConverter groupConverter;
     private final UserService userService;
@@ -43,7 +42,10 @@ public class GroupServiceImpl implements GroupService {
     private final ImageRepository imageRepository;
     private final MaterialRepository materialRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter, UserService userService, ChatRoomService chatRoomService, CourseRepository courseRepository, ImageService imageService, ImageRepository imageRepository, MaterialRepository materialRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupConverter groupConverter,
+                            UserService userService, ChatRoomService chatRoomService,
+                            CourseRepository courseRepository, ImageService imageService,
+                            ImageRepository imageRepository, MaterialRepository materialRepository) {
         this.groupRepository = groupRepository;
         this.groupConverter = groupConverter;
         this.userService = userService;
@@ -126,6 +128,16 @@ public class GroupServiceImpl implements GroupService {
             return Collections.emptyList();
         }
         return groups.stream().map(groupConverter::of).collect(Collectors.toList());
+    }
+
+    @Override
+    public void submitAssignment(Integer groupId, Integer assignmentId) {
+        groupRepository.submitAssignment(groupId, assignmentId);
+    }
+
+    @Override
+    public Set<Integer> findAllUsersIds(Group group) {
+        return groupRepository.findAllById(group.getId());
     }
 
     @Override

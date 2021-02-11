@@ -1,7 +1,5 @@
 package com.softserve.itacademy.service.implementation;
 
-import static com.softserve.itacademy.config.Constance.ANSWER_ID_NOT_FOUND;
-import static com.softserve.itacademy.config.Constance.ASSIGNMENT_ID_NOT_FOUND;
 import com.softserve.itacademy.entity.Assignment;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.AssignmentRepository;
@@ -27,8 +25,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentConverter assignmentConverter;
     private final AmazonS3ClientService amazonS3ClientService;
 
-    public AssignmentServiceImpl (AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter,
-                                  AmazonS3ClientService amazonS3ClientService) {
+    private static final String ASSIGNMENT_ID_NOT_FOUND = "Assignment with such id was not found";
+    private static final String ANSWER_ID_NOT_FOUND = "Answer with such id not found";
+
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, AssignmentConverter assignmentConverter, AmazonS3ClientService amazonS3ClientService) {
         this.assignmentRepository = assignmentRepository;
         this.assignmentConverter = assignmentConverter;
         this.amazonS3ClientService = amazonS3ClientService;
