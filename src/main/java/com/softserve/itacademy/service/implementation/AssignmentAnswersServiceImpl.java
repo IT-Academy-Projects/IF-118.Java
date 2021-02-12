@@ -20,6 +20,7 @@ import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -130,7 +131,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void grade(Integer id, Integer grade) {
         if (assignmentAnswersRepository.updateGrade(id, grade) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else{
+        } else {
+            assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.GRADED.name());
             createGradeOrRejectEvent(id, Event.EventType.GRADE_ANSWER);
         }
     }

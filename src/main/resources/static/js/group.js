@@ -253,7 +253,6 @@ function showAnswers(assignment) {
                         onclick="reject(${answer.id})">Reject</button></td>
                 </tr>
                 `);
-                console.log(answer.status)
                 $('#reject-' + answer.id + '-btn').attr('disabled', answer.status === 'GRADED')
                 $('#grade-' + answer.id + '-btn').attr('disabled', answer.status === 'REJECTED')
             });
@@ -304,6 +303,7 @@ function gradeAssignmentAnswer() {
         $(`#grade-${assignmentAnswerId}`)[0].innerHTML = gr;
         $('#grade-modal').modal('hide');
         gr = '';
+        $('#reject-' + assignmentAnswerId + '-btn').attr('disabled', true)
     })
 }
 
