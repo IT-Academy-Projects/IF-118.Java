@@ -19,6 +19,8 @@ function onEventReceived(payload) {
         showInvitationEvent(event);
     } else if(type === "OPEN_LECTION"){
         showOpenLectionEvent(event);
+    } else if(type === "SUBMIT_ANSWER"){
+        showSubmitEvent(event);
     } else{
        showAnswerEvent(event);
     }
@@ -35,6 +37,8 @@ function getEvents() {
                     showInvitationEvent(notification);
                 } else if(type === "OPEN_LECTION"){
                     showOpenLectionEvent(notification);
+                } else if(type === "SUBMIT_ANSWER"){
+                    showSubmitEvent(notification);
                 } else{
                     showAnswerEvent(notification);
                 }
@@ -54,15 +58,23 @@ function  showOpenLectionEvent(notification){
         newCell.appendChild(eventMsg);
     });
 }
+
+function  showSubmitEvent(notification){
+    let entId = notification.entityId;
+
+    $.get(`api/v1/assignments/${entId}`).then(assignment => {
+       showSubmitEventMessage(notification.creator.name, assignment.name);
+    });
+}
+
 function  showAnswerEvent(notification){
     let entId = notification.entityId;
 
     $.get(`/api/v1/assignment-answers/${entId}`).then(answer => {
-        $.get(`api/v1/assignments/${answer.id}`).then(assignment => {
+        let assignmentId = answer.assignmentId;
+        $.get(`api/v1/assignments/${assignmentId}`).then(assignment => {
             if(notification.type === "GRADE_ANSWER") {
                 showGradeEventMessage(notification.creator.name, assignment.name);
-            } else if(notification.type === "SUBMIT_ANSWER"){
-                showSubmitEventMessage(notification.creator.name, assignment.name);
             } else{
                 showRejectEventMessage(notification.creator.name, assignment.name);
             }
