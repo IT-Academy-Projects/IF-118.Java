@@ -39,6 +39,11 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
             "where answ.id = :answerId", nativeQuery = true)
     int findTeacherIdByAnswerId(Integer answerId);
 
+    @Query(value = "select a.id from assignment a " +
+            "join assignment_answers answ on a.id = answ.assignment_id " +
+            "where answ.id = :id", nativeQuery = true)
+    int findAssignmentIdByAnswerId(Integer id);
+
     @Query(value = "select * from assignment_answers join groups_assignments ga" +
             " on assignment_answers.assignment_id = ga.assignment_id where group_id = ?1", nativeQuery = true)
     Set<AssignmentAnswers> findAllByOwnerId(Integer id);

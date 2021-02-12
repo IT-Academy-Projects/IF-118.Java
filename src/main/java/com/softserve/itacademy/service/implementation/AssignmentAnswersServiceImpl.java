@@ -154,12 +154,14 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         }
     }
 
-    private void createSubmitEvent(Integer entityId, Event.EventType eventType) {
-        Integer creatorId = assignmentAnswersRepository.findOwnerById(entityId);
+    private void createSubmitEvent(Integer answerId, Event.EventType eventType) {
+        Integer entityId = assignmentAnswersRepository.findAssignmentIdByAnswerId(answerId);
+
+        Integer creatorId = assignmentAnswersRepository.findOwnerById(answerId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
 
-        Integer recipientId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
+        Integer recipientId = assignmentAnswersRepository.findTeacherIdByAnswerId(answerId);
         List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
 
         if (!recipients.isEmpty()) {
