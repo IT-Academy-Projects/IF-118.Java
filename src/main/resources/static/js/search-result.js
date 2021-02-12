@@ -42,7 +42,7 @@ function addGroupCard(group) {
                     </a>
                     <div class="card-body">
                        <h5 class="card-title">${group.name}</h5>
-                       <a href="/group?id=${group.id}" class="btn btn-primary">Follow</a>
+                       <a href="/group?id=${group.id}" class="btn btn-warning">Follow</a>
                     </div>
                 </div>
     `);
@@ -58,7 +58,7 @@ function addCourseCard(course) {
             <div class="card-body">
                 <h5 class="card-title">${course.name}</h5>
                 <p class="card-text">${course.description}</p>
-                <a href="/course?id=${course.id}" class="btn btn-primary">Learn</a>
+                <a href="/course?id=${course.id}" class="btn btn-warning">Learn</a>
             </div>
         </div>
     `);

@@ -31,10 +31,10 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
 
     int findOwnerById(Integer id);
 
-    @Query(value = "select sg.owner_id from student_groups sg" +
-                   "join groups_assignments ga on sg.id = ga.group_id" +
-                   "join assignment a on ga.assignment_id = a.id" +
-                   "join assignment_answers answ on a.id = answ.assignment_id" +
+    @Query(value = "select sg.owner_id from student_groups sg " +
+                   "join groups_assignments ga on sg.id = ga.group_id " +
+                   "join assignment a on ga.assignment_id = a.id " +
+                   "join assignment_answers answ on a.id = answ.assignment_id " +
                    "where answ.id = :answerId", nativeQuery = true)
     int findTeacherIdByAnswerId(Integer answerId);
 

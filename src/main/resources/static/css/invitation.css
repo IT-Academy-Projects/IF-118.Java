@@ -4,5 +4,14 @@
     display: grid;
     grid-template-columns: repeat(auto-fit,20rem);
     justify-content: center;
+    color: white;
 }
 
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
+}
+
+.text-center {
+    color: white;
+}

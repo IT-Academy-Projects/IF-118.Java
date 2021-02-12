@@ -68,3 +68,13 @@ a.custom-link:hover {
 .group-list {
     width: 600px;
 }
+
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
+}
+
+.card {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white;
+}
