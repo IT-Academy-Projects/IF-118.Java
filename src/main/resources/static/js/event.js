@@ -71,7 +71,8 @@ function  showAnswerEvent(notification){
     let entId = notification.entityId;
 
     $.get(`/api/v1/assignment-answers/${entId}`).then(answer => {
-        $.get(`api/v1/assignments/${answer.id}`).then(assignment => {
+        let assignmentId = answer.assignmentId;
+        $.get(`api/v1/assignments/${assignmentId}`).then(assignment => {
             if(notification.type === "GRADE_ANSWER") {
                 showGradeEventMessage(notification.creator.name, assignment.name);
             } else{
