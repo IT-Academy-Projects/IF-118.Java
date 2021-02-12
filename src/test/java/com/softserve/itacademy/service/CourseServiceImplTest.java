@@ -5,7 +5,6 @@ import com.softserve.itacademy.entity.Material;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.CourseRepository;
-import com.softserve.itacademy.repository.ImageRepository;
 import com.softserve.itacademy.repository.MaterialRepository;
 import com.softserve.itacademy.request.CourseRequest;
 import com.softserve.itacademy.response.CourseResponse;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CourseServiceTest {
+public class CourseServiceImplTest {
     @Mock
     private CourseRepository courseRepository;
     @Mock
@@ -42,21 +41,17 @@ public class CourseServiceTest {
     private UserService userService;
     @Mock
     private CourseConverter courseConverter;
-    @Mock
-    private ImageService imageService;
-    @Mock
-    private ImageRepository imageRepository;
 
     @InjectMocks
     private CourseServiceImpl courseServiceImpl;
 
     @BeforeEach
-    public void setupBeforeClass() throws Exception {
+    void setupBeforeClass() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void createCourseWithEmptyMaterialsFile() {
+    void createCourseWithEmptyMaterialsFile() {
         when(courseConverter.of(any(CourseRequest.class), anySet())).thenReturn(generateCourse());
         when(courseRepository.save(any(Course.class))).thenReturn(generateCourse());
         when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
@@ -69,7 +64,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void createCourseWithMaterials() {
+    void createCourseWithMaterials() {
         when(materialRepository.findByIds(anySet())).thenReturn(Set.of(generateMaterial()));
         Course course = generateCourse();
         course.setMaterials(Set.of(generateMaterial()));
@@ -87,14 +82,14 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testCreateCourseThrowsNotFoundException() {
+    void testCreateCourseThrowsNotFoundException() {
         when(userService.findById(anyInt())).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, () -> courseServiceImpl.create(generateCourseRequest(), null));
     }
 
     @Test
-    public void testFindByOwnerId() {
+    void testFindByOwnerId() {
         when(courseRepository.findByOwnerId(anyInt())).thenReturn(List.of(generateCourse()));
         when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
 
@@ -106,7 +101,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testFindByOwnerIdIfNoCourses() {
+    void testFindByOwnerIdIfNoCourses() {
         when(courseRepository.findByOwnerId(anyInt())).thenReturn(Collections.emptyList());
 
         List<CourseResponse> result = courseServiceImpl.findByOwner(1);
@@ -116,7 +111,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testUpdateDisabled() {
+    void testUpdateDisabled() {
         when(courseRepository.updateDisabled(anyInt(), anyBoolean())).thenReturn(1);
 
         courseServiceImpl.updateDisabled(1, true);
@@ -125,14 +120,14 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testUpdateDisabledThrowsNotFoundException() {
+    void testUpdateDisabledThrowsNotFoundException() {
         when(courseRepository.updateDisabled(anyInt(), anyBoolean())).thenReturn(0);
 
         assertThrows(NotFoundException.class, () -> courseServiceImpl.updateDisabled(1, true));
     }
 
     @Test
-    public void testUpdateDescription() {
+    void testUpdateDescription() {
         when(courseRepository.updateDescription(anyInt(), anyString())).thenReturn(1);
 
         courseServiceImpl.updateDescription(1, "Some string");
@@ -141,14 +136,14 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testUpdateDescriptionThrowsNotFoundException() {
+    void testUpdateDescriptionThrowsNotFoundException() {
         when(courseRepository.updateDescription(anyInt(), anyString())).thenReturn(0);
 
         assertThrows(NotFoundException.class, () -> courseServiceImpl.updateDescription(1, "Some string"));
     }
 
     @Test
-    public void testGetAvatar() {
+    void testGetAvatar() {
         when(courseRepository.existsById(anyInt())).thenReturn(true);
         byte[] bytes = "string".getBytes();
         when(courseRepository.getAvatarById(anyInt())).thenReturn(bytes);
@@ -160,14 +155,14 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testGetAvatarThrowsCourseNotFoundException() {
+    void testGetAvatarThrowsCourseNotFoundException() {
         when(courseRepository.existsById(anyInt())).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> courseServiceImpl.getAvatarById(1));
     }
 
     @Test
-    public void testGetAvatarThrowsAvatarNotFoundException() {
+    void testGetAvatarThrowsAvatarNotFoundException() {
         when(courseRepository.existsById(anyInt())).thenReturn(true);
         when(courseRepository.getAvatarById(anyInt())).thenReturn(null);
 
@@ -175,7 +170,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testReadById() {
+    void testReadById() {
         when(courseRepository.findById(anyInt())).thenReturn(Optional.of(generateCourse()));
         when(courseConverter.of(any(Course.class))).thenReturn(generateCourseResponse());
 
@@ -185,7 +180,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testReadByIdThrowsNotFoundException() {
+    void testReadByIdThrowsNotFoundException() {
         when(courseRepository.findById(anyInt())).thenThrow(NotFoundException.class);
 
         assertThrows(NotFoundException.class, () -> courseServiceImpl.readById(1));
@@ -193,7 +188,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void testReadByIdThrowsDisabledObjectException() {
+    void testReadByIdThrowsDisabledObjectException() {
         Course course = generateCourse();
         course.setDisabled(true);
         when(courseRepository.findById(anyInt())).thenReturn(Optional.of(course));
