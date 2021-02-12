@@ -4,7 +4,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
 }
 
 .table-wrapper {
@@ -23,22 +22,7 @@
 }
 
 .back-button {
-    color: white;
     padding: 15px 20px;
     margin: 0 5px;
     font-size: 20px;
-}
-
-html, body {
-    background-image: url('../img/auth-background.jpg');
-    background-size: cover;
-}
-
-.table {
-    color: white;
-    margin-bottom: 0;
-}
-
-.table td {
-    border-top-width: 0;
 }

@@ -1,5 +1,6 @@
 .wrapper {
     font-size: 18px;
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .content {

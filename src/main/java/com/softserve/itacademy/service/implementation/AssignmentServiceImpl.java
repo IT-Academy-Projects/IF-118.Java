@@ -96,6 +96,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public void delete(Integer id) {
         Assignment assignment = getById(id);
+        String fileReference = assignment.getFileReference();
+        if (fileReference != null) {
+            amazonS3ClientService.delete(BUCKET_NAME, ASSIGNMENTS_FOLDER, fileReference);
+        }
         assignmentRepository.delete(assignment);
     }
 
