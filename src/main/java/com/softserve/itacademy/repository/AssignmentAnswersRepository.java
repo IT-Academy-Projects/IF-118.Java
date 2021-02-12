@@ -29,13 +29,14 @@ public interface AssignmentAnswersRepository extends JpaRepository<AssignmentAns
                    "where assignment_answers.id = :id", nativeQuery = true)
     int updateGrade(Integer id, Integer grade);
 
+    @Query(value = "select owner_id from assignment_answers where id = :id", nativeQuery = true)
     int findOwnerById(Integer id);
 
-    @Query(value = "select sg.owner_id from student_groups sg" +
-                   "join groups_assignments ga on sg.id = ga.group_id" +
-                   "join assignment a on ga.assignment_id = a.id" +
-                   "join assignment_answers answ on a.id = answ.assignment_id" +
-                   "where answ.id = :answerId", nativeQuery = true)
+    @Query(value = "select sg.owner_id from student_groups sg " +
+            "join groups_assignments ga on sg.id = ga.group_id " +
+            "join assignment a on ga.assignment_id = a.id " +
+            "join assignment_answers answ on a.id = answ.assignment_id " +
+            "where answ.id = :answerId", nativeQuery = true)
     int findTeacherIdByAnswerId(Integer answerId);
 
     @Query(value = "select * from assignment_answers join groups_assignments ga" +

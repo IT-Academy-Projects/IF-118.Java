@@ -15,8 +15,10 @@ function onEventReceived(payload) {
     let event = JSON.parse(payload.body);
 
     let type = event.type;
-    if(type == "INVITE"){
+    if(type === "INVITE"){
         showInvitationEvent(event);
+    } else if(type === "OPEN_LECTION"){
+        showOpenLectionEvent(event);
     } else{
        showAnswerEvent(event);
     }
@@ -29,9 +31,11 @@ function getEvents() {
         $.get(`/api/v1/events/${user.id}?pageNo=${startPageNumber}`).then(notifications => {
             notifications.forEach(notification => {
                 let type = notification.type;
-                if (type == "INVITE") {
+                if (type === "INVITE") {
                     showInvitationEvent(notification);
-                } else {
+                } else if(type === "OPEN_LECTION"){
+                    showOpenLectionEvent(notification);
+                } else{
                     showAnswerEvent(notification);
                 }
             })
@@ -40,14 +44,24 @@ function getEvents() {
     });
 }
 
+
+function  showOpenLectionEvent(notification){
+    let entId = notification.entityId;
+
+    $.get(`/api/v1/materials/${entId}`).then(lection => {
+        let newCell = createNewCell();
+        var eventMsg = document.createTextNode(notification.creator.name + " open lection '" + lection.name + "'");
+        newCell.appendChild(eventMsg);
+    });
+}
 function  showAnswerEvent(notification){
     let entId = notification.entityId;
 
     $.get(`/api/v1/assignment-answers/${entId}`).then(answer => {
         $.get(`api/v1/assignments/${answer.id}`).then(assignment => {
-            if(notification.type = "GRADE_ANSWER") {
+            if(notification.type === "GRADE_ANSWER") {
                 showGradeEventMessage(notification.creator.name, assignment.name);
-            } else if(notification.type = "SUBMIT_ANSWER"){
+            } else if(notification.type === "SUBMIT_ANSWER"){
                 showSubmitEventMessage(notification.creator.name, assignment.name);
             } else{
                 showRejectEventMessage(notification.creator.name, assignment.name);

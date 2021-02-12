@@ -112,7 +112,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else{
-            createEvent(id, Event.EventType.SUBMIT_ANSWER);
+            createSubmitEvent(id, Event.EventType.SUBMIT_ANSWER);
         }
     }
 
@@ -121,7 +121,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.REJECTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else{
-            createEvent(id, Event.EventType.REJECT_ANSWER);
+            createGradeOrRejectEvent(id, Event.EventType.REJECT_ANSWER);
         }
     }
 
@@ -130,25 +130,47 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if(assignmentAnswersRepository.updateGrade(id, grade) == 0){
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else{
-            createEvent(id, Event.EventType.GRADE_ANSWER);
+            createGradeOrRejectEvent(id, Event.EventType.GRADE_ANSWER);
         }
     }
 
-    private void createEvent(Integer entityId, Event.EventType eventType) {
+    private void createGradeOrRejectEvent(Integer entityId, Event.EventType eventType) {
         Integer creatorId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
 
         Integer recipientId = assignmentAnswersRepository.findOwnerById(entityId);
-        List<User> recipient = userRepository.findById(recipientId).stream().collect(Collectors.toList());
+        List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
 
-        Event event = Event.builder()
-                .creator(creator)
-                .recipients(recipient)
-                .type(eventType)
-                .entityId(entityId)
-                .build();
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(eventType)
+                    .entityId(entityId)
+                    .build();
 
-        eventService.sendNotificationFromEvent(eventRepository.save(event));
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
+    }
+
+    private void createSubmitEvent(Integer entityId, Event.EventType eventType) {
+        Integer creatorId = assignmentAnswersRepository.findOwnerById(entityId);
+        User creator = userRepository.findById(creatorId)
+                .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
+
+        Integer recipientId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
+        List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
+
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(eventType)
+                    .entityId(entityId)
+                    .build();
+
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
     }
 }
