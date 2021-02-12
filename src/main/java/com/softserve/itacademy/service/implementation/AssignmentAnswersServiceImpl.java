@@ -121,7 +121,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else{
-            createGradeOrRejectEvent(id, Event.EventType.SUBMIT_ANSWER);
+            createSubmitEvent(id, Event.EventType.SUBMIT_ANSWER);
         }
     }
 
