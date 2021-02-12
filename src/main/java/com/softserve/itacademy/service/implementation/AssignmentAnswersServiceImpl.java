@@ -20,7 +20,6 @@ import com.softserve.itacademy.service.converters.AssignmentAnswersConverter;
 import com.softserve.itacademy.service.s3.AmazonS3ClientService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -112,8 +111,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void submit(Integer id) {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else {
-            createEventByTeacher(id, Event.EventType.SUBMIT_ANSWER);
+        } else{
+            createSubmitEvent(id, Event.EventType.SUBMIT_ANSWER);
         }
     }
 
@@ -121,8 +120,8 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void reject(Integer id) {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.REJECTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else {
-            createEventByTeacher(id, Event.EventType.REJECT_ANSWER);
+        } else{
+            createGradeOrRejectEvent(id, Event.EventType.REJECT_ANSWER);
         }
     }
 
@@ -131,27 +130,48 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void grade(Integer id, Integer grade) {
         if (assignmentAnswersRepository.updateGrade(id, grade) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else {
-            assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.GRADED.name());
-            createEventByTeacher(id, Event.EventType.GRADE_ANSWER);
+        } else{
+            createGradeOrRejectEvent(id, Event.EventType.GRADE_ANSWER);
         }
     }
 
-    private void createEventByTeacher(Integer entityId, Event.EventType eventType) {
+    private void createGradeOrRejectEvent(Integer entityId, Event.EventType eventType) {
         Integer creatorId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
 
         Integer recipientId = assignmentAnswersRepository.findOwnerById(entityId);
-        List<User> recipient = userRepository.findById(recipientId).stream().collect(Collectors.toList());
+        List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
 
-        Event event = Event.builder()
-                .creator(creator)
-                .recipients(recipient)
-                .type(eventType)
-                .entityId(entityId)
-                .build();
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(eventType)
+                    .entityId(entityId)
+                    .build();
 
-        eventService.sendNotificationFromEvent(eventRepository.save(event));
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
+    }
+
+    private void createSubmitEvent(Integer entityId, Event.EventType eventType) {
+        Integer creatorId = assignmentAnswersRepository.findOwnerById(entityId);
+        User creator = userRepository.findById(creatorId)
+                .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
+
+        Integer recipientId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
+        List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
+
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(eventType)
+                    .entityId(entityId)
+                    .build();
+
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
     }
 }
