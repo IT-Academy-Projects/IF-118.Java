@@ -51,7 +51,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest) {
-        log.info("sending invitation on email");
+        log.info("sending invitation on email " + invitationRequest.getEmail());
         Invitation invitation = invitationConverter.of(invitationRequest);
         sendInvitationMail(invitation);
         invitation.setLink(getLink(invitation));
@@ -83,7 +83,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void delete(Integer id) {
-        log.info("delete invitation");
+        log.info("delete invitation " + id);
         invitationRepository.delete(getById(id));
     }
 
@@ -186,7 +186,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("User id was not found"));
+                .orElseThrow(() -> new NotFoundException("User with such id was not found"));
         mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
                 getInviteMessage(invitation));
     }
