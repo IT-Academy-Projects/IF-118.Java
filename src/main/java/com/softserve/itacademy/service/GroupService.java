@@ -1,6 +1,7 @@
 package com.softserve.itacademy.service;
 
 import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.request.GroupRequest;
 import com.softserve.itacademy.response.GroupResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,11 +25,14 @@ public interface GroupService {
     void updateGroup(Integer groupId, GroupRequest groupRequest);
 
     List<GroupResponse> findGroupsWithClosedMaterial(Integer materialId);
-    List<GroupResponse> findGroupsWithOpenedMaterial(Integer materialId);
 
     void submitAssignment(Integer groupId, Integer assignmentId);
 
-    Set<Integer> findAllUsersIds(Group group);
+    Set<User> findAllUsers(Group group);
 
     Group getById(Integer id);
+
+    List<GroupResponse> findGroupsWithOpenedMaterial(Integer materialId);
+
 }
+

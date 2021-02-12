@@ -26,6 +26,7 @@ public class UserReportConverter {
                 .groupId(userFullStatisticResponse.getGroupId())
                 .assignments(objectMapper.writeValueAsString(userFullStatisticResponse.getUserAssignmentResponse()))
                 .avg(userFullStatisticResponse.getAvg())
+                .updatable(false)
                 .build();
 
     }
