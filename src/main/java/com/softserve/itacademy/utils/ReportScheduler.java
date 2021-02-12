@@ -27,7 +27,7 @@ public class ReportScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 15 23 * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")
     public void saveUserReports() {
         groupRepository.findAll()
                 .forEach(group -> groupService.findAllUsers(group)

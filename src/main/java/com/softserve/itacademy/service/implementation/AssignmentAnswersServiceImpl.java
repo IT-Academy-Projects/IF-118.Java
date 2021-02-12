@@ -29,9 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
-import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
-
 @Service
 public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
 
@@ -120,7 +117,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else{
-            createEvent(id, Event.EventType.SUBMIT_ANSWER);
+            createGradeOrRejectEvent(id, Event.EventType.SUBMIT_ANSWER);
         }
     }
 
@@ -139,8 +136,9 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else {
             int groupId = assignmentRepository.getGroupIdByAnswerId(id);
-            int userId = assignmentAnswersRepository.getOwnerId(id);
+            int userId = assignmentAnswersRepository.findOwnerById(id);
             makeReportUpdatable(groupId, userId);
+
             createGradeOrRejectEvent(id, Event.EventType.GRADE_ANSWER);
         }
     }
@@ -170,9 +168,5 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
         if (userReportRepository.existsByGroupIdAndUserId(groupId, userId)) {
             userReportRepository.makeUpdatable(groupId, userId);
         }
-    }
-
-    private int getGroupId(Integer assignmentId) {
-        return assignmentRepository.getGroupIdByAssignment(assignmentId);
     }
 }
