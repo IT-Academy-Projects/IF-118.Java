@@ -91,22 +91,6 @@ public class CommentServiceImpl implements CommentService {
         return collectComments(comments);
     }
 
-//    public List<CommentResponse> findByMaterial(Integer id, User currentUser) {
-//        log.info("Searching for comments of material {}", id);
-//        List<Comment> comments;
-//        if (currentUser.getAuthorities().stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("comment.readAllPrivate"))) {
-//            comments = commentRepository.findByMaterialIdStudentPrivate(id, currentUser.getId());
-//        } else {
-//            comments = commentRepository.findByMaterialIdPrivate(id);
-//        }
-//        if (comments == null) {
-//            log.info("No comments for material {}", id);
-//            return Collections.emptyList();
-//        }
-//        log.info("Comments: {}", comments);
-//        return collectComments(comments);
-//    }
-
     private Comment getById(Integer id) {
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException(COMMENT_ID_NOT_FOUND));
     }

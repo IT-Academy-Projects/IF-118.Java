@@ -22,4 +22,5 @@ public class UserFullStatisticResponse {
     private Set<UserAssignmentResponse> userAssignmentResponse;
 
     private String avg;
+
 }

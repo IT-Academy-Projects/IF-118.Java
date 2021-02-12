@@ -2,6 +2,8 @@
     height: 500px;
     overflow: auto;
     font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white;
 }
 
 .content {
@@ -50,4 +52,9 @@
 
 .tools {
     position: relative;
+}
+
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
 }

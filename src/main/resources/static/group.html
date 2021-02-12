@@ -18,7 +18,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-    <link rel="stylesheet" href="css/course.css">
     <!-- Font Awesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -47,9 +46,9 @@
             <div class="info">
                 <h1 class="course-title" id="group-name"></h1>
                 <div class="owner">Owner: <span id="owner"></span></div>
-                <input type="button" class="btn btn-dark" id="chat-btn" onclick="handleChatButton()" value="Chat"/>
-                <input type="button" class="btn btn-dark" id="statistic-btn" onclick="handleMyStatisticButton()" style="display: none" value="My statistic"/>
-                <input type="button" class="btn btn-dark" id="group-statistic-btn" onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
+                <input type="button" class="btn btn-secondary" id="chat-btn" onclick="handleChatButton()" value="Chat"/>
+                <input type="button" class="btn btn-secondary" id="statistic-btn" onclick="handleMyStatisticButton()" style="display: none" value="My statistic"/>
+                <input type="button" class="btn btn-secondary" id="group-statistic-btn" onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
             </div>
             <br>
             <h3>List of students:</h3>
@@ -64,7 +63,7 @@
             <div id="courses"></div>
             <br>
             <div class="assignment-title">
-                <h3 style="font-weight: bold; color: white">Topics</h3>
+                <h3 style="font-weight: bold; color: white">Assignments</h3>
                 <div class="col-sm" id="add-assignment-btn">
                     <button id="create-assignment-button" type="button" class="btn btn-success btn-sm"
                             data-toggle="modal" data-target="#create-assignment-modal">+

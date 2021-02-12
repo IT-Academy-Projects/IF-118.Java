@@ -55,11 +55,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         }
     }
 
-    @Override
-    public int deleteExpiredTokens() {
-        return tokenRepository.deleteExpiredTokens();
-    }
-
     private boolean validateToken(String token) {
 
         PasswordResetToken passToken = tokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Token " + token + " not found"));

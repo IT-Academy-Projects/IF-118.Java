@@ -2,6 +2,7 @@ package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.report.UserReport;
 import com.softserve.itacademy.repository.AssignmentRepository;
+import com.softserve.itacademy.repository.UserReportRepository;
 import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.response.statistic.tech.UserAssignmentResponse;
 import com.softserve.itacademy.response.statistic.tech.UserFullStatisticResponse;
@@ -25,6 +26,7 @@ public class StatisticServiceImpl implements StatisticService {
         this.userRepository = userRepository;
         this.reportService = reportService;
         this.assignmentRepository = assignmentRepository;
+
     }
 
     @Override
@@ -35,6 +37,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .userAssignmentResponse(getTinyStatistic(groupId, userId))
                 .avg(getAvg(groupId, userId))
                 .build();
+
         return reportService.save(user);
     }
 

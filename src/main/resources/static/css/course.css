@@ -6,8 +6,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     padding: 36px;
+    color: white;
 }
 
 .course-description {
@@ -66,3 +66,7 @@
     margin-left: 50px;
 }
 
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
+}

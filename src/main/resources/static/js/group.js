@@ -42,7 +42,7 @@ function showGroupInfo() {
             $('#owner').text(user.name);
         })
         $('#students').append(`
-            <table class="table borderless">
+            <table class="table borderless table-responsive">
                 <tbody id="student-${tempGroupId.id}-table">
                 </tbody>
             </table>
@@ -197,7 +197,7 @@ function updateAssignment() {
 }
 
 function deleteAssignment() {
-    deleteRequest(`/api/v1/assignments/${tempAssignmentId}`, null, () => {
+    deleteRequest(`/api/v1/assignments/${tempAssignmentId}`, null, (res) => {
         showAssignments();
     })
 }
@@ -239,7 +239,6 @@ function showMyAnswer(answer, assignmentId) {
 function showAnswers(assignment) {
     let answerTable = "#answer-" + assignment.id + "-table";
     $(answerTable).innerHTML = ''
-    console.log(assignment)
     assignment.assignmentAnswers.forEach(answer => {
         if (answer.status === 'SUBMITTED' || answer.status === 'GRADED') {
             getRequest(`/api/v1/users/${answer.ownerId}`).then(user => {
@@ -304,6 +303,7 @@ function gradeAssignmentAnswer() {
         $(`#grade-${assignmentAnswerId}`)[0].innerHTML = gr;
         $('#grade-modal').modal('hide');
         gr = '';
+        $('#reject-' + assignmentAnswerId + '-btn').attr('disabled', true)
     })
 }
 

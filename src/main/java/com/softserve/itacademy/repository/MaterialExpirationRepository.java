@@ -15,5 +15,5 @@ public interface MaterialExpirationRepository extends JpaRepository<MaterialExpi
 
     @Modifying
     @Query(value = "update material_expirations as me set me.expiration_date = :expirationDate where me.id = :expirationId", nativeQuery = true)
-    void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate);
+    int updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate);
 }

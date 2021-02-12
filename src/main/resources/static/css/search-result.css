@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+button {
+    width: 150px;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.cards-wrapper {
+    padding: 36px;
+    height: 100%;
+    width: 50%;
+    display: grid;
+    grid-row-gap: 2vw;
+    grid-column-gap: 2vw;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.custom-card {
+    height: 500px;
+    width: 270px;
+    border: solid #343a408f 1px;
+}
+
+
+a.custom-link,
+a.custom-link:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.menu-panel {
+    display: flex;
+    flex-direction: row;
+    background-color: lightgrey;
+    width: 100%;
+}
+
+.my-btn {
+    margin: 10px;
+}
+
+.user-info {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+#user-email, #user-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.course-list {
+    width: 600px;
+}
+
+.group-list {
+    width: 600px;
+}
+
+html, body {
+    background-image: url('../img/auth-background.jpg');
+    background-size: cover;
+}
+
+.card {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white;
+}

@@ -92,6 +92,8 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     @Override
     @Transactional
     public void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate) {
-        materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate);
+        if(materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate) == 0) {
+            throw new NotFoundException("Material with such Id was not found.");
+        }
     }
 }

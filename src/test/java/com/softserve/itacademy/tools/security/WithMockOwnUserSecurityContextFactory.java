@@ -2,6 +2,7 @@ package com.softserve.itacademy.tools.security;
 
 import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.entity.security.Role;
+import com.softserve.itacademy.security.principal.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,7 +29,7 @@ public class WithMockOwnUserSecurityContextFactory implements WithSecurityContex
                 .pickedRole(true)
                 .build();
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+        Authentication auth = new UsernamePasswordAuthenticationToken(UserPrincipal.of(user), user.getPassword(), user.getAuthorities());
         context.setAuthentication(auth);
         return context;
     }

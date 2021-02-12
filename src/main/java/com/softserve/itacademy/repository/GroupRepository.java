@@ -45,7 +45,4 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(value = "insert into groups_assignments (group_id, assignment_id) VALUE (?1, ?2)", nativeQuery = true)
     void submitAssignment(Integer groupId, Integer assignmentId);
 
-    @Query(value = "select gu.user_id from users u join groups_users gu on u.id = gu.group_id" +
-            " where group_id = ?1", nativeQuery = true)
-    Set<Integer> findAllById(Integer groupId);
 }

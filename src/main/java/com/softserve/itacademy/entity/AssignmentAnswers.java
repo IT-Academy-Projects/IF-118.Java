@@ -41,6 +41,7 @@ public class AssignmentAnswers extends BasicEntity {
     public enum AnswersStatus {
         NEW,
         SUBMITTED,
-        REJECTED
+        REJECTED,
+        GRADED
     }
 }
