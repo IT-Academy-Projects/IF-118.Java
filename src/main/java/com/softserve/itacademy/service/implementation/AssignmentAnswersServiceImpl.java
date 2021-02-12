@@ -29,6 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.softserve.itacademy.service.s3.S3Constants.ASSIGNMENTS_ANSWERS_FOLDER;
+import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
+
 @Service
 public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
 
@@ -81,7 +84,6 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
                 .grade(0)
                 .build();
         assignmentAnswers = assignmentAnswersRepository.save(assignmentAnswers);
-        makeReportUpdatable(getGroupId(assignment.getId()), ownerId);
         return assignmentAnswersConverter.of(assignmentAnswers);
     }
 
@@ -117,7 +119,7 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void submit(Integer id) {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.SUBMITTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else {
+        } else{
             createEvent(id, Event.EventType.SUBMIT_ANSWER);
         }
     }
@@ -126,39 +128,41 @@ public class AssignmentAnswersServiceImpl implements AssignmentAnswersService {
     public void reject(Integer id) {
         if (assignmentAnswersRepository.updateStatus(id, AssignmentAnswers.AnswersStatus.REJECTED.name()) == 0) {
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
-        } else {
-            createEvent(id, Event.EventType.REJECT_ANSWER);
+        } else{
+            createGradeOrRejectEvent(id, Event.EventType.REJECT_ANSWER);
         }
     }
 
     @Override
     public void grade(Integer id, Integer grade) {
-        if (assignmentAnswersRepository.updateGrade(id, grade) == 0) {
+        if(assignmentAnswersRepository.updateGrade(id, grade) == 0){
             throw new NotFoundException(ANSWER_ID_NOT_FOUND);
         } else {
             int groupId = assignmentRepository.getGroupIdByAnswerId(id);
             int userId = assignmentAnswersRepository.getOwnerId(id);
             makeReportUpdatable(groupId, userId);
-            createEvent(id, Event.EventType.GRADE_ANSWER);
+            createGradeOrRejectEvent(id, Event.EventType.GRADE_ANSWER);
         }
     }
 
-    private void createEvent(Integer entityId, Event.EventType eventType) {
+    private void createGradeOrRejectEvent(Integer entityId, Event.EventType eventType) {
         Integer creatorId = assignmentAnswersRepository.findTeacherIdByAnswerId(entityId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
 
-        Integer recipientId = assignmentAnswersRepository.getOwnerId(entityId);
-        List<User> recipient = userRepository.findById(recipientId).stream().collect(Collectors.toList());
+        Integer recipientId = assignmentAnswersRepository.findOwnerById(entityId);
+        List<User> recipients = userRepository.findById(recipientId).stream().collect(Collectors.toList());
 
-        Event event = Event.builder()
-                .creator(creator)
-                .recipients(recipient)
-                .type(eventType)
-                .entityId(entityId)
-                .build();
+        if (!recipients.isEmpty()) {
+            Event event = Event.builder()
+                    .creator(creator)
+                    .recipients(recipients)
+                    .type(eventType)
+                    .entityId(entityId)
+                    .build();
 
-        eventService.sendNotificationFromEvent(eventRepository.save(event));
+            eventService.sendNotificationFromEvent(eventRepository.save(event));
+        }
     }
 
     @Override

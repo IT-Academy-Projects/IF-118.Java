@@ -9,6 +9,4 @@ public interface PasswordResetService {
 
     @Transactional
     void setPasswordByToken(PasswordByTokenRequest dto);
-
-    int deleteExpiredTokens();
 }

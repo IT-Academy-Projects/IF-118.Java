@@ -9,6 +9,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EventConverter {
@@ -25,10 +26,11 @@ public class EventConverter {
         EventResponse map = mapper.map(event, EventResponse.class);
 
         UserTinyProjection creator = projectionFactory.createProjection(UserTinyProjection.class, event.getCreator());
-        List<User> recipients = event.getRecipients();
+        List<Integer> recipients = event.getRecipients().stream()
+                .map(User::getId).collect(Collectors.toList());
 
         map.setCreator(creator);
-        map.setRecipients(recipients);
+        map.setRecipientIds(recipients);
 
         return map;
     }
