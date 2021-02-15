@@ -76,6 +76,7 @@ function getMaterial(id) {
                                     <td id="exp-date">No expiration date yet.
                                         <form id="set-expiration">
                                             <input id="expiration-date-${groups[i].id}-${material.id}" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
+                                            <input id="expiration-time-${groups[i].id}-${material.id}" type="time" min="` + getCurrentTime() + `" value="` + getCurrentTime() + `">
                                             <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
                                                     onclick="setExpiration(${material.id}, ${groups[i].id})">Set date
                                             </button>
@@ -91,6 +92,7 @@ function getMaterial(id) {
                             $('#open-group-' + expirations[i].groupId + ' #exp-date').html(expirations[i].expirationDate + `
                                 <form id="set-expiration">
                                     <input id="expiration-date-${expirations[i].id}" type="date" min="` + getDayAfterToday(0) + `" value="` + getDefaultExpirationDate() + `">
+                                    <input id="expiration-time-${expirations[i].id}" type="time" value="` + getCurrentTime() + `">
                                     <button id="set-expiration-date-btn" type="button" class="btn btn-outline-success show"
                                             onclick="updateExpiration(${expirations[i].id})">Update
                                     </button>
@@ -162,6 +164,78 @@ function getMaterial(id) {
         });
     })
 }
+
+function setExpiration(materialId, groupId) {
+    let data = {
+        expirationDate: $('#expiration-date-'+groupId+'-'+materialId).val() + 'T' + $('#expiration-time-'+groupId+'-'+materialId).val(),
+        groupId: groupId,
+        materialId: materialId
+    }
+    postRequest(`/api/v1/expirations/`, data);
+}
+
+function updateExpiration(expirationId) {
+    let date = $('#expiration-date-'+expirationId);
+    let time = $('#expiration-time-'+expirationId);
+    if (Date.parse(date.val() + 'T' + time.val()) <= new Date()) {
+        date.css({"border": "2px solid red"});
+        time.css({"border": "2px solid red"});
+    } else {
+        date.css({"border": "collapse"});
+        time.css({"border": "collapse"});
+        let data = date.val() + 'T' + time.val();
+        patchRequest(`/api/v1/expirations/${expirationId}`, data);
+    }
+}
+
+function openMaterial(materialId) {
+    let checkedIds = []
+    $("#open-material input:checked").each(function () {
+        checkedIds.push($(this).val());
+    });
+    patchRequest(`/api/v1/materials/open/${materialId}`, checkedIds);
+}
+
+function getGroupsWithClosedMaterial(materialId) {
+    getRequest(`/api/v1/groups/closed/${materialId}`).then(groups => {
+        for (let i = 0; i < groups.length; i++) {
+            $('#open-material .form-check').append(`
+                <input class="form-check-input" type="checkbox" value="${groups[i].id}" id="group-${groups[i].id}">
+                <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
+        `)
+        }
+    })
+}
+
+function getGroupsWithOpenedMaterial(materialId) {
+    return getRequest(`/api/v1/groups/opened/${materialId}`);
+}
+
+function getExpirations(materialId) {
+    return getRequest(`/api/v1/expirations/${materialId}`);
+}
+
+function getDayAfterToday(days) {
+    let d = new Date();
+
+    let month = d.getMonth() + 1;
+    let day = d.getDate() + days;
+
+    return d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+}
+
+function getDefaultExpirationDate() {
+    return getDayAfterToday(1);
+}
+
+function getCurrentTime() {
+    let hours = new Date().getHours();
+    let minutes = new Date().getMinutes();
+    return (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
+}
+
 
 function createAssignment() {
     let data = {
@@ -265,68 +339,6 @@ function showAnswers(assignment) {
             });
         }
     });
-}
-
-function setExpiration(materialId, groupId) {
-    let data = {
-        expirationDate: $('#expiration-date-'+groupId+'-'+materialId).val() + 'T' + getCurrentTime(),
-        groupId: groupId,
-        materialId: materialId
-    }
-    postRequest(`/api/v1/expirations/`, data);
-}
-
-function updateExpiration(expirationId) {
-    let data = $('#expiration-date-'+expirationId).val() + 'T' + getCurrentTime();
-    patchRequest(`/api/v1/expirations/${expirationId}`, data);
-}
-
-function openMaterial(materialId) {
-    let checkedIds = []
-    $("#open-material input:checked").each(function () {
-        checkedIds.push($(this).val());
-    });
-    patchRequest(`/api/v1/materials/open/${materialId}`, checkedIds);
-}
-
-function getGroupsWithClosedMaterial(materialId) {
-    getRequest(`/api/v1/groups/closed/${materialId}`).then(groups => {
-        for (let i = 0; i < groups.length; i++) {
-            $('#open-material .form-check').append(`
-                <input class="form-check-input" type="checkbox" value="${groups[i].id}" id="group-${groups[i].id}">
-                <label class="form-check-label" for="group-${groups[i].id}">${groups[i].name}</label>
-        `)
-        }
-    })
-}
-
-function getGroupsWithOpenedMaterial(materialId) {
-    return getRequest(`/api/v1/groups/opened/${materialId}`);
-}
-
-function getExpirations(materialId) {
-    return getRequest(`/api/v1/expirations/${materialId}`);
-}
-
-function getDayAfterToday(days) {
-    let d = new Date();
-
-    let month = d.getMonth() + 1;
-    let day = d.getDate() + days;
-
-    return d.getFullYear() + '-' +
-        (month < 10 ? '0' : '') + month + '-' +
-        (day < 10 ? '0' : '') + day;
-}
-
-function getDefaultExpirationDate() {
-    return getDayAfterToday(1);
-}
-
-function getCurrentTime() {
-    let hours = new Date().getHours();
-    let minutes = new Date().getMinutes();
-    return (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
 }
 
 function toggleAnswers(id) {

@@ -31,7 +31,7 @@ public class MailReminder implements Reminder {
             List<User> usersByGroupIds = userRepository.findAllByGroupIds(groupIds);
             if (!usersByGroupIds.isEmpty()) {
                 usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection work time expiring",
-                        "Hello" + user.getName() + "! Check Your's courses on SoftClass. Looks like Your work time on some lections is expiring."));
+                        "Hello " + user.getName() + "! Check Your's courses on SoftClass. Looks like Your work time on some lections is expiring."));
             }
         }
     }
