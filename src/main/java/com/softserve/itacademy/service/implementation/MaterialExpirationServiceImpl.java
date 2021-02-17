@@ -16,13 +16,21 @@ import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.MaterialExpirationService;
 import com.softserve.itacademy.service.converters.MaterialExpirationConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +41,13 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     private final GroupRepository groupRepository;
     private final MaterialExpirationRepository materialExpirationRepository;
     private final MaterialExpirationConverter materialExpirationConverter;
-
-    public MaterialExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailDesignService mailDesignService, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
+    
+    public MaterialExpirationServiceImpl(MaterialRepository materialRepository,
+                                         UserRepository userRepository,
+                                         MailDesignService mailDesignService,
+                                         GroupRepository groupRepository,
+                                         MaterialExpirationRepository materialExpirationRepository,
+                                         MaterialExpirationConverter materialExpirationConverter) {
         this.materialRepository = materialRepository;
         this.userRepository = userRepository;
         this.mailDesignService = mailDesignService;
@@ -61,7 +74,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<User> usersByGroupIds = userRepository.findByGroupId(group.get().getId());
         if (!usersByGroupIds.isEmpty()) {
             usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection time",
-                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
+                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date " + materialExpiration.getExpirationDate() + " for " + material.get().getName() + "."));
         }
     }
 
@@ -71,7 +84,9 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<Integer> groupIds;
         Optional<Material> material = materialRepository.findById(materialId);
         List<MaterialExpirationResponse> responses;
-        if (material.isPresent()) {
+        if (material.isEmpty()) {
+            throw new NotFoundException("Material with such id was not found");
+        } else {
             if (material.get().getOwnerId().equals(principal.getId())) {
                 groupIds = groupRepository.findByOwnerId(principal.getId()).stream().map(BasicEntity::getId).collect(Collectors.toList());
             } else {
@@ -84,8 +99,6 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
                 throw new NotFoundException("Expirations for this material for this/these group/s was not found");
             }
             return responses;
-        } else {
-            throw new NotFoundException("Material with such id was not found");
         }
     }
 
@@ -96,4 +109,22 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
             throw new NotFoundException("Material with such Id was not found.");
         }
     }
+
+    @Override
+    public List<MaterialExpirationResponse> findAllExpiringBy(LocalDateTime dateTime) {
+        List<MaterialExpiration> expirations = materialExpirationRepository.findAllDueDateTimeExpiringBy(dateTime);
+        if (expirations.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return expirations.stream()
+                .map(materialExpirationConverter::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public int deleteByExpirationDate() {
+        return materialExpirationRepository.deleteByExpirationDate();
+    }
+
 }

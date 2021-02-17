@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.softserve.itacademy.service.s3.S3Constants.BUCKET_NAME;
 import static com.softserve.itacademy.service.s3.S3Constants.MATERIALS_FOLDER;
@@ -107,7 +109,25 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void open(Integer materialId, List<Integer> groupIds) {
         materialRepository.openMaterial(materialId, groupIds);
-        createOpenLectionEvent(materialId, groupIds);
+        createLectionEvent(materialId, groupIds, Event.EventType.OPEN_LECTION);
+    }
+
+    @Transactional
+    @Override
+    public void closeByExpirationDate(Integer materialId, Integer groupId) {
+        materialRepository.closeMaterial(materialId, groupId);
+        createLectionEvent(materialId, List.of(groupId), Event.EventType.CLOSE_LECTION);
+    }
+
+    @Override
+    public Set<MaterialResponse> findAllByCourseId(Integer courseId) {
+        Set<Material> materials = materialRepository.findByCourseIds(Set.of(courseId));
+        if (materials == null) {
+            return Collections.emptySet();
+        }
+        return materials.stream()
+            .map(materialConverter::of)
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -116,7 +136,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .orElseThrow(() -> new NotFoundException("Material with such id was not found"));
     }
 
-    private void createOpenLectionEvent(Integer entityId, List<Integer> groupIds) {
+    private void createLectionEvent(Integer entityId, List<Integer> groupIds, Event.EventType eventType) {
         Integer creatorId = materialRepository.findOwnerIdById(entityId);
         User creator = userRepository.findById(creatorId)
                 .orElseThrow(() -> new NotFoundException("User with id(" + creatorId + ") not found"));
@@ -127,7 +147,7 @@ public class MaterialServiceImpl implements MaterialService {
             Event event = Event.builder()
                     .creator(creator)
                     .recipients(recipients)
-                    .type(Event.EventType.OPEN_LECTION)
+                    .type(eventType)
                     .entityId(entityId)
                     .build();
 

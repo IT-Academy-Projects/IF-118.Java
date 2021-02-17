@@ -39,62 +39,64 @@ function getCourse(id, user) {
         getRequest(`/api/v1/users/${course.ownerId}`).then(user => {
             $('#teacher-name').text(user.name);
         })
-
-        refreshMaterials(course.materialIds);
+        if (course.materialIds.length > 0) {
+            if (canEdit) {
+                getMaterialsForTeacher(course.id);
+            } else {
+                getMaterialsForStudent(course.id);
+            }
+        } else {
+            $('#materials').html(noMaterialsText);
+        }
     }, err => {
         $('#course-content').html(noCourseText);
     });
 }
 
-function refreshMaterials(ids) {
-    if (ids.length > 0) {
-        getMaterials(ids, canEdit);
-    } else {
-        $('#materials').html(noMaterialsText);
-    }
-}
-
-function getMaterials(materialIds) {
-    materialIds.forEach(materialId => {
-        getRequest(`/api/v1/materials/${materialId}`).then(material => {
+function getMaterialsForTeacher(courseId) {
+    getRequest(`/api/v1/materials/in-course/${courseId}`).then(materials => {
+        materials.forEach(material => {
             let deleteBtn = '';
-            if (canEdit) {
-                deleteBtn = `<div class="delete-material"">
-                                <button type="button" class="btn btn-danger" onclick="deleteMaterial(${materialId})">Delete</button>
-                            </div>`;
-            }
+                deleteBtn = `
+                    <div class="delete-material"">
+                        <button type="button" class="btn btn-danger" onclick="deleteMaterial(${material.id})">Delete</button>
+                    </div>`;
             $('#materials').append(`
-                <div class="material-info">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="material-name"><a href="/material?id=${materialId}">${material.name}</a></div>
-                                <div class="material-description">${material.description}</div>
-                                <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
-                                ${deleteBtn}
+            <div class="material-info">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="material-name"><a href="/material?id=${material.id}">${material.name}</a></div>
+                            <div class="material-description">${material.description}</div>
+                            <div class="material-download">Download: <a href="/api/v1/materials/${material.id}/file">${material.name}</a></div>
+                            ${deleteBtn}
+                        </div>
+                        <div class="col-lg-4">
+                            <div>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${material.id});">View comments</button>
+                                <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
+                                    data-toggle="modal" data-target="#create-comment-modal" onclick="setMaterialId(${material.id})">Write comment
+                                </button> 
                             </div>
-                            <div class="col-lg-4">
-                                <div>
-                                    <button class="btn btn-outline-info btn-sm" onclick="toggleComments(${materialId});">View comments</button>
-                                    <button id="create-comment-button" type="button" class="btn btn-outline-success btn-sm"
-                                        data-toggle="modal" data-target="#create-comment-modal" onclick="setMaterialId(${materialId})">Write comment
-                                    </button> 
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div id="material-${materialId}-comments" style="display: none">
-                                    <div id="material-${materialId}-comments-body">
-                                    </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="material-${material.id}-comments" style="display: none">
+                                <div id="material-${material.id}-comments-body">
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
+                    
                 </div>
-            `);
+            </div>
+        `);
+        loadComments(material.id);
         });
-        loadComments(materialId);
     });
+}
+
+function getMaterialsForStudent() {
+
 }
 
 function createMaterial() {
@@ -108,12 +110,12 @@ function createMaterial() {
     let file = $('#file').prop('files')[0];
 
     let formData = new FormData();
-    formData.append( 'file', file);
-    formData.append( 'material', JSON.stringify(data));
+    formData.append('file', file);
+    formData.append('material', JSON.stringify(data));
     postRequest(`/api/v1/materials`, formData).then(res => {
         $('#materials').html('');
         getRequest(`/api/v1/courses/${courseId}`).then(course => {
-            refreshMaterials(course.materialIds);
+            getMaterialsForTeacher(course.id);
             $('#create-material-modal').modal('hide');
         })
     });
@@ -128,7 +130,7 @@ function editCourseDescription() {
 }
 
 function checkTextArea() {
-    if ($('#description-textarea').val().length > 0 ) {
+    if ($('#description-textarea').val().length > 0) {
         $('#submit-edit-desc-btn').removeAttr('disabled');
     } else {
         $('#submit-edit-desc-btn').attr('disabled', true);
@@ -147,7 +149,7 @@ function deleteMaterial(id) {
     deleteRequest(`/api/v1/materials/${id}`).then(res => {
         $('#materials').html('');
         getRequest(`/api/v1/courses/${courseId}`).then(course => {
-            refreshMaterials(course.materialIds);
+            getMaterialsForTeacher(courseId);
         })
     })
 }

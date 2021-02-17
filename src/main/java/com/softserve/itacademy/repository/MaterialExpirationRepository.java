@@ -16,4 +16,11 @@ public interface MaterialExpirationRepository extends JpaRepository<MaterialExpi
     @Modifying
     @Query(value = "update material_expirations as me set me.expiration_date = :expirationDate where me.id = :expirationId", nativeQuery = true)
     int updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate);
+
+    @Query(value = "select * from material_expirations where expiration_date <= :dateTime", nativeQuery = true)
+    List<MaterialExpiration> findAllDueDateTimeExpiringBy(LocalDateTime dateTime);
+
+    @Modifying
+    @Query(value = "delete from material_expirations where expiration_date <= now()", nativeQuery = true)
+    int deleteByExpirationDate();
 }
