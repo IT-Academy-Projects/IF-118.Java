@@ -95,7 +95,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private void sendPasswordResetEmail(PasswordResetToken token) {
         String resetLink = address + "/password-reset-new?token=" +  token.getToken();
 
-        Map<String, Object> mailContext = new HashMap<String, Object>();
+        Map<String, Object> mailContext = new HashMap<>();
         mailContext.put("name", token.getUser().getName());
         mailContext.put("link", resetLink);
 

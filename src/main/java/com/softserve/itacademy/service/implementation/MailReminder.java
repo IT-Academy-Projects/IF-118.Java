@@ -1,8 +1,6 @@
 package com.softserve.itacademy.service.implementation;
 
 import com.softserve.itacademy.entity.User;
-import com.softserve.itacademy.repository.MaterialRepository;
-import com.softserve.itacademy.repository.UserRepository;
 import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.Reminder;
 import lombok.extern.slf4j.Slf4j;

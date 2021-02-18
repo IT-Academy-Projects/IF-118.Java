@@ -137,7 +137,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void sendActivationEmail(User user) {
         if (!user.getEmail().isBlank()) {
             String activationLink = address + "/api/v1/activation/" + user.getActivationCode();
-            Map<String, Object> mailContext = new HashMap<String, Object>();
+            Map<String, Object> mailContext = new HashMap<>();
             mailContext.put("name", user.getName());
             mailContext.put("link",  activationLink);
 

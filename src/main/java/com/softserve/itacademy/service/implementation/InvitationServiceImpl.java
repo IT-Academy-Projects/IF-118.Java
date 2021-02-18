@@ -191,7 +191,7 @@ public class InvitationServiceImpl implements InvitationService {
                 .orElseThrow(() -> new NotFoundException("User with such id was not found"));
 
         String inviteTo = invitation.getGroup() != null ? invitation.getGroup().getName() : invitation.getCourse().getName();
-        Map<String, Object> mailContext = new HashMap<String, Object>();
+        Map<String, Object> mailContext = new HashMap<>();
         mailContext.put("name", user.getName());
         mailContext.put("courseOrGroupName",  inviteTo);
         mailContext.put("link", getLink(invitation));
