@@ -1,6 +1,10 @@
 package com.softserve.itacademy.service.implementation;
 
-import com.softserve.itacademy.entity.*;
+import com.softserve.itacademy.entity.Course;
+import com.softserve.itacademy.entity.Event;
+import com.softserve.itacademy.entity.Group;
+import com.softserve.itacademy.entity.Material;
+import com.softserve.itacademy.entity.User;
 import com.softserve.itacademy.exception.DisabledObjectException;
 import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.exception.OperationNotAllowedException;

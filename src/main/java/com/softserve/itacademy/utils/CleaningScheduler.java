@@ -36,9 +36,7 @@ public class CleaningScheduler {
     @Scheduled(cron = "0 0 * * * ?")
     public void closeExpiredMaterials() {
         List<MaterialExpirationResponse> expirations = materialExpirationService.findAllExpiringBy(LocalDateTime.now());
-        expirations.forEach(expiration->{
-            materialService.closeByExpirationDate(expiration.getMaterialId(), expiration.getGroupId());
-        });
+        expirations.forEach(expiration->materialService.closeByExpirationDate(expiration.getMaterialId(), expiration.getGroupId()));
 
         materialExpirationService.deleteByExpirationDate();
     }

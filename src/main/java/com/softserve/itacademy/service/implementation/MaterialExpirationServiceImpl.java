@@ -16,21 +16,14 @@ import com.softserve.itacademy.security.principal.UserPrincipal;
 import com.softserve.itacademy.service.MailDesignService;
 import com.softserve.itacademy.service.MaterialExpirationService;
 import com.softserve.itacademy.service.converters.MaterialExpirationConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +34,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     private final GroupRepository groupRepository;
     private final MaterialExpirationRepository materialExpirationRepository;
     private final MaterialExpirationConverter materialExpirationConverter;
-    
+
     public MaterialExpirationServiceImpl(MaterialRepository materialRepository,
                                          UserRepository userRepository,
                                          MailDesignService mailDesignService,
@@ -105,7 +98,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     @Override
     @Transactional
     public void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate) {
-        if(materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate) == 0) {
+        if (materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate) == 0) {
             throw new NotFoundException("Material with such Id was not found.");
         }
     }
