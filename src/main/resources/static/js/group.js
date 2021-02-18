@@ -9,6 +9,7 @@ let tempAnswerId;
 let assignmentAnswerId;
 let tempGroupId;
 
+generateFbShareButton();
 showGroupInfo();
 
 function showGroupInfo() {
@@ -392,4 +393,18 @@ function deleteRequest(url, data, callback) {
                 callback(res)
         }
     })
+}
+
+function generateFbShareButton() {
+    $("#fb-share-button").append(`
+    <div class="fb-share-button" data-href="https://softclass.herokuapp.com/group?id=${id}"
+         data-layout="button_count"
+         data-size="small">
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fsoftclass.herokuapp.com%2Fgroup%3Fid%3D${id}&amp;src=sdkpreparse"
+           class="fb-xfbml-parse-ignore">
+            Share
+        </a>
+    </div>
+   `);
+    console.log("I'm here")
 }

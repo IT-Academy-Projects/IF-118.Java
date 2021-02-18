@@ -23,20 +23,13 @@
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
     <link rel="stylesheet" href="css/group.css">
-    <script src="js/group.js"></script>
-    <script src="js/invitation.js"></script>
-    <script>
-        $(function () {
-            $("#navbar").load("navbar.html");
-        });
-
-        $(function () {
-            $("#events").load("event.html");
-        });
-    </script>
 </head>
 
 <body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v9.0&appId=465993377904546"
+        nonce="6fIJ3q04"></script>
 <div id="navbar"></div>
 <div id="events"></div>
 <div class="wrapper">
@@ -45,10 +38,13 @@
         <div class="content">
             <div class="info">
                 <h1 class="course-title" id="group-name"></h1>
+                <div id="fb-share-button"></div>
                 <div class="owner">Owner: <span id="owner"></span></div>
                 <input type="button" class="btn btn-secondary" id="chat-btn" onclick="handleChatButton()" value="Chat"/>
-                <input type="button" class="btn btn-secondary" id="statistic-btn" onclick="handleMyStatisticButton()" style="display: none" value="My statistic"/>
-                <input type="button" class="btn btn-secondary" id="group-statistic-btn" onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
+                <input type="button" class="btn btn-secondary" id="statistic-btn" onclick="handleMyStatisticButton()"
+                       style="display: none" value="My statistic"/>
+                <input type="button" class="btn btn-secondary" id="group-statistic-btn"
+                       onclick="handleGroupStatisticButton()" style="display: none" value="Group statistic"/>
             </div>
             <br>
             <h3>List of students:</h3>
@@ -86,7 +82,8 @@
                             <form>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="text" class="form-control" id="email" placeholder="Type student email...">
+                                    <input type="text" class="form-control" id="email"
+                                           placeholder="Type student email...">
                                 </div>
                             </form>
                         </div>
@@ -94,7 +91,8 @@
                             <button type="button" class="btn btn-outline-success show" onclick="inviteToGroup();">
                                 Invite
                             </button>
-                            <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                            <button id="close" type="button" class="btn btn-outline-dark" data-dismiss="modal">Close
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -116,9 +114,11 @@
                     <div class="form-group">
                         <div class="assignment-input">
                             <label for="assignment-name">Name:</label>
-                            <input id="assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <input id="assignment-name" class="form-control" onchange=" checkAssignment()"
+                                   placeholder="Name">
                             <label for="assignment-description">Description:</label>
-                            <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <textarea id="assignment-description" class="form-control" onchange=" checkAssignment()"
+                                      placeholder="Description"></textarea>
                             <label for="assignment-file">Assignment:</label>
                             <input type="file" class="form-control" id="assignment-file">
                         </div>
@@ -148,7 +148,7 @@
                     <div class="form-group">
                         <div class="answer-input">
                             <label for="answer-file">File:</label>
-                            <input type="file" class="form-control" id="answer-file"  lang="en"
+                            <input type="file" class="form-control" id="answer-file" lang="en"
                                    onchange="checkAnswerFile()">
                         </div>
                     </div>
@@ -177,7 +177,7 @@
                     <div class="form-group">
                         <div class="answer-input">
                             <label for="answer-file">File:</label>
-                            <input type="file" class="form-control" id="new-answer-file"  lang="en"
+                            <input type="file" class="form-control" id="new-answer-file" lang="en"
                                    onchange="checkAnswerFile()">
                         </div>
                     </div>
@@ -234,9 +234,11 @@
                     <div class="form-group">
                         <div class="assignment-input">
                             <label for="new-assignment-name">Name:</label>
-                            <input id="new-assignment-name" class="form-control" onchange=" checkAssignment()" placeholder="Name">
+                            <input id="new-assignment-name" class="form-control" onchange=" checkAssignment()"
+                                   placeholder="Name">
                             <label for="new-assignment-description">Description:</label>
-                            <textarea id="new-assignment-description" class="form-control" onchange=" checkAssignment()" placeholder="Description"></textarea>
+                            <textarea id="new-assignment-description" class="form-control" onchange=" checkAssignment()"
+                                      placeholder="Description"></textarea>
                             <label for="new-assignment-file">Assignment:</label>
                             <input type="file" class="form-control" id="new-assignment-file">
                         </div>
@@ -252,5 +254,18 @@
         </div>
     </div>
 </div>
+
+<script src="js/group.js"></script>
+<script src="js/invitation.js"></script>
+<script>
+    $(function () {
+        $("#navbar").load("navbar.html");
+    });
+
+    $(function () {
+        $("#events").load("event.html");
+    });
+</script>
+
 </body>
 </html>
