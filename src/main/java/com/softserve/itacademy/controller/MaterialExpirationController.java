@@ -18,11 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/expirations")
-public class ExpirationController {
+public class MaterialExpirationController {
 
     private final MaterialExpirationService materialExpirationService;
 
-    public ExpirationController(MaterialExpirationService materialExpirationService) {
+    public MaterialExpirationController(MaterialExpirationService materialExpirationService) {
         this.materialExpirationService = materialExpirationService;
     }
 

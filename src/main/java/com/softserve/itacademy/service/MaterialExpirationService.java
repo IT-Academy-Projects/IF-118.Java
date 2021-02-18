@@ -13,4 +13,8 @@ public interface MaterialExpirationService {
     List<MaterialExpirationResponse> getMaterialExpiration(Integer materialId);
 
     void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate);
+
+    List<MaterialExpirationResponse> findAllExpiringBy(LocalDateTime dateTime);
+
+    int deleteByExpirationDate();
 }

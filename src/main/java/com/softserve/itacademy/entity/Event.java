@@ -54,6 +54,7 @@ public class Event {
 
     public enum EventType {
         OPEN_LECTION,
+        CLOSE_LECTION,
         GRADE_ANSWER,
         REJECT_ANSWER,
         SUBMIT_ANSWER,

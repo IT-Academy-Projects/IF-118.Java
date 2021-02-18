@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,12 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
     private final MaterialExpirationRepository materialExpirationRepository;
     private final MaterialExpirationConverter materialExpirationConverter;
 
-    public MaterialExpirationServiceImpl(MaterialRepository materialRepository, UserRepository userRepository, MailDesignService mailDesignService, GroupRepository groupRepository, MaterialExpirationRepository materialExpirationRepository, MaterialExpirationConverter materialExpirationConverter) {
+    public MaterialExpirationServiceImpl(MaterialRepository materialRepository,
+                                         UserRepository userRepository,
+                                         MailDesignService mailDesignService,
+                                         GroupRepository groupRepository,
+                                         MaterialExpirationRepository materialExpirationRepository,
+                                         MaterialExpirationConverter materialExpirationConverter) {
         this.materialRepository = materialRepository;
         this.userRepository = userRepository;
         this.mailDesignService = mailDesignService;
@@ -61,7 +67,7 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<User> usersByGroupIds = userRepository.findByGroupId(group.get().getId());
         if (!usersByGroupIds.isEmpty()) {
             usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection time",
-                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date for materials."));
+                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date " + materialExpiration.getExpirationDate() + " for " + material.get().getName() + "."));
         }
     }
 
@@ -71,7 +77,9 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<Integer> groupIds;
         Optional<Material> material = materialRepository.findById(materialId);
         List<MaterialExpirationResponse> responses;
-        if (material.isPresent()) {
+        if (material.isEmpty()) {
+            throw new NotFoundException("Material with such id was not found");
+        } else {
             if (material.get().getOwnerId().equals(principal.getId())) {
                 groupIds = groupRepository.findByOwnerId(principal.getId()).stream().map(BasicEntity::getId).collect(Collectors.toList());
             } else {
@@ -84,16 +92,32 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
                 throw new NotFoundException("Expirations for this material for this/these group/s was not found");
             }
             return responses;
-        } else {
-            throw new NotFoundException("Material with such id was not found");
         }
     }
 
     @Override
     @Transactional
     public void updateMaterialExpiration(Integer expirationId, LocalDateTime expirationDate) {
-        if(materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate) == 0) {
+        if (materialExpirationRepository.updateMaterialExpiration(expirationId, expirationDate) == 0) {
             throw new NotFoundException("Material with such Id was not found.");
         }
     }
+
+    @Override
+    public List<MaterialExpirationResponse> findAllExpiringBy(LocalDateTime dateTime) {
+        List<MaterialExpiration> expirations = materialExpirationRepository.findAllDueDateTimeExpiringBy(dateTime);
+        if (expirations.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return expirations.stream()
+                .map(materialExpirationConverter::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public int deleteByExpirationDate() {
+        return materialExpirationRepository.deleteByExpirationDate();
+    }
+
 }

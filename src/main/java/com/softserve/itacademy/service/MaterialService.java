@@ -7,6 +7,7 @@ import com.softserve.itacademy.response.MaterialResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface MaterialService {
 
@@ -16,4 +17,6 @@ public interface MaterialService {
     DownloadFileResponse downloadById(Integer id);
     void delete(Integer id, Integer currentUserId);
     void open(Integer materialId, List<Integer> groupIds);
+    void closeByExpirationDate(Integer materialId, Integer groupId);
+    Set<MaterialResponse> findAllByCourseId(Integer courseId);
 }

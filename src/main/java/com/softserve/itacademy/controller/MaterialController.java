@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/materials")
@@ -54,6 +55,12 @@ public class MaterialController {
     @GetMapping("/{id}")
     public ResponseEntity<MaterialResponse> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(materialService.findById(id), HttpStatus.OK);
+    }
+
+    @CourseReadPermission
+    @GetMapping("/in-course/{courseId}")
+    public ResponseEntity<Set<MaterialResponse>> findAllByCourseId(@PathVariable Integer courseId) {
+        return new ResponseEntity<>(materialService.findAllByCourseId(courseId), HttpStatus.OK);
     }
 
     @CourseReadPermission
