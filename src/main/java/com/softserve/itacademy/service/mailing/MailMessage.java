@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Builder
 @Getter
@@ -20,16 +21,18 @@ import java.time.LocalDateTime;
 public class MailMessage implements Serializable {
 
     private String email;
-    private String message;
     private String subject;
+    private String mailTemplate;
+    private Map<String, Object> mailContext;
 
     private LocalDateTime expirationDate;
 
     @JsonCreator
-    public MailMessage(String email, String message, String subject, LocalDateTime expirationDate) {
+    public MailMessage(String email, String subject,  String mailTemplate, Map<String, Object> mailContext, LocalDateTime expirationDate) {
         this.email = email;
-        this.message = message;
         this.subject = subject;
+        this.mailTemplate = mailTemplate;
+        this.mailContext = mailContext;
         this.expirationDate = expirationDate;
     }
 }

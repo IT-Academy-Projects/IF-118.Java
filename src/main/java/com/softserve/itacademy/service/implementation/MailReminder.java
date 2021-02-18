@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -21,7 +22,8 @@ public class MailReminder implements Reminder {
     public void remind(List<User> recipients) {
         if (!recipients.isEmpty()) {
             recipients.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection work time expiring",
-                    "Hello " + user.getName() + "! Check Your's courses on SoftClass. Looks like Your work time on some lections is expiring."));
+                    Map.of("name", user.getName(), "message", "Check Your courses on SoftClass. Looks like Your work time on some lections is expiring."),
+                    MailDesignServiceImpl.MailType.LECTION_EXPIRATION));
         }
     }
 }

@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -134,14 +136,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void sendActivationEmail(User user) {
         if (!user.getEmail().isBlank()) {
-            String message = String.format(
-                    "Hello, %s! \n" + "Your activation link: %s/api/v1/activation/%s",
-                    user.getName(),
-                    address,
-                    user.getActivationCode()
-            );
+            String activationLink = address + "/api/v1/activation/" + user.getActivationCode();
+            Map<String, Object> mailContext = new HashMap<>();
+            mailContext.put("name", user.getName());
+            mailContext.put("link",  activationLink);
 
-            mailDesignService.designAndQueue(user.getEmail(), "SoftClass activation", message);
+            mailDesignService.designAndQueue(user.getEmail(), "SoftClass activation",
+                    mailContext, MailDesignServiceImpl.MailType.ACTIVATION);
         }
     }
 }

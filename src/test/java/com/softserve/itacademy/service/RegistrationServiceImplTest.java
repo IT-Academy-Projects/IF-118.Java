@@ -10,6 +10,7 @@ import com.softserve.itacademy.security.dto.RegistrationRequest;
 import com.softserve.itacademy.security.dto.RolePickRequest;
 import com.softserve.itacademy.security.dto.RolePickResponse;
 import com.softserve.itacademy.security.dto.SuccessRegistrationResponse;
+import com.softserve.itacademy.service.implementation.MailDesignServiceImpl;
 import com.softserve.itacademy.service.implementation.RegistrationServiceImpl;
 import com.softserve.itacademy.tools.security.WithMockOwnStudent;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +27,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
 
         assertEquals(exceptedResponse, actualResponse);
         verify(userRepository, times(1)).save(expectedUser);
-        verify(mailDesignService, times(1)).designAndQueue(eq(registrationRequest.getEmail()), anyString(), anyString());
+        verify(mailDesignService, times(1)).designAndQueue(eq(registrationRequest.getEmail()), anyString(), anyMap(), eq(MailDesignServiceImpl.MailType.ACTIVATION));
         verify(passwordEncoder, times(1)).encode(registrationRequest.getPassword());
     }
 

@@ -20,7 +20,7 @@ public class ViewController {
 
     @GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String homeView() {
-        return "home.html";
+        return "../static/home.html";
     }
 
     @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
@@ -28,7 +28,7 @@ public class ViewController {
         if (principal == null) {
             String referrer = request.getHeader("Referer");
             request.getSession().setAttribute("url_prior_login", referrer);
-            return "login.html";
+            return "../static/login.html";
         } else {
             return "redirect:user";
         }
@@ -37,7 +37,7 @@ public class ViewController {
     @GetMapping(path = "/registration", produces = MediaType.TEXT_HTML_VALUE)
     public String registrationView(Principal principal) {
         if (principal == null) {
-            return "registration.html";
+            return "../static/registration.html";
         } else {
             return "redirect:user";
         }
@@ -45,64 +45,64 @@ public class ViewController {
 
     @GetMapping(path = "/role-pick", produces = MediaType.TEXT_HTML_VALUE)
     public String rolePickView() {
-            return "role-pick.html";
+            return "../static/role-pick.html";
     }
 
     @AdminRolePermission
     @GetMapping(path = "/admin", produces = MediaType.TEXT_HTML_VALUE)
     public String adminView() {
-        return "admin-panel.html";
+        return "../static/admin-panel.html";
     }
 
     @UserRolePermission
     @GetMapping(path = "/user", produces = MediaType.TEXT_HTML_VALUE)
     public String userView() {
-        return "user-panel.html";
+        return "../static/user-panel.html";
     }
 
     @GetMapping(path = "/profile", produces = MediaType.TEXT_HTML_VALUE)
     public String profileView() {
-        return "profile.html";
+        return "../static/profile.html";
     }
 
     @GetMapping(path = "/group", produces = MediaType.TEXT_HTML_VALUE)
     public String groupView() {
-        return "group.html";
+        return "../static/group.html";
     }
 
     @GetMapping(path = "/course", produces = MediaType.TEXT_HTML_VALUE)
     public String courseView() {
-        return "course.html";
+        return "../static/course.html";
     }
 
     @GetMapping(path = "/material", produces = MediaType.TEXT_HTML_VALUE)
     public String materialView() {
-        return "material.html";
+        return "../static/material.html";
     }
 
     @GetMapping(path = "/invitation", produces = MediaType.TEXT_HTML_VALUE)
     public String inviteView() {
-        return "invitation.html";
+        return "../static/invitation.html";
     }
 
     @GetMapping(path = "/group-chat", produces = MediaType.TEXT_HTML_VALUE)
     @PreAuthorize("@accessManager.isAllowedToChat(authentication.principal, #id)")
-    public String chatView(@RequestParam int id) { return "group-chat.html"; }
+    public String chatView(@RequestParam int id) { return "../static/group-chat.html"; }
 
     @GetMapping(path = "/search-result", produces = MediaType.TEXT_HTML_VALUE)
     @CourseReadPermission
     @GroupReadPermission
-    public String searchView(@RequestParam String searchQuery) { return "search-result.html"; }
+    public String searchView(@RequestParam String searchQuery) { return "../static/search-result.html"; }
 
     @GetMapping(path = "/password-reset", produces = MediaType.TEXT_HTML_VALUE)
-    public String passwordResetView() { return "password-reset.html"; }
+    public String passwordResetView() { return "../static/password-reset.html"; }
 
     @GetMapping(path = "/password-reset-new", produces = MediaType.TEXT_HTML_VALUE)
-    public String newPasswordView(@RequestParam String token) { return "password-reset-new.html"; }
+    public String newPasswordView(@RequestParam String token) { return "../static/password-reset-new.html"; }
 
     @GetMapping(path = "/my-group-statistic", produces = MediaType.TEXT_HTML_VALUE)
-    public String myGroupStatistic() { return "user-group-statistic.html"; }
+    public String myGroupStatistic() { return "../static/user-group-statistic.html"; }
 
     @GetMapping(path = "/group-statistic", produces = MediaType.TEXT_HTML_VALUE)
-    public String groupStatistic() { return "group-statistic.html"; }
+    public String groupStatistic() { return "../static/group-statistic.html"; }
 }
