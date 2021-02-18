@@ -13,11 +13,15 @@ import com.softserve.itacademy.response.InvitationResponse;
 import com.softserve.itacademy.service.converters.InvitationConverter;
 import com.softserve.itacademy.service.implementation.InvitationServiceImpl;
 import static java.util.Optional.of;
+
+import com.softserve.itacademy.service.implementation.MailDesignServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doNothing;
@@ -51,7 +55,7 @@ public class InvitationServiceTest {
     void sendInvitationSuccessfulTest() {
         InvitationRequest request = buildRequest();
         setUp();
-        doNothing().when(mailDesignService).designAndQueue(anyString(), anyString(), anyString());
+        doNothing().when(mailDesignService).designAndQueue(anyString(), anyString(), anyMap(), eq(MailDesignServiceImpl.MailType.INVITATION));
 
         invitationService.sendInvitation(request);
         verify(invitationRepository, times(1)).save(any());

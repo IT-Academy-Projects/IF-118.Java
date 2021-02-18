@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,8 @@ public class MaterialExpirationServiceImpl implements MaterialExpirationService 
         List<User> usersByGroupIds = userRepository.findByGroupId(group.get().getId());
         if (!usersByGroupIds.isEmpty()) {
             usersByGroupIds.forEach(user -> mailDesignService.designAndQueue(user.getEmail(), "SoftClass Lection time",
-                    "Hello" + user.getName() + "! Check Your's courses on SoftClass. Teacher set expiration date " + materialExpiration.getExpirationDate() + " for " + material.get().getName() + "."));
+                    Map.of("name", user.getName(), "lectionName", material.get().getName(), "expirationDate", materialExpiration.getExpirationDate()),
+                    MailDesignServiceImpl.MailType.LECTION_OPEN));
         }
     }
 

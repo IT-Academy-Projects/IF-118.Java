@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -91,13 +93,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     private void sendPasswordResetEmail(PasswordResetToken token) {
-        String message = String.format(
-                "Hello, %s! \n" + "Your password reset link: %s/password-reset-new?token=%s",
-                token.getUser().getName(),
-                address,
-                token.getToken()
-        );
+        String resetLink = address + "/password-reset-new?token=" +  token.getToken();
 
-        mailDesignService.designAndQueue(token.getUser().getEmail(), "SoftClass password reset", message);
+        Map<String, Object> mailContext = new HashMap<String, Object>();
+        mailContext.put("name", token.getUser().getName());
+        mailContext.put("link", resetLink);
+
+        mailDesignService.designAndQueue(token.getUser().getEmail(), "SoftClass password reset",
+                mailContext, MailDesignServiceImpl.MailType.RESET_PASSWORD);
     }
 }

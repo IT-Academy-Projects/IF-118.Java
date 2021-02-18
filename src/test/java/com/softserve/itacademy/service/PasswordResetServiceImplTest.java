@@ -6,6 +6,7 @@ import com.softserve.itacademy.exception.NotFoundException;
 import com.softserve.itacademy.repository.security.PasswordResetTokenRepository;
 import com.softserve.itacademy.security.dto.PasswordByTokenRequest;
 import com.softserve.itacademy.security.dto.ResetPasswordRequest;
+import com.softserve.itacademy.service.implementation.MailDesignServiceImpl;
 import com.softserve.itacademy.service.implementation.PasswordResetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
@@ -64,7 +66,7 @@ class PasswordResetServiceImplTest {
 
         verify(tokenRepository, times(1)).findByUserId((user.getId()));
         verify(tokenRepository, times(1)).save(isA(PasswordResetToken.class));
-        verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyString());
+        verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyMap(), eq(MailDesignServiceImpl.MailType.RESET_PASSWORD));
     }
 
     @Test
@@ -79,7 +81,7 @@ class PasswordResetServiceImplTest {
 
         verify(tokenRepository, times(1)).findByUserId(user.getId());
         verify(tokenRepository, times(1)).save(isA(PasswordResetToken.class));
-        verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyString());
+        verify(mailDesignService, times(1)).designAndQueue(eq(user.getEmail()), anyString(), anyMap(), eq(MailDesignServiceImpl.MailType.RESET_PASSWORD));
     }
 
     @Test
@@ -89,7 +91,7 @@ class PasswordResetServiceImplTest {
         ResetPasswordRequest request = new ResetPasswordRequest(user.getEmail());
 
         assertThrows(BadCredentialsException.class, () -> passwordResetService.resetPassword(request));
-        verify(mailDesignService, times(0)).designAndQueue(eq(user.getEmail()), anyString(), anyString());
+        verify(mailDesignService, times(0)).designAndQueue(eq(user.getEmail()), anyString(), anyMap(), eq(MailDesignServiceImpl.MailType.RESET_PASSWORD));
         verify(tokenRepository, times(0)).save(isA(PasswordResetToken.class));
     }
 

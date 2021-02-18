@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -187,13 +189,15 @@ public class InvitationServiceImpl implements InvitationService {
     private void sendInvitationMail(Invitation invitation) {
         User user = userRepository.findById(invitation.getUser().getId())
                 .orElseThrow(() -> new NotFoundException("User with such id was not found"));
-        mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
-                getInviteMessage(invitation));
-    }
 
-    private String getInviteMessage(Invitation invitation) {
         String inviteTo = invitation.getGroup() != null ? invitation.getGroup().getName() : invitation.getCourse().getName();
-        return String.format("You are invited to %s %s", inviteTo, getLink(invitation));
+        Map<String, Object> mailContext = new HashMap<String, Object>();
+        mailContext.put("name", user.getName());
+        mailContext.put("courseOrGroupName",  inviteTo);
+        mailContext.put("link", getLink(invitation));
+
+        mailDesignService.designAndQueue(user.getEmail(), "SoftClass invitation",
+                mailContext, MailDesignServiceImpl.MailType.INVITATION);
     }
 
     private String getLink(Invitation invitation) {

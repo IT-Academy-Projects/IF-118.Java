@@ -6,6 +6,7 @@ import com.softserve.itacademy.service.mailing.MailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 public class MailDesignServiceImpl implements MailDesignService {
@@ -17,14 +18,33 @@ public class MailDesignServiceImpl implements MailDesignService {
     }
 
     @Override
-    public void designAndQueue(String email, String topic, String message) {
+    public void designAndQueue(String email, String topic, Map<String, Object> mailContext, MailType mailType) {
         MailMessage mail = MailMessage.builder()
                 .email(email)
                 .subject(topic)
-                .message(message)
+                .mailContext(mailContext)
+                .mailTemplate(mailType.getTemplate())
                 .expirationDate(LocalDateTime.now().plusDays(3))
                 .build();
 
         mailSender.addMessageToMailQueue(mail);
+    }
+
+    public enum MailType{
+        ACTIVATION("activation-temp"),
+        INVITATION("invitation-temp"),
+        RESET_PASSWORD("reset-temp"),
+        LECTION_OPEN("open-lection-temp"),
+        LECTION_EXPIRATION("expiation-reminder-temp");
+
+        private String template;
+
+        MailType(String template) {
+            this.template = template;
+        }
+
+        public String getTemplate() {
+            return template;
+        }
     }
 }
