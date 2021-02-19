@@ -1,7 +1,7 @@
 //package com.softserve.itacademy.controller;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.softserve.itacademy.config.ErrorConfigurationProperties;
+//import com.softserve.itacademy.com.softserve.itacademy.config.ErrorConfigurationProperties;
 //import com.softserve.itacademy.exception.NotFoundException;
 //import com.softserve.itacademy.request.CourseRequest;
 //import com.softserve.itacademy.request.ErrorRequest;

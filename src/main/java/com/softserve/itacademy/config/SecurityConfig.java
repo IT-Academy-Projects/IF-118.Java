@@ -10,6 +10,7 @@ import com.softserve.itacademy.security.ownauth.OwnAuthProvider;
 import com.softserve.itacademy.security.service.UserPrincipalService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Profile("!test")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String LOGIN_PAGE = "/login";

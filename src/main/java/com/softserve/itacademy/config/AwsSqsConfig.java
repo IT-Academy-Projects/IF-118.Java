@@ -14,12 +14,14 @@ import org.springframework.cloud.aws.messaging.listener.QueueMessageHandler;
 import org.springframework.cloud.aws.messaging.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 
 import java.util.List;
 
 @Configuration
+@Profile("!test")
 public class AwsSqsConfig {
 
     @Value("${cloud.aws.sqs.region}")
