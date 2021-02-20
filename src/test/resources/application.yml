@@ -9,3 +9,6 @@ spring:
 
 application:
   address: "www.test.com"
+
+server:
+  port: 8888
